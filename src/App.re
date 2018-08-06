@@ -1,0 +1,1 @@
+Main.init(Main.app, "app");

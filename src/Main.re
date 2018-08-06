@@ -7,7 +7,7 @@ type node = {
 type element;
 type document;
 
-let div = (~id="", ~_class="", ~children, ()) : node => {
+let div = (~id="", ~_class="", ~children, rest) : node => {
   name: "div",
   attributes: [|("id", id), ("class", _class)|],
   children,
@@ -16,27 +16,64 @@ let div = (~id="", ~_class="", ~children, ()) : node => {
 [@bs.val]
 external createElement : string => element = "document.createElement";
 
-let setAttributes: (element, array((string, string))) => element = [%bs.raw {|
- function (element, attributes) {
-	for (let i=0; i <attributes.lenght; i++) {
+let setAttributes: (array((string, string)), element) => element = [%bs.raw
+  {|
+ function (attributes, element) {
+	for (let i=0; i <attributes.length; i++) {
       element.setAttribute(attributes[i][0], attributes[i][1]);
    }
    return element;
  }
-|}];
+|}
+];
 
-let appendChild: (element, list(element)) => element = [%bs.raw {|
-   function (parent, child) {
-      parent.appendChild(child);
+let init: (element, string) => element = [%bs.raw
+  {|
+    function(element, id) {
+      return document.getElementById(id).appendChild(element);
+    }
+|}
+];
+
+let appendChild: (list(element), element) => element = [%bs.raw
+  {|
+   function (children, parent) {
+      for (let i=0; i < children.length; i++) {
+        if (Array.isArray(children[i])) {
+          appendChild(children[i], parent);
+        } else if (typeof children[i] !== 'number') {
+          parent.appendChild(children[i]);
+        } 
+      }
       return parent;
    }
-|}];
+|}
+];
 
-let rec render = (node: node) => {
-  let children = List.map((child) => render(child), node.children);
-  let element = createElement(node.name);
-  appendChild(element, children);
-  setAttributes(element, node.attributes);
-};
+let rec render = (node: node) =>
+  createElement(node.name)
+    |> setAttributes(node.attributes)
+    |> appendChild(List.map(child => render(child), node.children))
 
-let x = <div> <div id="4" /></div>;
+
+let jsx = <div _class="cls" id="1">
+  <div id="2" _class="cls1"></div>
+  <div id="2" _class="cls1"></div>
+  <div id="2" _class="cls1"></div>
+
+  <div id="2" _class="cls1"></div>
+
+  <div id="2" _class="cls1">
+    <div id="3" _class="cls1"></div>
+    <div id="3" _class="cls1"></div>
+
+    <div id="3" _class="cls1"></div>
+
+    <div id="3" _class="cls1"></div>
+
+  </div>
+</div>
+
+let app  = render(
+  jsx
+);

@@ -1,0 +1,16 @@
+{
+  "name": "rembrant-e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "copy": "mkdir -p server/static && cp ../bundle/index.js ./server/static",
+    "test": "jest"
+  },
+  "author": "Przemyslaw Jan Pietrzak",
+  "license": "MIT",
+  "dependencies": {
+    "jest": "^22",
+    "puppeteer": "^1.6.0"
+  }
+}
