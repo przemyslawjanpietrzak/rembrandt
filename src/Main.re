@@ -1,5 +1,10 @@
+type nodeName =
+  | DIV
+  | TEXT
+
 type node = {
-  name: string,
+  name: nodeName,
+  text: string,
   attributes: array((string, string)),
   children: list(node),
 };
@@ -18,20 +23,22 @@ type document;
 type domElement;
 
 let text = (s: string) : node => {
-  name: "text",
+  name: TEXT,
+  text: s,
   attributes: [||],
   children: [],
 };
 
 let div = (~id="", ~_class="", ~children, rest) : node => {
-  name: "div",
+  name: DIV,
+  text: "",
   attributes: [|("id", id), ("class", _class)|],
   children,
 };
 
 
 [@bs.val]
-external createElement : string => domElement = "document.createElement";
+external createElement : nodeName => domElement = "document.createElement";
 
 let setAttributes: (array((string, string)), domElement) => domElement = [%bs.raw
   {|
@@ -52,6 +59,14 @@ let init: (domElement, string) => domElement = [%bs.raw
 |}
 ];
 
+let createTextNode: (string) => domElement = [%bs.raw
+  {|
+    function(text) {
+      return document.createTestNode(text);
+    }
+|}
+];
+
 let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
   {|
    function (children, parent) {
@@ -68,9 +83,14 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
 ];
 
 let rec render = (node: node) =>
-  createElement(node.name)
-    |> setAttributes(node.attributes)
-    |> appendChild(List.map(child => render(child), node.children))
+   switch node.name {
+    | TEXT => createTextNode(node.text)
+    | DIV => createElement(node.name)
+      |> setAttributes(node.attributes)
+      |> appendChild(List.map(child => render(child), node.children))
+   };
+
+
 
 let jsx = <div _class="cls" id="1">
   <div id="2" _class="cls1"></div>
