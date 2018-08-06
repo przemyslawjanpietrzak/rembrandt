@@ -4,8 +4,24 @@ type node = {
   children: list(node),
 };
 
-type element;
+type nodeChild =
+  | Node
+  | String;
+
+type textElement = string;
+
+type element =
+  | Node
+  | TextElement;
+
 type document;
+type domElement;
+
+let text = (s: string) : node => {
+  name: "text",
+  attributes: [||],
+  children: [],
+};
 
 let div = (~id="", ~_class="", ~children, rest) : node => {
   name: "div",
@@ -13,10 +29,11 @@ let div = (~id="", ~_class="", ~children, rest) : node => {
   children,
 };
 
-[@bs.val]
-external createElement : string => element = "document.createElement";
 
-let setAttributes: (array((string, string)), element) => element = [%bs.raw
+[@bs.val]
+external createElement : string => domElement = "document.createElement";
+
+let setAttributes: (array((string, string)), domElement) => domElement = [%bs.raw
   {|
  function (attributes, element) {
 	for (let i=0; i <attributes.length; i++) {
@@ -27,7 +44,7 @@ let setAttributes: (array((string, string)), element) => element = [%bs.raw
 |}
 ];
 
-let init: (element, string) => element = [%bs.raw
+let init: (domElement, string) => domElement = [%bs.raw
   {|
     function(element, id) {
       return document.getElementById(id).appendChild(element);
@@ -35,7 +52,7 @@ let init: (element, string) => element = [%bs.raw
 |}
 ];
 
-let appendChild: (list(element), element) => element = [%bs.raw
+let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
   {|
    function (children, parent) {
       for (let i=0; i < children.length; i++) {
@@ -43,7 +60,7 @@ let appendChild: (list(element), element) => element = [%bs.raw
           appendChild(children[i], parent);
         } else if (typeof children[i] !== 'number') {
           parent.appendChild(children[i]);
-        } 
+        }
       }
       return parent;
    }
@@ -54,7 +71,6 @@ let rec render = (node: node) =>
   createElement(node.name)
     |> setAttributes(node.attributes)
     |> appendChild(List.map(child => render(child), node.children))
-
 
 let jsx = <div _class="cls" id="1">
   <div id="2" _class="cls1"></div>
@@ -69,7 +85,7 @@ let jsx = <div _class="cls" id="1">
 
     <div id="3" _class="cls1"></div>
 
-    <div id="3" _class="cls1"></div>
+    <div id="3" _class="cls1">(text("text"))</div>
 
   </div>
 </div>

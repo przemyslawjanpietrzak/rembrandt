@@ -3,5 +3,5 @@
 .bsb.lock
 npm-debug.log
 /lib/bs/
-/node_modules/
+node_modules/
 src/*.bs.js

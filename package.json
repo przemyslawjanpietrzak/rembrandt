@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "build": "bsb -make-world",
+    "build:app": "fpack ./src/App.bs.js",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world"
   },
@@ -12,6 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^4.0.3"
+    "bs-platform": "^4.0.3",
+    "fpack": "^0.5.3"
   }
 }
