@@ -1,24 +1,26 @@
-// const { host, height, width, headless } = require('../settings');
+const puppeteer = require('puppeteer');
+const { host, height, width, headless } = require('../settings');
 
-// let page;
-// let browser;
+let page;
+let browser;
 
 beforeEach(async () => {
-  // browser = await puppeteer.launch({
-  //   headless,
-  //   args: [`--window-size=${width},${height}`, '--no-sandbox'],
-  // });
-  // page = await browser.newPage();
+  browser = await puppeteer.launch({
+    headless,
+    args: [`--window-size=${width},${height}`, '--no-sandbox'],
+  });
+  page = await browser.newPage();
 
-  // await page.goto(host);
-  // await page.setViewport({ height, width });
+  await page.goto(host);
+  await page.setViewport({ height, width });
 });
 
 afterEach(() => {
-  // browser.close();
+  browser.close();
 });
 
-test('login and logout', async () => {
-  // const children = await page.evaluate(() => document.querySelector('#app').children);
-  // assert(children.length).toBe(5);
+test('', async () => {
+  await page.waitForSelector('#app > div')
+  const childrenCount = await page.evaluate(() => document.querySelector('#app > div').children.length);
+  expect(childrenCount).toBe(5);
 });

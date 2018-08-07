@@ -83,13 +83,12 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
 ];
 
 let rec render = (node: node) =>
-   switch node.name {
+  switch node.name {
     | TEXT => createTextNode(node.text)
     | DIV => createElement(node.name)
       |> setAttributes(node.attributes)
       |> appendChild(List.map(child => render(child), node.children))
-   };
-
+  };
 
 
 let jsx = <div _class="cls" id="1">

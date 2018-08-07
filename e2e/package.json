@@ -4,13 +4,23 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "copy": "mkdir -p server/static && cp ../bundle/index.js ./server/static",
-    "test": "jest"
+    "copy": "mkdir -p server/static && cp ../bundle/index.js ./server/static && cp ../src/Main.re ./tests/",
+    "test": "jest",
+    "compile": "bsb -make-world",
+    "build": "fpack ./src/App.bs.js"
+  },
+  "jest": {
+    "verbose": true,
+    "testURL": "http://localhost"
   },
   "author": "Przemyslaw Jan Pietrzak",
   "license": "MIT",
   "dependencies": {
-    "jest": "^22",
+    "jest": "^23.4.2",
     "puppeteer": "^1.6.0"
+  },
+  "devDependencies": {
+    "bs-platform": "^4.0.3",
+    "fpack": "^0.5.3"
   }
 }
