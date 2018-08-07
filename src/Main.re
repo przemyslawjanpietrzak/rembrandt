@@ -62,7 +62,7 @@ let init: (domElement, string) => domElement = [%bs.raw
 let createTextNode: (string) => domElement = [%bs.raw
   {|
     function(text) {
-      return document.createTestNode(text);
+      return document.createTextNode(text);
     }
 |}
 ];
@@ -85,7 +85,7 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
 let rec render = (node: node) =>
   switch node.name {
     | TEXT => createTextNode(node.text)
-    | DIV => createElement(node.name)
+    | DIV => createElement("div")
       |> setAttributes(node.attributes)
       |> appendChild(List.map(child => render(child), node.children))
   };
@@ -104,7 +104,7 @@ let jsx = <div _class="cls" id="1">
 
     <div id="3" _class="cls1"></div>
 
-    <div id="3" _class="cls1">(text("text"))</div>
+    <div id="3" _class="cls1"></div>
 
   </div>
 </div>

@@ -4,10 +4,12 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "copy": "mkdir -p server/static && cp ../bundle/index.js ./server/static && cp ../src/Main.re ./tests/",
+    "copy": "mkdir -p server/static && cp ./bundle/index.js ./server/static && cp ../src/Main.re ./tests/",
+    "clean": "rm -rf bundle && rm -rf src/*.bs.js",
     "test": "jest",
     "compile": "bsb -make-world",
-    "build": "fpack ./src/App.bs.js"
+    "build": "fpack ./src/App.bs.js",
+    "ci": "npm run clean && npm run compile && npm run build && npm run copy && npm test"
   },
   "jest": {
     "verbose": true,

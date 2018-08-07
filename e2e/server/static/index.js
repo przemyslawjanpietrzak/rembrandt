@@ -6114,11 +6114,21 @@ let $n__src$MainDOT$$bs = { id: "src$MainDOT$$bs", exports: {}};
 var $i__src$MainDOT$$bs__List = ($n__NM$$bs$$_$$platform$lib$js$list.exports);
 var $i__src$MainDOT$$bs__Curry = ($n__NM$$bs$$_$$platform$lib$js$curry.exports);
 
+function $i__src$MainDOT$$bs__text(s) {
+  return /* record */[
+          /* name : TEXT */1,
+          /* text */s,
+          /* attributes : array */[],
+          /* children : [] */0
+        ];
+}
+
 function $i__src$MainDOT$$bs__div($staropt$star, $staropt$star$1, children, _) {
   var id = $staropt$star !== undefined ? $staropt$star : "";
   var _class = $staropt$star$1 !== undefined ? $staropt$star$1 : "";
   return /* record */[
-          /* name */"div",
+          /* name : DIV */0,
+          /* text */"",
           /* attributes : array */[
             /* tuple */[
               "id",
@@ -6148,6 +6158,12 @@ var $i__src$MainDOT$$bs__init = (
     }
 );
 
+var $i__src$MainDOT$$bs__createTextNode = (
+    function(text) {
+      return document.createTextNode(text);
+    }
+);
+
 var $i__src$MainDOT$$bs__appendChild = (
    function (children, parent) {
       for (let i=0; i < children.length; i++) {
@@ -6155,14 +6171,19 @@ var $i__src$MainDOT$$bs__appendChild = (
           $i__src$MainDOT$$bs__appendChild(children[i], parent);
         } else if (typeof children[i] !== 'number') {
           parent.appendChild(children[i]);
-        } 
+        }
       }
       return parent;
    }
 );
 
 function $i__src$MainDOT$$bs__render(node) {
-  return $i__src$MainDOT$$bs__Curry._2($i__src$MainDOT$$bs__appendChild, $i__src$MainDOT$$bs__List.map($i__src$MainDOT$$bs__render, node[/* children */2]), $i__src$MainDOT$$bs__Curry._2($i__src$MainDOT$$bs__setAttributes, node[/* attributes */1], document.createElement(node[/* name */0])));
+  var match = node[/* name */0];
+  if (match) {
+    return $i__src$MainDOT$$bs__Curry._1($i__src$MainDOT$$bs__createTextNode, node[/* text */1]);
+  } else {
+    return $i__src$MainDOT$$bs__Curry._2($i__src$MainDOT$$bs__appendChild, $i__src$MainDOT$$bs__List.map($i__src$MainDOT$$bs__render, node[/* children */3]), $i__src$MainDOT$$bs__Curry._2($i__src$MainDOT$$bs__setAttributes, node[/* attributes */2], document.createElement("div")));
+  }
 }
 
 var $i__src$MainDOT$$bs__jsx = $i__src$MainDOT$$bs__div("1", "cls", /* :: */[
@@ -6196,9 +6217,11 @@ var $i__src$MainDOT$$bs__jsx = $i__src$MainDOT$$bs__div("1", "cls", /* :: */[
 
 var $i__src$MainDOT$$bs__app = $i__src$MainDOT$$bs__render($i__src$MainDOT$$bs__jsx);
 
+$n__src$MainDOT$$bs.exports.text = $i__src$MainDOT$$bs__text;
 $n__src$MainDOT$$bs.exports.div = $i__src$MainDOT$$bs__div;
 $n__src$MainDOT$$bs.exports.setAttributes = $i__src$MainDOT$$bs__setAttributes;
 $n__src$MainDOT$$bs.exports.init = $i__src$MainDOT$$bs__init;
+$n__src$MainDOT$$bs.exports.createTextNode = $i__src$MainDOT$$bs__createTextNode;
 $n__src$MainDOT$$bs.exports.appendChild = $i__src$MainDOT$$bs__appendChild;
 $n__src$MainDOT$$bs.exports.render = $i__src$MainDOT$$bs__render;
 $n__src$MainDOT$$bs.exports.jsx = $i__src$MainDOT$$bs__jsx;
@@ -6214,9 +6237,9 @@ let $n__src$AppDOT$$bs = { id: "src$AppDOT$$bs", exports: {}};
 'use strict';
 
 var $i__src$AppDOT$$bs__Curry = ($n__NM$$bs$$_$$platform$lib$js$curry.exports);
-var $i__src$AppDOT$$bs__Main$Rembrant = ($n__src$MainDOT$$bs.exports);
+var $i__src$AppDOT$$bs__Main$RembrantTester = ($n__src$MainDOT$$bs.exports);
 
-$i__src$AppDOT$$bs__Curry._2($i__src$AppDOT$$bs__Main$Rembrant.init, $i__src$AppDOT$$bs__Main$Rembrant.app, "app");
+$i__src$AppDOT$$bs__Curry._2($i__src$AppDOT$$bs__Main$RembrantTester.init, $i__src$AppDOT$$bs__Main$RembrantTester.app, "app");
 
 /*  Not a pure module */
 
