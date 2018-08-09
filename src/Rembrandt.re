@@ -1,20 +1,19 @@
 type appParams('model, 'action) = {
-    view: ('model, ('action) => 'model) => Main.node,
+    view: ('model, ('action) => 'model) => Dom.domElement,
     update: ('model, 'action) => 'model,
     model: 'model,
 };
 
-
 let dispatch = (action, model, update) => {
     update(model, action)
 }
-let appRun = (~view, ~model, ~update) => {
-    let currentModel = ref(model)
+let run = (~view, ~model, ~update) => {
+    let currentModel = model
     let dispatch = (action, model, update) => {
-        let updatedModel = update(model, action);
-        currentModel := updatedModel;
-        /* TODO: rerender */ 
-        updatedModel;
+        /* currentModel := updatedModel; TODO:*/
+        /* TODO: rerender */
+        update(model, action);
+
     }
 
     let dispatchAction = action => dispatch(action, currentModel, update);

@@ -8,19 +8,13 @@ function dispatch(action, model, update) {
   return Curry._2(update, model, action);
 }
 
-function appRun(view, model, update) {
-  var currentModel = /* record */[/* contents */model];
+function run(view, model, update) {
   var dispatchAction = function (action) {
-    var action$1 = action;
-    var model = currentModel;
-    var update$1 = update;
-    var updatedModel = Curry._2(update$1, model, action$1);
-    currentModel[0] = updatedModel;
-    return updatedModel;
+    return Curry._2(update, model, action);
   };
   return Main$Rembrant.render(Curry._2(view, model, dispatchAction));
 }
 
 exports.dispatch = dispatch;
-exports.appRun = appRun;
+exports.run = run;
 /* Main-Rembrant Not a pure module */
