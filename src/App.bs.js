@@ -13,7 +13,10 @@ function update(model, action) {
 }
 
 Rembrandt$Rembrant.run((function (_, _$1) {
-        return Main$Rembrant.div(undefined, undefined, /* [] */0, /* () */0);
+        return Main$Rembrant.div(undefined, undefined, /* :: */[
+                    Main$Rembrant.text("42"),
+                    /* [] */0
+                  ], /* () */0);
       }), 42, update);
 
 exports.update = update;

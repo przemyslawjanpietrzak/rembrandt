@@ -11,6 +11,12 @@ var setAttributes = (
  }
 );
 
+var replaceChild = (
+        function(parent, newNode, oldNode) {
+            return parent.replaceChild(newNode, oldNode);
+        }
+    );
+
 var init = (
     function(element, id) {
       return document.getElementById(id).appendChild(element);
@@ -37,6 +43,7 @@ var appendChild = (
 );
 
 exports.setAttributes = setAttributes;
+exports.replaceChild = replaceChild;
 exports.init = init;
 exports.createTextNode = createTextNode;
 exports.appendChild = appendChild;

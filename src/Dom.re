@@ -1,4 +1,6 @@
-type domElement;
+type domElement = {
+  children: list(domElement)
+};
 
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
@@ -12,6 +14,14 @@ let setAttributes: (array((string, string)), domElement) => domElement = [%bs.ra
    return element;
  }
 |}
+];
+
+let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
+    {|
+        function(parent, newNode, oldNode) {
+            return parent.replaceChild(newNode, oldNode);
+        }
+    |}
 ];
 
 let init: (domElement, string) => domElement = [%bs.raw

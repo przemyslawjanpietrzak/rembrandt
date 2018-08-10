@@ -5,7 +5,7 @@ type action =
   | ADD(int)
   | SUB(int);
 
-let update = (model: model, action: action) => {
+let update = (model: model, action: action): model => {
   switch action {
   | ADD(value) => model + value
   | SUB(value) => model - value
@@ -15,5 +15,5 @@ let update = (model: model, action: action) => {
 Rembrandt.run(
   ~model=42,
   ~update=update,
-  ~view=(model, dispatch) => <div></div>
+  ~view=(model, dispatch) => <div>(text("42"))</div>
 );
