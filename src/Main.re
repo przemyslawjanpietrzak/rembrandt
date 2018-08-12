@@ -11,7 +11,6 @@ type node = {
   attributes: array((string, string)),
   handlers: list((string, option(eventHandler))),
   children: list(node),
-  null: bool,
 };
 
 type nodeChild =
@@ -38,7 +37,6 @@ let text = (s: string) : node => {
   attributes: [||],
   handlers: [],
   children: [],
-  null: false,
 };
 
 let defaultHandler = (a: string) => false;
@@ -48,7 +46,6 @@ let div = (~id="", ~_class="", ~style="", ~onClick: eventHandler=defaultHandler,
   attributes: [|("id", id), ("class", _class), ("style", style)|],
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
-  null: false,
 };
 
 let null = (): node => {
@@ -57,7 +54,6 @@ let null = (): node => {
   attributes: [||],
   handlers: [],
   children: [],
-  null: true,
 };
 
 
@@ -71,21 +67,3 @@ let rec render = (node: node) =>
   };
 
 let component = (name, ~children) => (<div id="component"></div>);
-
-let jsx = <div _class="cls" id="1">
-  <div id="2" _class="cls1"></div>
-  <div id="2" _class="cls1"></div>
-  <div id="2" _class="cls1"></div>
-  <div id="2" _class="cls1"></div>
-  <div id="2" _class="cls1">
-    <component />
-    <div id="3" _class="cls1"></div>
-    <div id="3" _class="cls1"></div>
-    <div id="3" _class="cls1"></div>
-    <div id="3" _class="cls1">(text("42"))</div>
-  </div>
-</div>
-
-let app  = render(
-  jsx
-);

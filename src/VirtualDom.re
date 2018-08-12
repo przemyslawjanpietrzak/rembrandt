@@ -18,7 +18,7 @@ let nth = (items: list(node), index: int): node => {
   }
 }
 
-let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~index: int): domElement => {
+/* let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~index: int): domElement => {
   if (oldNode.null) {
     appendChild([render(newNode)], parent)
   } else if (newNode.null) {
@@ -44,4 +44,4 @@ let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~i
     }
     parent;
   }
-};
+}; */
