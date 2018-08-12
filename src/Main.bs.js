@@ -4,20 +4,25 @@
 var List = require("bs-platform/lib/js/list.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Dom$Rembrant = require("./Dom.bs.js");
+var Js_primitive = require("bs-platform/lib/js/js_primitive.js");
+var Caml_builtin_exceptions = require("bs-platform/lib/js/caml_builtin_exceptions.js");
 
 function text(s) {
   return /* record */[
           /* name : TEXT */1,
           /* text */s,
           /* attributes : array */[],
+          /* handlers : [] */0,
           /* children : [] */0,
           /* null */false
         ];
 }
 
-function div($staropt$star, $staropt$star$1, children, _) {
+function div($staropt$star, $staropt$star$1, $staropt$star$2, $staropt$star$3, children, _) {
   var id = $staropt$star !== undefined ? $staropt$star : "";
   var _class = $staropt$star$1 !== undefined ? $staropt$star$1 : "";
+  var style = $staropt$star$2 !== undefined ? $staropt$star$2 : "";
+  var onClick = $staropt$star$3 !== undefined ? Js_primitive.valFromOption($staropt$star$3) : undefined;
   return /* record */[
           /* name : DIV */0,
           /* text */"",
@@ -29,49 +34,83 @@ function div($staropt$star, $staropt$star$1, children, _) {
             /* tuple */[
               "class",
               _class
+            ],
+            /* tuple */[
+              "style",
+              style
             ]
+          ],
+          /* handlers : :: */[
+            /* tuple */[
+              "click",
+              onClick
+            ],
+            /* [] */0
           ],
           /* children */children,
           /* null */false
         ];
 }
 
+function $$null() {
+  return /* record */[
+          /* name : Null */2,
+          /* text */"",
+          /* attributes : array */[],
+          /* handlers : [] */0,
+          /* children : [] */0,
+          /* null */true
+        ];
+}
+
 function render(node) {
   var match = node[/* name */0];
-  if (match) {
-    return Curry._1(Dom$Rembrant.createTextNode, node[/* text */1]);
-  } else {
-    return Curry._2(Dom$Rembrant.appendChild, List.map(render, node[/* children */3]), Curry._2(Dom$Rembrant.setAttributes, node[/* attributes */2], document.createElement("div")));
+  switch (match) {
+    case 0 : 
+        return Curry._2(Dom$Rembrant.appendChild, List.map(render, node[/* children */4]), Dom$Rembrant.setHandlers(node[/* handlers */3], Curry._2(Dom$Rembrant.setAttributes, node[/* attributes */2], document.createElement("div"))));
+    case 1 : 
+        return Curry._1(Dom$Rembrant.createTextNode, node[/* text */1]);
+    case 2 : 
+        throw [
+              Caml_builtin_exceptions.match_failure,
+              /* tuple */[
+                "Main.re",
+                64,
+                2
+              ]
+            ];
+    
   }
 }
 
 function component(_, _$1) {
-  return div("component", undefined, /* [] */0, /* () */0);
+  return div("component", undefined, undefined, undefined, /* [] */0, /* () */0);
 }
 
-var jsx = div("1", "cls", /* :: */[
-      div("2", "cls1", /* [] */0, /* () */0),
+var jsx = div("1", "cls", undefined, undefined, /* :: */[
+      div("2", "cls1", undefined, undefined, /* [] */0, /* () */0),
       /* :: */[
-        div("2", "cls1", /* [] */0, /* () */0),
+        div("2", "cls1", undefined, undefined, /* [] */0, /* () */0),
         /* :: */[
-          div("2", "cls1", /* [] */0, /* () */0),
+          div("2", "cls1", undefined, undefined, /* [] */0, /* () */0),
           /* :: */[
-            div("2", "cls1", /* [] */0, /* () */0),
+            div("2", "cls1", undefined, undefined, /* [] */0, /* () */0),
             /* :: */[
-              div("2", "cls1", /* :: */[
+              div("2", "cls1", undefined, undefined, /* :: */[
                     component(/* () */0, /* [] */0),
                     /* :: */[
-                      div("3", "cls1", /* [] */0, /* () */0),
+                      div("3", "cls1", undefined, undefined, /* [] */0, /* () */0),
                       /* :: */[
-                        div("3", "cls1", /* [] */0, /* () */0),
+                        div("3", "cls1", undefined, undefined, /* [] */0, /* () */0),
                         /* :: */[
-                          div("3", "cls1", /* [] */0, /* () */0),
+                          div("3", "cls1", undefined, undefined, /* [] */0, /* () */0),
                           /* :: */[
-                            div("3", "cls1", /* :: */[
+                            div("3", "cls1", undefined, undefined, /* :: */[
                                   /* record */[
                                     /* name : TEXT */1,
                                     /* text */"42",
                                     /* attributes : array */[],
+                                    /* handlers : [] */0,
                                     /* children : [] */0,
                                     /* null */false
                                   ],
@@ -94,6 +133,7 @@ var app = render(jsx);
 
 exports.text = text;
 exports.div = div;
+exports.$$null = $$null;
 exports.render = render;
 exports.component = component;
 exports.jsx = jsx;

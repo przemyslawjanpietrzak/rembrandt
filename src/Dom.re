@@ -1,3 +1,5 @@
+type eventHandler = (string) => string
+
 type domElement = {
   children: list(domElement),
   childNodes: list(domElement),
@@ -33,6 +35,15 @@ let init: (string, domElement) => domElement = [%bs.raw
   |}
 ];
 
+let update: (string, domElement) => domElement = [%bs.raw
+  {|
+    function(id, element) {
+      var app = document.getElementById(id);
+      return app.replaceChild(element, app.firstChild);
+    }
+  |}
+];
+
 let createTextNode: (string) => domElement = [%bs.raw
   {|
     function(text) {
@@ -63,3 +74,20 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
    }
   |}
 ];
+
+let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.raw
+  {|
+    function(handler, eventName, parent) {
+      return parent.addEventListener(eventName, handler);
+    }
+  |}
+]
+
+let setHandlers = (handlers: list((string, option(eventHandler))), parent: domElement): domElement => {
+  handlers
+    |> List.map(((name, handler)) => switch (handler) {
+      | None => parent
+      | Some(h) => addEventListener(h, name, parent)
+    })
+  parent;
+};

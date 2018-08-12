@@ -3,11 +3,13 @@ open Dom;
 type nodeName =
   | DIV
   | TEXT
+  | Null
 
 type node = {
   name: nodeName,
   text: string,
   attributes: array((string, string)),
+  handlers: list((string, option(eventHandler))),
   children: list(node),
   null: bool,
 };
@@ -34,23 +36,36 @@ let text = (s: string) : node => {
   name: TEXT,
   text: s,
   attributes: [||],
+  handlers: [],
   children: [],
   null: false,
 };
 
-let div = (~id="", ~_class="", ~children, rest) : node => {
+let div = (~id="", ~_class="", ~style="", ~onClick=None, ~children, rest) : node => {
   name: DIV,
   text: "",
-  attributes: [|("id", id), ("class", _class)|],
+  attributes: [|("id", id), ("class", _class), ("style", style)|],
+  handlers: [("click", onClick)],
   children,
   null: false,
 };
+
+let null = (): node => {
+  name: Null,
+  text: "",
+  attributes: [||],
+  handlers: [],
+  children: [],
+  null: true,
+};
+
 
 let rec render = (node: node) =>
   switch node.name {
     | TEXT => createTextNode(node.text)
     | DIV => createElement("div")
       |> setAttributes(node.attributes)
+      |> setHandlers(node.handlers)
       |> appendChild(List.map(child => render(child), node.children))
   };
 

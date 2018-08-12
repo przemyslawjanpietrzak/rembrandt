@@ -6,9 +6,17 @@ type optionalNode =
   | Null;
 
 let changed = (node1: node, node2: node) =>
-  node1.name !== node2.name || node1.attributes !== node2.attributes;
+  node1.name !== node2.name;
 
 let max = (a: int, b: int) => a > b ? a : b;
+
+let nth = (items: list(node), index: int): node => {
+  if (List.length(items) >= index) {
+    List.nth(items, index);
+  } else {
+    null();
+  }
+}
 
 let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~index: int): domElement => {
   if (oldNode.null) {
@@ -29,8 +37,8 @@ let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~i
     for (i in max(newLength, oldLength) downto 0) {
       updateElement(
         ~parent=List.nth(parent.children, index),
-        ~newNode=List.nth(newNode.children, i),
-        ~oldNode=List.nth(oldNode.children, i),
+        ~newNode=nth(newNode.children, i),
+        ~oldNode=nth(oldNode.children, i),
         ~index=i,
       )
     }

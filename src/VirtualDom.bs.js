@@ -7,11 +7,7 @@ var Dom$Rembrant = require("./Dom.bs.js");
 var Main$Rembrant = require("./Main.bs.js");
 
 function changed(node1, node2) {
-  if (node1[/* name */0] !== node2[/* name */0]) {
-    return true;
-  } else {
-    return node1[/* attributes */2] !== node2[/* attributes */2];
-  }
+  return node1[/* name */0] !== node2[/* name */0];
 }
 
 function max(a, b) {
@@ -23,21 +19,29 @@ function max(a, b) {
   }
 }
 
+function nth(items, index) {
+  if (List.length(items) >= index) {
+    return List.nth(items, index);
+  } else {
+    return Main$Rembrant.$$null(/* () */0);
+  }
+}
+
 function updateElement(parent, newNode, oldNode, index) {
-  if (oldNode[/* null */4]) {
+  if (oldNode[/* null */5]) {
     return Curry._2(Dom$Rembrant.appendChild, /* :: */[
                 Main$Rembrant.render(newNode),
                 /* [] */0
               ], parent);
-  } else if (newNode[/* null */4]) {
+  } else if (newNode[/* null */5]) {
     return Curry._2(Dom$Rembrant.removeChild, parent, List.nth(parent[/* childNodes */1], index));
   } else if (changed(newNode, oldNode)) {
     return Curry._3(Dom$Rembrant.replaceChild, parent, Main$Rembrant.render(newNode), Main$Rembrant.render(oldNode));
   } else {
-    var newLength = List.length(newNode[/* children */3]);
-    var oldLength = List.length(oldNode[/* children */3]);
+    var newLength = List.length(newNode[/* children */4]);
+    var oldLength = List.length(oldNode[/* children */4]);
     for(var i = max(newLength, oldLength); i >= 0; --i){
-      updateElement(List.nth(parent[/* children */0], index), List.nth(newNode[/* children */3], i), List.nth(oldNode[/* children */3], i), i);
+      updateElement(List.nth(parent[/* children */0], index), nth(newNode[/* children */4], i), nth(oldNode[/* children */4], i), i);
     }
     return parent;
   }
@@ -45,5 +49,6 @@ function updateElement(parent, newNode, oldNode, index) {
 
 exports.changed = changed;
 exports.max = max;
+exports.nth = nth;
 exports.updateElement = updateElement;
 /* Dom-Rembrant Not a pure module */
