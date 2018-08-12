@@ -2,19 +2,34 @@
 'use strict';
 
 var Curry = require("bs-platform/lib/js/curry.js");
+var Dom$Rembrant = require("./Dom.bs.js");
 var Main$Rembrant = require("./Main.bs.js");
+var VirtualDom$Rembrant = require("./VirtualDom.bs.js");
 
 function dispatch(action, model, update) {
   return Curry._2(update, model, action);
 }
 
 function run(view, model, update) {
-  var dispatchAction = function (action) {
-    return Curry._2(update, model, action);
-  };
-  return Main$Rembrant.render(Curry._2(view, model, dispatchAction));
+  var root = /* record */[/* contents */document.createElement("div")];
+  var currentView = /* record */[/* contents */Main$Rembrant.div(undefined, undefined, /* [] */0, /* () */0)];
+  var dispatchAction = /* record */[/* contents */(function () {
+        return false;
+      })];
+  dispatchAction[0] = (function (action) {
+      var action$1 = action;
+      var model$1 = model;
+      var update$1 = update;
+      var updatedModel = Curry._2(update$1, model$1, action$1);
+      var updatedView = Curry._2(view, updatedModel, dispatchAction);
+      VirtualDom$Rembrant.updateElement(root[0], updatedView, currentView[0], 0);
+      return true;
+    });
+  currentView[0] = Curry._2(view, model, dispatchAction);
+  root[0] = Curry._2(Dom$Rembrant.init, "app", Main$Rembrant.render(currentView[0]));
+  return /* () */0;
 }
 
 exports.dispatch = dispatch;
 exports.run = run;
-/* Main-Rembrant Not a pure module */
+/* Dom-Rembrant Not a pure module */

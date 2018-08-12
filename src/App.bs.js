@@ -12,9 +12,9 @@ function update(model, action) {
   }
 }
 
-Rembrandt$Rembrant.run((function (_, _$1) {
+Rembrandt$Rembrant.run((function (model, _) {
         return Main$Rembrant.div(undefined, undefined, /* :: */[
-                    Main$Rembrant.text("42"),
+                    Main$Rembrant.text(String(model)),
                     /* [] */0
                   ], /* () */0);
       }), 42, update);

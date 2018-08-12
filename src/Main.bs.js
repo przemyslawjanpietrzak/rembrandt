@@ -10,7 +10,8 @@ function text(s) {
           /* name : TEXT */1,
           /* text */s,
           /* attributes : array */[],
-          /* children : [] */0
+          /* children : [] */0,
+          /* null */false
         ];
 }
 
@@ -30,7 +31,8 @@ function div($staropt$star, $staropt$star$1, children, _) {
               _class
             ]
           ],
-          /* children */children
+          /* children */children,
+          /* null */false
         ];
 }
 
@@ -70,7 +72,8 @@ var jsx = div("1", "cls", /* :: */[
                                     /* name : TEXT */1,
                                     /* text */"42",
                                     /* attributes : array */[],
-                                    /* children : [] */0
+                                    /* children : [] */0,
+                                    /* null */false
                                   ],
                                   /* [] */0
                                 ], /* () */0),

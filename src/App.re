@@ -15,5 +15,7 @@ let update = (model: model, action: action): model => {
 Rembrandt.run(
   ~model=42,
   ~update=update,
-  ~view=(model, dispatch) => <div>(text("42"))</div>
+  ~view=(model, dispatch) => <div>
+    { string_of_int(model) |> text }
+  </div>
 );

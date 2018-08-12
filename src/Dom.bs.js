@@ -18,16 +18,22 @@ var replaceChild = (
     );
 
 var init = (
-    function(element, id) {
+    function(id, element) {
       return document.getElementById(id).appendChild(element);
     }
-);
+  );
 
 var createTextNode = (
     function(text) {
       return document.createTextNode(text);
     }
 );
+
+var removeChild = (
+      function(parent, child) {
+        return parent.removeChild(child);
+      }
+  );
 
 var appendChild = (
    function (children, parent) {
@@ -40,11 +46,12 @@ var appendChild = (
       }
       return parent;
    }
-);
+  );
 
 exports.setAttributes = setAttributes;
 exports.replaceChild = replaceChild;
 exports.init = init;
 exports.createTextNode = createTextNode;
+exports.removeChild = removeChild;
 exports.appendChild = appendChild;
 /* setAttributes Not a pure module */

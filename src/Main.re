@@ -9,6 +9,7 @@ type node = {
   text: string,
   attributes: array((string, string)),
   children: list(node),
+  null: bool,
 };
 
 type nodeChild =
@@ -34,6 +35,7 @@ let text = (s: string) : node => {
   text: s,
   attributes: [||],
   children: [],
+  null: false,
 };
 
 let div = (~id="", ~_class="", ~children, rest) : node => {
@@ -41,6 +43,7 @@ let div = (~id="", ~_class="", ~children, rest) : node => {
   text: "",
   attributes: [|("id", id), ("class", _class)|],
   children,
+  null: false,
 };
 
 let rec render = (node: node) =>

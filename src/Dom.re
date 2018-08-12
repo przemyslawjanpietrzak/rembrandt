@@ -1,5 +1,6 @@
 type domElement = {
-  children: list(domElement)
+  children: list(domElement),
+  childNodes: list(domElement),
 };
 
 [@bs.val]
@@ -24,12 +25,12 @@ let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
     |}
 ];
 
-let init: (domElement, string) => domElement = [%bs.raw
+let init: (string, domElement) => domElement = [%bs.raw
   {|
-    function(element, id) {
+    function(id, element) {
       return document.getElementById(id).appendChild(element);
     }
-|}
+  |}
 ];
 
 let createTextNode: (string) => domElement = [%bs.raw
@@ -39,6 +40,14 @@ let createTextNode: (string) => domElement = [%bs.raw
     }
 |}
 ];
+
+let removeChild: (domElement, domElement) => domElement = [%bs.raw
+    {|
+      function(parent, child) {
+        return parent.removeChild(child);
+      }
+  |}
+]
 
 let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
   {|
@@ -52,5 +61,5 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
       }
       return parent;
    }
-|}
+  |}
 ];
