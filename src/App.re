@@ -16,10 +16,7 @@ Rembrandt.run(
   ~model=42,
   ~update=update,
   ~view=(model, dispatch) => <div>
-    <div style="height:100px;width:100px;"onClick={Some((a: string) => {
-      dispatch(ADD(3));
-      "test test test"
-    })}>
+    <div style="height:100px;width:100px;" onClick={(a: string) => ADD(3) |> dispatch }>
       { string_of_int(model) |> text }
     </div>
   </div>

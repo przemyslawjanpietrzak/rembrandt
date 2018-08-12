@@ -41,11 +41,12 @@ let text = (s: string) : node => {
   null: false,
 };
 
-let div = (~id="", ~_class="", ~style="", ~onClick=None, ~children, rest) : node => {
+let defaultHandler = (a: string) => false;
+let div = (~id="", ~_class="", ~style="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
   name: DIV,
   text: "",
   attributes: [|("id", id), ("class", _class), ("style", style)|],
-  handlers: [("click", onClick)],
+  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
   null: false,
 };
