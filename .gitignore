@@ -1,0 +1,5 @@
+node_modules
+**/*.bs.js
+e2e
+bundle
+.bsb.lock
