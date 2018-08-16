@@ -8,7 +8,7 @@ type domElement = {
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
 
-let setAttributes: (array((string, string)), domElement) => domElement = [%bs.raw
+let setAttributes: (list((string, string)), domElement) => domElement = [%bs.raw
   {|
  function (attributes, element) {
 	for (let i=0; i <attributes.length; i++) {

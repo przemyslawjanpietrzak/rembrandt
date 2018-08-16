@@ -8,7 +8,7 @@ type nodeName =
 type node = {
   name: nodeName,
   text: string,
-  attributes: array((string, string)),
+  attributes: list((string, string)),
   handlers: list((string, option(eventHandler))),
   children: list(node),
 };
@@ -34,7 +34,7 @@ type component = {
 let text = (s: string) : node => {
   name: TEXT,
   text: s,
-  attributes: [||],
+  attributes: [],
   handlers: [],
   children: [],
 };
@@ -43,7 +43,7 @@ let defaultHandler = (a: string) => false;
 let div = (~id="", ~_class="", ~style="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
   name: DIV,
   text: "",
-  attributes: [|("id", id), ("class", _class), ("style", style)|],
+  attributes: [("id", id), ("class", _class), ("style", style)],
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
@@ -51,7 +51,7 @@ let div = (~id="", ~_class="", ~style="", ~onClick: eventHandler=defaultHandler,
 let null = (): node => {
   name: Null,
   text: "",
-  attributes: [||],
+  attributes: [],
   handlers: [],
   children: [],
 };
