@@ -27,6 +27,55 @@ describe("diffProps", () => {
 
 });
 
+describe("getPatch", () => {
+  open Expect;
+
+  test("the same nodes should returns empty list", () =>
+    getPatch(<div></div>, Some(<div></div>))
+        |> expect
+        |> toEqual([])
+  )
+
+  test("the same text nodes should returns empty list", () =>
+    getPatch(text("42"), Some(text("42")))
+        |> expect
+        |> toEqual([])
+  )
+
+  test("different text nodes should returns text patch", () =>
+    getPatch(text("42"), Some(text("43")))
+        |> expect
+        |> toEqual([{
+            patchType: "text",
+            content: Some(text("43")),
+            attributes: None
+        }])
+  )
+
+  test("different nodes types should returns replace patch", () =>
+    getPatch(<div></div>, Some(text("42")))
+        |> expect
+        |> toEqual([{
+            patchType: "replace",
+            content: Some(text("42")),
+            attributes: None
+        }])
+  )
+
+  test("the same nodes with different attributes should returns replace patch", () =>
+    getPatch(<div _class="42"></div>, Some(<div _class="43"></div>))
+        |> expect
+        |> toEqual([{
+            patchType: "props",
+            content: None,
+            attributes: Some([("class", "43")])
+        }])
+  )
+
+});
+
+
+
 /* describe("walker", () => {
   open Expect;
 

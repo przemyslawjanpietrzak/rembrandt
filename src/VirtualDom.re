@@ -63,23 +63,22 @@ let diffProps = (oldNode: node, newNode: node) => {
   }, oldChildren)
 } */
 
-let getPatch = (oldNode, newNode: option(node)): patches => {
-   let currentPatch: list(patch) = [];
+let getPatch = (oldNode, newNode: option(node)): patches => { /* TODO: patch */
    switch (newNode) {
-    | None => currentPatch
+    | None => []
     | Some(node) => {
          /* TextNode content replacing */
         if (node.name === TEXT && oldNode.name === TEXT && node.text !== oldNode.text) {
-            let patch = { patchType: "text", content: Some(node), attributes: None };
-            List.append(currentPatch, [patch]);
+            [{ patchType: "text", content: Some(node), attributes: None }];
         } else if (node.name === oldNode.name) {
             /* Diff props */
             let propsPatches = diffProps(oldNode, node);
-            let patch = { patchType: "props", attributes: Some(propsPatches), content: None };
-            List.append(currentPatch, [patch]);
+            switch (propsPatches) {
+              | [] => []
+              | _ =>  [{ patchType: "props", attributes: Some(propsPatches), content: None }]
+            }
         } else {
-          let patch = { patchType: "replace", content: Some(node), attributes: None };
-          List.append(currentPatch, [patch]);
+          [{ patchType: "replace", content: Some(node), attributes: None }];
         }
       }
    }
