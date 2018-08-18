@@ -18,6 +18,7 @@ let run = (~view, ~model, ~update) => {
     let dispatch = (action, model, update) => {
         currentModel := update(currentModel^, action);
         let updatedView = view(currentModel^, dispatchAction^);
+        VirtualDom.setPositions(~node=updatedView, ~initialPosition=0);
         updatedView |> Main.render |> Dom.update("app");
         /* VirtualDom.updateElement(
             ~parent=root^,
