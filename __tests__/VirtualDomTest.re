@@ -81,6 +81,33 @@ describe("walker - basic", () => {
 
 });
 
+
+describe("walker - basic", () => {
+  open Expect;
+
+  test("the same element should have empty diff", () =>
+    walker(
+      ~oldNode=<div>
+        <div/>
+      </div>,
+      ~newNode=Some(
+        <div>
+          <div/>
+          <div/>
+          <div/>
+          <div/>
+        </div>
+      ),
+      ~patches=Hashtbl.create(10000),
+      ~index=0,
+    )
+    |>Hashtbl.length
+    |> expect
+    |> toEqual(0))
+
+
+});
+
 describe("diffProps", () => {
   open Expect;
 
