@@ -2,7 +2,7 @@ open Jest;
 open Main;
 open VirtualDom;
 
-describe("setPositions", () => {
+/* describe("setPositions", () => {
     open Expect;
 
     test("simple node", () =>
@@ -24,7 +24,7 @@ describe("setPositions", () => {
         node.position |> expect |> toBe(6)
     });
 
-});
+}); */
 
 describe("walker - basic", () => {
   open Expect;
@@ -82,33 +82,105 @@ describe("walker - basic", () => {
 });
 
 
-describe("walker - basic", () => {
+describe("walker - advanced", () => {
   open Expect;
 
-  test("the same element should have empty diff", () =>
-    walker(
-      ~oldNode=<div>
-        <div/>
-      </div>,
-      ~newNode=Some(
-        <div>
-          <div/>
-          <div/>
-          <div/>
-          <div/>
-        </div>
-      ),
+  test("change children attributes", () => {
+    let oldNode = <div>
+        <div _class="old1"/>
+        <div _class="old2"/>
+        <div _class="old3"/>
+    </div>
+    let _ = setPositions(~node=oldNode, ~initialPosition=0);
+    let newNode = <div>
+      <div _class="new1"/>
+      <div _class="new2"/>
+      <div _class="new3"/>
+    </div>
+    let _ = setPositions(~node=newNode, ~initialPosition=0);
+
+    let diff = walker(
+      ~oldNode=oldNode,
+      ~newNode=Some(newNode),
       ~patches=Hashtbl.create(10000),
       ~index=0,
-    )
-    |>Hashtbl.length
-    |> expect
-    |> toEqual(0))
+    );
 
+    diff
+      |>Hashtbl.length
+      |> expect
+      |> toEqual(3)
 
+    Hashtbl.find(diff, 1)
+      |> expect
+      |> toEqual({ patchType: "props", attributes: Some([("class", "new1")]), content: None })
+
+    Hashtbl.find(diff, 2)
+      |> expect
+      |> toEqual({ patchType: "props", attributes: Some([("class", "new2")]), content: None })
+
+    Hashtbl.find(diff, 3)
+      |> expect
+      |> toEqual({ patchType: "props", attributes: Some([("class", "new3")]), content: None })
+  });
+
+   test("replace generation", () => {
+      let oldNode = <div>
+        <div _class="old1"/>
+      </div>;
+      let _ = setPositions(~node=oldNode, ~initialPosition=0);
+      let newNode = <div>
+        { text("42") }
+      </div>;
+      let _ = setPositions(~node=newNode, ~initialPosition=0);
+      let diff = walker(
+        ~oldNode=oldNode,
+        ~newNode=Some(newNode),
+        ~patches=Hashtbl.create(10000),
+        ~index=0,
+      );
+
+      diff
+        |>Hashtbl.length
+        |> expect
+        |> toEqual(1)
+
+      Hashtbl.find(diff, 1)
+        |> expect
+        |> toEqual({ patchType: "replace", attributes: None, content: Some(text("42")) })
+
+    });
+
+    test("replace generation", () => {
+      let oldNode = <div>
+        <div _class="old1"/>
+      </div>;
+      let _ = setPositions(~node=oldNode, ~initialPosition=0);
+      let newNode = <div>
+        { text("42") }
+        { text("43") }
+      </div>;
+      let _ = setPositions(~node=newNode, ~initialPosition=0);
+      let diff = walker(
+        ~oldNode=oldNode,
+        ~newNode=Some(newNode),
+        ~patches=Hashtbl.create(10000),
+        ~index=0,
+      );
+
+      diff
+        |>Hashtbl.length
+        |> expect
+        |> toEqual(2)
+
+      Hashtbl.find(diff, 1)
+        |> expect
+        |> toEqual({ patchType: "replace", attributes: None, content: Some(text("42")) })
+
+    });
 });
 
-describe("diffProps", () => {
+/* describe("diffProps", () => {
   open Expect;
 
   test("the same nodes should return empty list", () =>
@@ -131,7 +203,7 @@ describe("diffProps", () => {
     |> expect
     |> toEqual([("id", "id-value"), ("class", "value")]))
 
-});
+}); */
 
 /* describe("getPatch", () => {
   open Expect;

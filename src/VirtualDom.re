@@ -78,8 +78,8 @@ let getPatch = (oldNode, newNode: option(node)): option(patch) => {
    }
 }
 
-let rec walker = (~oldNode, ~newNode: option(node), ~patches=Hashtbl.create(10000), ~index=0) => {
-  let _ = switch (getPatch(oldNode, newNode: option(node))) {
+let rec walker = (~oldNode, ~newNode: option(node), ~patches=Hashtbl.create(10000), ~index) => {
+  let _ = switch (getPatch(oldNode, newNode)) {
     | None => None
     | Some(patch) => {
         let _ = Hashtbl.add(patches, index, patch);
@@ -93,7 +93,7 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches=Hashtbl.create(1000
           oldNode.children
             |> List.mapi((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
-                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + 1);
+                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + i + 1);
                 oldChildNode;
               });
           [];
