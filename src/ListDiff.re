@@ -50,20 +50,18 @@ let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
   }
 }
 
-
-let rec r = (list: rec(list('a)), index: int) => {
-  switch (list) {
-  | [] => []
-  | [head, ...tail] => {
-    if (index)
+let removeFromSimulateList = (collection: list('a), index: int): list('a) => {
+  let rec removeFromSimulateListAcc = (collection, index: int, acc) => switch (collection) {
+    | [] => []
+    | [head, ...tail] => {
+      if (index === 0) {
+        List.append(acc, tail)
+      } else {
+        removeFromSimulateListAcc(tail, index - 1,  List.append(acc, [head]));
+      }
+    }
   }
-  }
-}
-let removeFromSimulateList = (list: ref(list('a)), index: int): ref(list('a)) => {
-  let item = List.nth(list^, index)
-  let itemToRemove = List.find(listItem => listItem !== item, list^);
-  list := List.filter(listItem => listItem !== item, list^);
-  list;
+  removeFromSimulateListAcc(collection, index, []);
 }
 
 let getDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
@@ -94,7 +92,6 @@ let getDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
           children := List.append(children^, [Some(newItem)]);
         } else {
           children := List.append(children^, [None]);
-          /* children^ |> List.length |> Js.log */
         }
       }
     }
@@ -105,7 +102,7 @@ let getDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   let i = ref(0);
   while (i^ < List.length(simulateList^)) {
     if (List.nth(simulateList^, i^) === None) {
-      removeFromSimulateList(simulateList, i^);
+      simulateList := removeFromSimulateList(simulateList^, i^);
       moves := List.append(moves^, [{ index: i^, moveType: Remove }]);
     } else {
       i := i^ + 1;
@@ -131,7 +128,7 @@ let getDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
                 let nextItemKey = getItemKey( nextItem );
                 if (nextItemKey === itemKey) {
                   moves := List.append(moves^, [{ index: i, moveType: Remove }]);
-                  removeFromSimulateList(simulateList, j^);
+                  simulateList := removeFromSimulateList(simulateList^, j^);
                   j := j^ + 1;
                   /* after removing, current j is right, just jump to next one */
                 } else {
