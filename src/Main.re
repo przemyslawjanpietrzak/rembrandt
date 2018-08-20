@@ -30,11 +30,11 @@ let text = (s: string) : node => {
 };
 
 let defaultHandler = (a: string) => false;
-let div = (~id="", ~_class="", ~style="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
+let div = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
   name: DIV,
   text: "",
   position: 0,
-  attributes: [("id", id), ("class", _class), ("style", style)],
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
