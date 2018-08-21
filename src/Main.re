@@ -3,13 +3,16 @@ open Dom;
 type nodeName =
   | DIV
   | TEXT
+  | SPAN
   | Null
+
+type attributes = list((string, string));
 
 type node = {
   name: nodeName,
   text: string,
   mutable position: int,
-  attributes: list((string, string)),
+  attributes: attributes,
   handlers: list((string, option(eventHandler))),
   children: list(node),
 };
@@ -38,6 +41,14 @@ let div = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaul
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
+let span = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
+  name: SPAN,
+  text: "",
+  position: 0,
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
+  children,
+};
 
 let null = (): node => {
   name: Null,
@@ -49,9 +60,13 @@ let null = (): node => {
 };
 
 let rec render = (node: node) =>
-  switch node.name {
+  switch node.name { /* TODO: */
     | TEXT => createTextNode(node.text)
     | DIV => createElement("div")
+      |> setAttributes(node.attributes)
+      |> setHandlers(node.handlers)
+      |> appendChild(List.map(child => render(child), node.children))
+    | SPAN => createElement("span")
       |> setAttributes(node.attributes)
       |> setHandlers(node.handlers)
       |> appendChild(List.map(child => render(child), node.children))

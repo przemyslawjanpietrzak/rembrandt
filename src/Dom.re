@@ -3,10 +3,31 @@ type eventHandler = string => bool
 type domElement = {
   children: list(domElement),
   childNodes: list(domElement),
+  parentElement: domElement,
 };
 
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
+
+
+let removeAttribute: (string, domElement) => domElement = [%bs.raw
+  {|
+  function (key, element) {
+      element.removeAttribute(key);
+      return element;
+    }
+  |}
+];
+
+
+let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
+  {|
+ function (attribute, element) {
+    element.setAttribute(attribute[0], attributes[1]);
+    return element;
+  }
+|}
+];
 
 let setAttributes: (list((string, string)), domElement) => domElement = [%bs.raw
   {|

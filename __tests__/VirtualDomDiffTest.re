@@ -23,39 +23,74 @@ describe("Test diff algorithm", () => {
       ~patches=Hashtbl.create(10000),
       ~index=0,
     );
-    patches |> Hashtbl.length |> expect |> toBe(3)
-    /* Hashtbl.find(patches, 0).patchType |> expect |> toBe("props"); */
+    patches |> Hashtbl.length |> expect |> toBe(2)
 
-     Hashtbl.find_all(patches, 0)
+     Hashtbl.find(patches, 0)
       |> expect
-      |> toEqual([{ patchType: "children", content: None, attributes: None, moves: []}]);
-    /* patches[2][0].type.should.be.equal(patch.REPLACE) */
+      |> toEqual({
+        patchType: Children,
+        content: None,
+        attributes: None,
+        moves: [
+          { index: 0, moveType: ListDiff.Insert },
+          { index: 2, moveType: ListDiff.Insert },
+        ],
+      });
   })
 
-  /* test("Node propeties change", () => {
-    var oldRoot = el('div', [
-      el('p', [el('span', { style: 'blue' })]),
-      el('p', [el('span', { style: 'red' })]),
-      el('p', [el('span', { style: 'yellow' })])
-    ])
-
-    var newRoot = el('div', [
-      el('p', [el('span', { style: 'blue', index: '0' })]),
-      el('p', [el('span', { class: 'fuck' })]),
-      el('p', [el('span', { style: 'yellow green' })])
-    ])
+  /* it('Node replacing', function () {
+    var oldRoot = el('div', [el('p'), el('div'), el('section')])
+    var newRoot = el('div', [el('p'), el('span'), el('section')])
 
     var patches = diff(oldRoot, newRoot)
+    patches[2][0].type.should.be.equal(patch.REPLACE)
+  }) */
+
+  /* test("Node propeties change", () => {
+    let oldNode = <div>
+      <span id="old1" key="1"/>
+      <span id="old2" key="2"/>
+      <span id="old3" key="3"/>
+    </div>;
+    let newNode = <div>
+      <span id="new1" key="1"/>
+      <span id="new2" key="2"/>
+      <span id="new3" key="3"/>
+    </div>;
+    setPositions(~node=oldNode, ~initialPosition=0) |> ignore;
+    setPositions(~node=newNode, ~initialPosition=0) |> ignore;
+
+    let patches = walker(
+      ~oldNode=oldNode,
+      ~newNode=Some(newNode),
+      ~patches=Hashtbl.create(10000),
+      ~index=0,
+    );
+    patches |> Hashtbl.length |> expect |> toBe(4)
+    Hashtbl.find_all(patches, 4)
+      |> expect
+      |> toEqual([
+        {
+          patchType: "children",
+          content: None,
+          attributes: None,
+          moves: [
+            { index: 0, moveType: ListDiff.Insert },
+            { index: 2, moveType: ListDiff.Insert },
+          ],
+        }
+      ]); */
+    /* var patches = diff(oldRoot, newRoot)
     patches[2][0].type.should.be.equal(patch.PROPS)
     patches[2][0].props.should.be.deep.equal({ index: '0' })
 
     patches[4][0].type.should.be.equal(patch.PROPS)
     patches[4][0].props.should.be.deep.equal({ style: void 555, class: 'fuck' })
 
-    patches[6][0].type.should.be.equal(patch.PROPS)
-    patches[6][0].props.should.be.deep.equal({ style: 'yellow green' })
-  })
-
+    patches[6][0].type.should.be.equal(patch.PROPS) */
+    /* patches[6][0].props.should.be.deep.equal({ style: 'yellow green' }) */
+  /* }) */
+/* 
   test("Node removing", () => {
     var oldRoot = el('div', [
       el('p', [el('span', { style: 'blue' })]),
