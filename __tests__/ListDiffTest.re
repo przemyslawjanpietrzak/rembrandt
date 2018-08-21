@@ -51,7 +51,7 @@ describe("ListDiff", () => {
   test("Removing items", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>]
     let after = [<div key="2"/>, <div key="3"/>, <div key="1"/>]
-    let diffs = getDiff(before, after);
+    let diffs = getListDiff(before, after);
 
     diffs.moves |> List.length |> expect |> toBe(5) |> ignore
 
@@ -71,7 +71,7 @@ describe("ListDiff", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>]
     let after = [<div key="1"/>, <div key="2"/>, <div key="4"/>, <div key="6"/>]
 
-    let diffs = getDiff(before, after);
+    let diffs = getListDiff(before, after);
 
     diffs.moves |> List.length |> expect |> toBe(2) |> ignore;
     diffs.children
@@ -89,7 +89,7 @@ describe("ListDiff", () => {
   test("Inserting items", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>];
     let after = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
-    let diffs = getDiff(before, after);
+    let diffs = getListDiff(before, after);
 
     diffs.moves |> List.length |> expect |> toBe(2) |> ignore;
     diffs.children
@@ -106,7 +106,7 @@ describe("ListDiff", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
     let after = [<div key="1"/>, <div key="2"/>, <div key="7"/>, <div key="8"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
     /* let after = ['a', 'b', 'e', 'f', 'c', 'd', 'g', 'h'] */
-    let diffs = getDiff(before, after);
+    let diffs = getListDiff(before, after);
     diffs.moves |> List.length |> expect |> toBe(4) |> ignore;
     diffs.children
       |> expect
@@ -123,7 +123,7 @@ describe("ListDiff", () => {
   test("Moving items from front to back", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
     let after = [<div key="1"/>,  <div key="3"/>, <div key="5"/>, <div key="6"/>, <div key="2"/>, <div key="4"/>,];
-    let diffs = getDiff(before, after);
+    let diffs = getListDiff(before, after);
 
     diffs.moves |> List.length |> expect |> toBe(4) |> ignore;
     diffs.children

@@ -64,7 +64,7 @@ let removeFromSimulateList = (collection: list('a), index: int): list('a) => {
   removeFromSimulateListAcc(collection, index, []);
 }
 
-let getDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
+let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   let oldMap = makeKeyIndexAndFree(oldNodes);
   let newMap = makeKeyIndexAndFree(newNodes);
 

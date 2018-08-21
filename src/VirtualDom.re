@@ -7,6 +7,7 @@ type patch = {
   patchType: string,
   content: option(node),
   attributes: option(attributes),
+  moves: list(ListDiff.move),
 };
 
 type patches = list(patch);
@@ -57,44 +58,72 @@ let diffProps = (oldNode: node, newNode: node) => {
   List.append(changedProps, newProps);
 }
 
-let getPatch = (oldNode, newNode: option(node)): option(patch) => {
+let getPatches = (oldNode, newNode: option(node)): list(patch) => {
    switch (newNode) {
-    | None => None
+    | None => []
     | Some(node) => {
          /* TextNode content replacing */
         if (node.name === TEXT && oldNode.name === TEXT && node.text !== oldNode.text) {
-            Some({ patchType: "text", content: Some(node), attributes: None });
+            [{ patchType: "text", content: Some(node), attributes: None, moves: [] }];
         } else if (node.name === oldNode.name) {
             /* Diff props */
             let propsPatches = diffProps(oldNode, node);
             switch (propsPatches) {
-              | [] => None
-              | _ =>  Some({ patchType: "props", attributes: Some(propsPatches), content: None })
+              | [] => []
+              | _ =>  [{ patchType: "props", attributes: Some(propsPatches), content: None, moves: [] }]
             }
         } else {
-          Some({ patchType: "replace", content: Some(node), attributes: None });
+          [{ patchType: "replace", content: Some(node), attributes: None, moves: [] }];
         }
       }
    }
 }
 
-let rec walker = (~oldNode, ~newNode: option(node), ~patches=Hashtbl.create(10000), ~index) => {
-  let _ = switch (getPatch(oldNode, newNode)) {
-    | None => None
-    | Some(patch) => {
-        let _ = Hashtbl.add(patches, index, patch);
-        None;
-    }
+let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
+  let listDiff = ListDiff.getListDiff(oldChildren, newChildren);
+  switch (listDiff.moves) {
+    | [] => []
+    | _ => [{ patchType: "children", attributes: None, content: None, moves: [] }]
   };
+};
+
+/* let diffChildren =  (oldChildren, newChildren, index, patches, currentPatch) => {
+  let diffs = listDiff(oldChildren, newChildren)
+  newChildren = diffs.children
+
+  if (diffs.moves.length) {
+    let reorderPatch = { type: patch.REORDER, moves: diffs.moves }
+    currentPatch.push(reorderPatch)
+  }
+
+  let leftNode = null
+  let currentNodeIndex = index
+  _.each(oldChildren, function (child, i) {
+    let newChild = newChildren[i]
+    currentNodeIndex = (leftNode && leftNode.count)
+      ? currentNodeIndex + leftNode.count + 1
+      : currentNodeIndex + 1
+    dfsWalk(child, newChild, currentNodeIndex, patches)
+    leftNode = child=
+  })
+} */
+let rec walker = (~oldNode, ~newNode: option(node), ~patches=Hashtbl.create(10000), ~index) => {
+  getPatches(oldNode, newNode) |> List.iter((patch) => {
+    Hashtbl.add(patches, index, patch) |> ignore;
+  });
+
   let childrenPatches = switch (newNode) {
       | None => []
       | Some(node) => {
+        getChildrenPatches(oldNode.children, node.children) |> List.iter((patch) => {
+          Hashtbl.add(patches, index, patch) |> ignore;
+        });
         if (node.name === oldNode.name) {
           oldNode.children
-            |> List.mapi((i, oldChildNode) => {
+            |> List.iteri((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
-                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + i + 1);
-                oldChildNode;
+                let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
+                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + currentNodeIndex + 1) |> ignore;
               });
           [];
         } else {
