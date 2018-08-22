@@ -10,7 +10,7 @@ type keyIndexes = {
 }
 
 type diff = {
-  moves: list(move),
+  moves: moves,
   children: list(option(node)),
 }
 
@@ -115,8 +115,8 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   let i = ref(0);
   while (i^ < List.length(simulateList^)) {
     if (List.nth(simulateList^, i^) === None) {
-      simulateList := removeFromSimulateList(simulateList^, i^);
       moves := List.append(moves^, [{ index: i^, moveType: Remove, item: None }]);
+      simulateList := removeFromSimulateList(simulateList^, i^);
     } else {
       i := i^ + 1;
     }
@@ -125,8 +125,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   let j = ref(0);
   newNodes |> List.iteri((i, item) => {
     let itemKey = getItemKey(item);
-
-    switch (simulateList^ -> List.nth(1)) {
+    switch (getFromSimulateList(simulateList^, j^)) {
       | Some(simulateItem) => {
         let simulateItemKey = getItemKey(simulateItem);
         if (itemKey === simulateItemKey) {
@@ -136,6 +135,8 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
           switch (getFromSimulateList(simulateList^, j^ + 1)) {
             | Some(nextItem) => {
               let nextItemKey = getItemKey(nextItem);
+              Js.log({ nextItemKey });
+              Js.log({ itemKey });
               if (nextItemKey === itemKey) {
                 moves := List.append(moves^, [{ index: i, moveType: Remove, item: None }]);
                 simulateList := removeFromSimulateList(simulateList^, j^);
@@ -149,9 +150,12 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
             | None => 42 |> ignore;
           }
         } else {
+          /* TODO: dead */
           moves := List.append(moves^, [{ index: i, moveType: Insert, item: Some(item) }]);
-          /* 42 |> ignore */
         }
+      }
+      | None => {
+        moves := List.append(moves^, [{ index: i, moveType: Insert, item: Some(item) }]);
       }
     }
   });

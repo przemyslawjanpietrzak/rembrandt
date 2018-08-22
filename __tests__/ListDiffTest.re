@@ -5,6 +5,23 @@ open ListDiff;
 
 type item = { key: string };
 
+let perform: (array(node), moves) => array(node) = [%bs.raw
+  {|
+    function (list, moves) {
+      console.log({ moves });
+      moves.forEach(function (move) {
+        console.log({ move });
+        if (move[1] ) {
+          list.splice(move.index, 1);
+        } else {
+          list.splice(move.index, 0, move.item);
+        }
+      })
+      return list;
+    }
+  |}
+];
+
 describe("ListDiff", () => {
   open Expect;
 
@@ -39,8 +56,6 @@ describe("ListDiff", () => {
     let after = [<div key="2"/>, <div key="3"/>, <div key="1"/>]
     let diffs = getListDiff(before, after);
 
-    diffs.moves |> List.length |> expect |> toBe(5) |> ignore
-
     diffs.children
       |> expect
       |> toEqual([
@@ -50,7 +65,16 @@ describe("ListDiff", () => {
         None,
         None,
         None,
-      ])
+      ]) |> ignore;
+      diffs.moves
+      |> expect
+      |> toEqual([
+        { index: 3, moveType: Remove, item: None },
+        { index: 3, moveType: Remove, item: None },
+        { index: 3, moveType: Remove, item: None },
+        { index: 0, moveType: Remove, item: None },
+        { index: 2, moveType: Insert, item: Some(<div key="1"/>), },
+      ]);
   });
 
   test("Removing items in the middel", () => {
