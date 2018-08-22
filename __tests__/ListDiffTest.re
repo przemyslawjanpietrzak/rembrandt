@@ -8,20 +8,6 @@ type item = { key: string };
 describe("ListDiff", () => {
   open Expect;
 
-  test("getItemKey", () => {
-    getItemKey(<div key="1"/>)
-      |> expect
-      |> toEqual(Some("1"));
-  })
-
-  test("", () => {
-    removeFromSimulateList([None, Some(42), None, None], 0)
-      |> expect |> toEqual([ Some(42), None, None])
-
-    removeFromSimulateList([None, Some(42), None, None], 1)
-      |> expect |> toEqual([ None, None, None])
-  })
-
   test("Making map from list with string key", () => {
     let list = [
       <div key="1"/>,

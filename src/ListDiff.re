@@ -1,7 +1,7 @@
 open Main;
 
 type moveType = Insert | Remove;
-type move = { index: int, moveType: moveType };
+type move = { index: int, moveType: moveType, item: option(node) };
 type moves = list(move);
 
 type keyIndexes = {
@@ -24,8 +24,13 @@ let getItemKey = (node: node): option(string)  => {
 
   switch (item) {
     | (key, value) => Some(value)
-    | exn => None
+    | exception Not_found => None
   };
+};
+
+let isInHashTable = (hashTable, optionalKey: option('a)): bool => switch (optionalKey) {
+  | None => false;
+  | Some(key) => Hashtbl.mem(hashTable, key);
 }
 
 let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
@@ -64,6 +69,14 @@ let removeFromSimulateList = (collection: list('a), index: int): list('a) => {
   removeFromSimulateListAcc(collection, index, []);
 }
 
+let getFromSimulateList =  (collection: list('a), index: int): 'a => {
+  if (List.length(collection) > index) {
+    List.nth(collection, index);
+  } else {
+    None;
+  }
+}
+
 let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   let oldMap = makeKeyIndexAndFree(oldNodes);
   let newMap = makeKeyIndexAndFree(newNodes);
@@ -83,7 +96,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
       | None => {
         let freeItem = List.nth(newFree, freeIndex^);
         children := List.append(children^, [Some(freeItem)]);
-        freeIndex := freeIndex^ + 1; /* TODO: option */
+        freeIndex := freeIndex^ + 1;
       }
       | Some(itemKey) => {
         if (Hashtbl.mem(newKeyIndex, itemKey)) {
@@ -103,7 +116,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   while (i^ < List.length(simulateList^)) {
     if (List.nth(simulateList^, i^) === None) {
       simulateList := removeFromSimulateList(simulateList^, i^);
-      moves := List.append(moves^, [{ index: i^, moveType: Remove }]);
+      moves := List.append(moves^, [{ index: i^, moveType: Remove, item: None }]);
     } else {
       i := i^ + 1;
     }
@@ -118,26 +131,26 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
         let simulateItemKey = getItemKey(simulateItem);
         if (itemKey === simulateItemKey) {
           j := j^ + 1;
-        } else {
+        } else if (isInHashTable(oldKeyIndex, itemKey)) {
           /* new item, just inesrt it */
-          if (!Hashtbl.mem(oldKeyIndex, "itemKey")) {
-            moves := List.append(moves^, [{ index: i, moveType: Insert }]);
-          } else {
-            switch (simulateList^ -> List.nth(j^ + 1)) {
-              | Some(nextItem) => {
-                let nextItemKey = getItemKey( nextItem );
-                if (nextItemKey === itemKey) {
-                  moves := List.append(moves^, [{ index: i, moveType: Remove }]);
-                  simulateList := removeFromSimulateList(simulateList^, j^);
-                  j := j^ + 1;
-                  /* after removing, current j is right, just jump to next one */
-                } else {
-                  /* else insert item */
-                  moves := List.append(moves^, [{ index: i, moveType: Insert }]);
-                }
+          switch (getFromSimulateList(simulateList^, j^ + 1)) {
+            | Some(nextItem) => {
+              let nextItemKey = getItemKey(nextItem);
+              if (nextItemKey === itemKey) {
+                moves := List.append(moves^, [{ index: i, moveType: Remove, item: None }]);
+                simulateList := removeFromSimulateList(simulateList^, j^);
+                j := j^ + 1;
+                /* after removing, current j is right, just jump to next one */
+              } else {
+                /* else insert item */
+                moves := List.append(moves^, [{ index: i, moveType: Insert, item: Some(item) }]);
               }
             }
+            | None => 42 |> ignore;
           }
+        } else {
+          moves := List.append(moves^, [{ index: i, moveType: Insert, item: Some(item) }]);
+          /* 42 |> ignore */
         }
       }
     }

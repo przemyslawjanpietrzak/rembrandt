@@ -4,11 +4,20 @@ type domElement = {
   children: list(domElement),
   childNodes: list(domElement),
   parentElement: domElement,
+  nodeType: int,
+  getAttribute: string => string,
 };
 
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
 
+let getNthChild: (list(domElement), int) => domElement = [%bs.raw
+  {|
+  function (children, index) {
+      return chilren[index];
+    }
+  |}
+];
 
 let removeAttribute: (string, domElement) => domElement = [%bs.raw
   {|
