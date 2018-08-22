@@ -3,25 +3,6 @@ open Jest;
 open Main;
 open ListDiff;
 
-type item = { key: string };
-
-let perform: (array(node), moves) => array(node) = [%bs.raw
-  {|
-    function (list, moves) {
-      console.log({ moves });
-      moves.forEach(function (move) {
-        console.log({ move });
-        if (move[1] ) {
-          list.splice(move.index, 1);
-        } else {
-          list.splice(move.index, 0, move.item);
-        }
-      })
-      return list;
-    }
-  |}
-];
-
 describe("ListDiff", () => {
   open Expect;
 
@@ -77,13 +58,13 @@ describe("ListDiff", () => {
       ]);
   });
 
-  test("Removing items in the middel", () => {
+  test("Removing items in the middle", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>]
     let after = [<div key="1"/>, <div key="2"/>, <div key="4"/>, <div key="6"/>]
 
     let diffs = getListDiff(before, after);
 
-    diffs.moves |> List.length |> expect |> toBe(2) |> ignore;
+    diffs.moves |> expect |> toEqual([ { index: 2, moveType: Remove, item: None }, { index: 3, moveType: Remove, item: None } ]) |> ignore;
     diffs.children
       |> expect
       |> toEqual([
@@ -101,7 +82,13 @@ describe("ListDiff", () => {
     let after = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
     let diffs = getListDiff(before, after);
 
-    diffs.moves |> List.length |> expect |> toBe(2) |> ignore;
+    diffs.moves
+      |> expect
+      |> toEqual([
+        { index: 2, moveType: Insert, item: Some(<div key="5"/>) },
+        { index: 3, moveType: Insert, item: Some(<div key="6"/>) },
+      ])
+      |> ignore;
     diffs.children
       |> expect
       |> toEqual([
@@ -115,9 +102,19 @@ describe("ListDiff", () => {
   test("Moving items from back to front", () => {
     let before = [<div key="1"/>, <div key="2"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
     let after = [<div key="1"/>, <div key="2"/>, <div key="7"/>, <div key="8"/>, <div key="3"/>, <div key="4"/>, <div key="5"/>, <div key="6"/>];
-    /* let after = ['a', 'b', 'e', 'f', 'c', 'd', 'g', 'h'] */
     let diffs = getListDiff(before, after);
-    diffs.moves |> List.length |> expect |> toBe(4) |> ignore;
+
+    diffs.moves
+      |> expect
+      |> toEqual([
+        { index: 2, item: Some(<div key="5"/>), moveType: Insert },
+        { index: 3, item: Some(<div key="6"/>), moveType: Insert },
+        { index: 6, item: Some(<div key="7"/>), moveType: Insert },
+        { index: 7, item: Some(<div key="8"/>), moveType: Insert },
+        { index: 9, item: None, moveType: Remove },
+        { index: 8, item: None, moveType: Remove },
+      ])
+      |> ignore;
     diffs.children
       |> expect
       |> toEqual([
@@ -136,6 +133,15 @@ describe("ListDiff", () => {
     let diffs = getListDiff(before, after);
 
     diffs.moves |> List.length |> expect |> toBe(4) |> ignore;
+    diffs.moves
+    |> expect
+    |> toEqual([
+      { index: 1, item: None, moveType: Remove },
+      { index: 2, item: None, moveType: Remove },
+      { index: 3, item: Some(<div key="2"/>), moveType: Insert },
+      { index: 3, item: Some(<div key="4"/>), moveType: Insert },
+    ])
+    |> ignore;
     diffs.children
       |> expect
       |> toEqual([

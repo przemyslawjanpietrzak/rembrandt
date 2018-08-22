@@ -135,8 +135,6 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
           switch (getFromSimulateList(simulateList^, j^ + 1)) {
             | Some(nextItem) => {
               let nextItemKey = getItemKey(nextItem);
-              Js.log({ nextItemKey });
-              Js.log({ itemKey });
               if (nextItemKey === itemKey) {
                 moves := List.append(moves^, [{ index: i, moveType: Remove, item: None }]);
                 simulateList := removeFromSimulateList(simulateList^, j^);
