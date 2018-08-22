@@ -113,6 +113,15 @@ let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.ra
   |}
 ]
 
+let insertBefore: (domElement, domElement, domElement) => domElement = [%bs.raw
+  {|
+    function(parent, newElement, referenceElement) {
+      parentNode.insertBefore(newElement, referenceElement || null);
+      return parent;
+    }
+  |}
+]
+
 let setHandlers = (handlers: list((string, option(eventHandler))), parent: domElement): domElement => {
   handlers
     |> List.map(((name, handler)) => switch (handler) {
