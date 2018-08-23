@@ -34,7 +34,7 @@ let isInHashTable = (hashTable, optionalKey: option('a)): bool => switch (option
 }
 
 let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
-  let keyIndex = Hashtbl.create(10000);
+  let keyIndex = Hashtbl.create(100);
   let free = ref([]);
 
   let _ = list |>
@@ -53,20 +53,6 @@ let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
     free: free^,
     keyIndex,
   }
-}
-
-let removeFromSimulateList = (collection: list('a), index: int): list('a) => {
-  let rec removeFromSimulateListAcc = (collection, index: int, acc) => switch (collection) {
-    | [] => []
-    | [head, ...tail] => {
-      if (index === 0) {
-        List.append(acc, tail)
-      } else {
-        removeFromSimulateListAcc(tail, index - 1,  List.append(acc, [head]));
-      }
-    }
-  }
-  removeFromSimulateListAcc(collection, index, []);
 }
 
 let getFromSimulateList =  (collection: list('a), index: int): 'a => {
@@ -100,6 +86,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
       }
       | Some(itemKey) => {
         if (Hashtbl.mem(newKeyIndex, itemKey)) {
+          Js.log(newKeyIndex)
           let newItemIndex = Hashtbl.find(newKeyIndex, itemKey);
           let newItem = List.nth(newNodes, newItemIndex);
           children := List.append(children^, [Some(newItem)]);
@@ -116,7 +103,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   while (i^ < List.length(simulateList^)) {
     if (List.nth(simulateList^, i^) === None) {
       moves := List.append(moves^, [{ index: i^, moveType: Remove, item: None }]);
-      simulateList := removeFromSimulateList(simulateList^, i^);
+      simulateList := Utils.removeFromList(simulateList^, i^);
     } else {
       i := i^ + 1;
     }
@@ -137,7 +124,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
               let nextItemKey = getItemKey(nextItem);
               if (nextItemKey === itemKey) {
                 moves := List.append(moves^, [{ index: i, moveType: Remove, item: None }]);
-                simulateList := removeFromSimulateList(simulateList^, j^);
+                simulateList := Utils.removeFromList(simulateList^, j^);
                 j := j^ + 1;
                 /* after removing, current j is right, just jump to next one */
               } else {
