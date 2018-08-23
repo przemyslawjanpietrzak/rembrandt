@@ -1,5 +1,6 @@
 open Main;
 open Dom;
+open Utils;
 
 type attributes = list((string, string));
 
@@ -9,7 +10,6 @@ type patchType =
   | Text
   | Props;
 
-
 type patch = {
   patchType: patchType,
   content: option(node),
@@ -17,7 +17,7 @@ type patch = {
   moves: list(ListDiff.move),
 };
 
-type patches = list(patch);
+type patches = IntMap(patch)
 
 let nthChildren = (nodes: option(node), index: int): option('a) => {
     switch (nodes) {
@@ -46,8 +46,6 @@ let getPrevChildPosition = (children: list(node), index: int): int => switch (in
   | 0 => 0
   | _ => List.nth(children, index - 1).position
 };
-
-let isIgnoredNode = node => false;
 
 let diffProps = (oldNode: node, newNode: node) => {
 
@@ -95,22 +93,23 @@ let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
 };
 
 let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
+  let currentPatches = ref(patches);
   getPatches(oldNode, newNode) |> List.iter((patch) => {
-    Hashtbl.add(patches, index, patch) |> ignore;
+    currentPatches := IntMap.add(index, patch, currentPatches^);
   });
 
   let childrenPatches = switch (newNode) {
       | None => []
       | Some(node) => {
         getChildrenPatches(oldNode.children, node.children) |> List.iter((patch) => {
-          Hashtbl.add(patches, index, patch) |> ignore;
+          currentPatches := IntMap.add(index, patch, currentPatches^);
         });
         if (node.name === oldNode.name) {
           oldNode.children
             |> List.iteri((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
                 let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
-                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + currentNodeIndex + 1) |> ignore;
+                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=currentPatches^, ~index=index + currentNodeIndex + 1) |> ignore;
               });
           [];
         } else {
@@ -122,4 +121,4 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
   patches;
 }
 
-let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=Hashtbl.create(10000), ~index=0)
+let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)

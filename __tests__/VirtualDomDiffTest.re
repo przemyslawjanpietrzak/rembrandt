@@ -18,7 +18,6 @@ describe("Test diff algorithm", () => {
     </div>;
     
     let diff = getDiff(oldNode, Some(newNode));
-    Js.log( Hashtbl.length(diff) )
     let a =2
     a |> expect |> toEqual(2);
     /* diff -> Hashtbl.find(2) |> expect |> toEqual({ patchType: Props, attributes: None, content: None, moves: [] }) */
