@@ -1,4 +1,5 @@
 open Main;
+open Utils;
 
 type moveType = Insert | Remove;
 type move = { index: int, moveType: moveType, item: option(node) };
@@ -6,7 +7,7 @@ type moves = list(move);
 
 type keyIndexes = {
   free: list(node),
-  keyIndex: Hashtbl.t(string, int),
+  keyIndex: StringMap.t(int),
 }
 
 type diff = {
@@ -28,13 +29,13 @@ let getItemKey = (node: node): option(string)  => {
   };
 };
 
-let isInHashTable = (hashTable, optionalKey: option('a)): bool => switch (optionalKey) {
+let isInMap = (map, optionalKey: option('a)): bool => switch (optionalKey) {
   | None => false;
-  | Some(key) => Hashtbl.mem(hashTable, key);
+  | Some(key) => StringMap.mem(key, map);
 }
 
 let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
-  let keyIndex = Hashtbl.create(100);
+  let keyIndex = ref(StringMap.empty);
   let free = ref([]);
 
   let _ = list |>
@@ -45,13 +46,13 @@ let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
           free := List.append(free^, [item])
         }
         | Some(itemKey) => {
-          Hashtbl.add(keyIndex, itemKey, i);
+          keyIndex := StringMap.add(itemKey, i, keyIndex^)
         }
       }
     });
   {
     free: free^,
-    keyIndex,
+    keyIndex: keyIndex^,
   }
 }
 
@@ -85,9 +86,8 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
         freeIndex := freeIndex^ + 1;
       }
       | Some(itemKey) => {
-        if (Hashtbl.mem(newKeyIndex, itemKey)) {
-          Js.log(newKeyIndex)
-          let newItemIndex = Hashtbl.find(newKeyIndex, itemKey);
+        if (StringMap.mem(itemKey, newKeyIndex)) {
+          let newItemIndex = StringMap.find(itemKey, newKeyIndex);
           let newItem = List.nth(newNodes, newItemIndex);
           children := List.append(children^, [Some(newItem)]);
         } else {
@@ -117,7 +117,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
         let simulateItemKey = getItemKey(simulateItem);
         if (itemKey === simulateItemKey) {
           j := j^ + 1;
-        } else if (isInHashTable(oldKeyIndex, itemKey)) {
+        } else if (isInMap(oldKeyIndex, itemKey)) {
           /* new item, just inesrt it */
           switch (getFromSimulateList(simulateList^, j^ + 1)) {
             | Some(nextItem) => {
