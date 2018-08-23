@@ -109,7 +109,7 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
             |> List.iteri((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
                 let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
-                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=currentPatches^, ~index=index + currentNodeIndex + 1) |> ignore;
+                currentPatches := walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=currentPatches^, ~index=(index + currentNodeIndex + i + 1));
               });
           [];
         } else {
@@ -118,7 +118,7 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
       }
   }
 
-  patches;
+  currentPatches^;
 }
 
 let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)
