@@ -38,16 +38,6 @@ let addPatch = (patch: list(patch), patches: patches, index: int): patches => sw
   | _ => IntMap.add(index, patch, patches);
 }
 
-let rec setPositions = (~node: node, ~initialPosition: int): int => {
-  let position = ref(initialPosition);
-  node.children |> List.iter(child => {
-    position := position^ + setPositions(~node=child, ~initialPosition=position^);
-  });
-  position := position^ + 1;
-  node.position = position^;
-  position^;
-}
-
 let getPrevChildPosition = (children: list(node), index: int): int => switch (index) {
   | 0 => 0
   | _ => List.nth(children, index - 1).position
@@ -99,27 +89,27 @@ let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
 };
 
 let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
-  Js.log(index);
   let currentPatches = ref(patches);
   let patches = getPatches(oldNode, newNode);
-  /* currentPatches := IntMap.add(index, patches, currentPatches^); */
   currentPatches := addPatch(patches, currentPatches^, index);
-
-  Js.log(currentPatches);
 
   let childrenPatches = switch (newNode) {
       | None => []
       | Some(node) => {
         let childrenPatches = getChildrenPatches(oldNode.children, node.children);
         currentPatches := addPatch(childrenPatches, currentPatches^, index);
-        /* currentPatches := IntMap.add(index, childrenPatches, currentPatches^); */
 
         if (node.name === oldNode.name) {
           oldNode.children
             |> List.iteri((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
                 let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
-                currentPatches := walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=currentPatches^, ~index=(index + currentNodeIndex + i + 1));
+                currentPatches := walker(
+                  ~oldNode=oldChildNode,
+                  ~newNode=newChildNode,
+                  ~patches=currentPatches^,
+                  ~index=(index + currentNodeIndex + i + 1)
+                );
               });
           [];
         } else {
@@ -131,4 +121,5 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
   currentPatches^;
 }
 
-let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(list(patch)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)
+let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(list(patch)) =>
+  walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)

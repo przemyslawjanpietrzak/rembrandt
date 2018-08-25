@@ -1,6 +1,7 @@
 open Common
 open Utils;
-open VirtualDom;
+
+open Diff;
 
 type maps = StringMap.t(Dom.domElement) ;
 

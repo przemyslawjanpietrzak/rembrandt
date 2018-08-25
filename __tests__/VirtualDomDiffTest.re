@@ -1,14 +1,18 @@
-/* open Jest;
+open Jest;
+
 open Common;
-open VirtualDom;
+
+open Positions;
+open Diff;
 open ListDiff;
 
-let getPatchType = patches => List.nth(patches, 0).patchType;
+/* let getPatchType = patches => List.nth(patches, 0).patchType; */
 
 describe("Test diff algorithm", () => {
   open Expect;
 
   test("Node replacing", () => {
+    let updatedNode = <span key="2"/>;
     let oldNode = <div>
       <div key="1"/>
       <div key="2"/>
@@ -16,7 +20,7 @@ describe("Test diff algorithm", () => {
     </div>;
     let newNode = <div>
       <div key="1"/>
-      <span key="2"/>
+      { updatedNode }
       <div key="3"/>
     </div>;
     setPositions(oldNode, 0);
@@ -25,7 +29,12 @@ describe("Test diff algorithm", () => {
     let diff = getDiff(oldNode, Some(newNode));
     let patch = diff |> Utils.IntMap.find(2);
 
-    patch -> getPatchType |> expect |> toEqual(Replace)
+    patch |> expect |> toEqual([{
+      patchType: Replace,
+      content: Some(updatedNode),
+      attributes: None,
+      moves: [],
+    }])
   });
 
   test("Node propeties change", () => {
@@ -45,12 +54,20 @@ describe("Test diff algorithm", () => {
     let diff = getDiff(oldNode, Some(newNode));
 
     let patch = diff |> Utils.IntMap.find(2);
-    patch.patchType |> expect |> toEqual(Props)
-    patch.attributes |> expect |> toEqual(Some([("id", "new1")]))
+    patch |> expect |> toEqual([{
+      patchType: Props,
+      content: None,
+      attributes: Some([("id", "new1")]),
+      moves: [],
+    }])
 
     let patch1 = diff |> Utils.IntMap.find(3);
-    patch1.patchType |> expect |> toEqual(Props)
-    patch1.attributes |> expect |> toEqual(Some([("id", "new2")]))
+    patch |> expect |> toEqual([{
+      patchType: Props,
+      content: None,
+      attributes: Some([("id", "new1")]),
+      moves: [],
+    }]);
   });
 
   test("Node removing", () => {
@@ -72,11 +89,16 @@ describe("Test diff algorithm", () => {
 
   let diff = getDiff(oldNode, Some(newNode));
   let patch = diff |> Utils.IntMap.find(2);
-  patch.patchType |> expect |> toEqual(Children);
-  patch.moves |> expect |> toEqual([
-    { index: 0, moveType: Remove, item: None },
-    { index: 0, moveType: Remove, item: None },
-  ])
+  patch |> expect |> toEqual([{
+    patchType: Children,
+    content: None,
+    attributes: None,
+    moves: [
+      { index: 0, moveType: Remove, item: None },
+      { index: 0, moveType: Remove, item: None },
+    ],
+  }]);
+
   })
 
   test("Text replacing", () => {
@@ -85,8 +107,12 @@ describe("Test diff algorithm", () => {
 
     let diff = getDiff(oldNode, Some(newNode));
     let patch = diff |> Utils.IntMap.find(0);
-    patch.patchType |> expect |> toEqual(Text);
-    patch.content |> expect |> toEqual(Some(text("43")))
+    patch |> expect |> toEqual([{
+      patchType: Text,
+      content: Some(text("43")),
+      attributes: None,
+      moves: [],
+    }]);
   })
 
   /* test("Reordering with keyed items", () => {
@@ -131,4 +157,4 @@ describe("Test diff algorithm", () => {
     diffs[0][1].moves.length.should.equal(4) */
   /* }) */
 
-}); */
+});
