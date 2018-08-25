@@ -1,7 +1,9 @@
-open Jest;
-open Main;
+/* open Jest;
+open Common;
 open VirtualDom;
 open ListDiff;
+
+let getPatchType = patches => List.nth(patches, 0).patchType;
 
 describe("Test diff algorithm", () => {
   open Expect;
@@ -23,7 +25,7 @@ describe("Test diff algorithm", () => {
     let diff = getDiff(oldNode, Some(newNode));
     let patch = diff |> Utils.IntMap.find(2);
 
-    patch.patchType |> expect |> toEqual(Replace)
+    patch -> getPatchType |> expect |> toEqual(Replace)
   });
 
   test("Node propeties change", () => {
@@ -129,4 +131,4 @@ describe("Test diff algorithm", () => {
     diffs[0][1].moves.length.should.equal(4) */
   /* }) */
 
-});
+}); */

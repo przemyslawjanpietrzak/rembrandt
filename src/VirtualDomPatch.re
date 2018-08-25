@@ -47,42 +47,50 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
   });
 };
 
-let applyPatches = (element: Dom.domElement, currentPatches) => {
-  let r = a => 42 |> ignore;
-  currentPatches |> IntMap.iter((key) => {
-    let patch = IntMap.find(key, currentPatches);
+let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) => {
+  currentPatches |> List.iteri((i, patch) => {
     switch patch.patchType {
       | Replace => {
         switch patch.content {
           | Some(node) => {
             let newDomElement = render(node);
-            Dom.replaceChild(element.parentElement, newDomElement, element)
-            r;
+            Dom.replaceChild(element -> Dom.getParentNode, newDomElement, element) |> ignore;
           }
         }
       };
       | Props => {
         switch patch.attributes {
           | Some(attributes) => {
-            setProps(element, attributes)
-            r;
+            setProps(element, attributes) |> ignore;
           }
         }
       };
       | Children => {
-        reorderChildren(element, patch.moves);
-        r;
+        reorderChildren(element, patch.moves) |> ignore;
       }
       | Text => {
         switch patch.content {
           | Some(node) => {
+            Js.log("flag");
             let newDomElement = render(node);
-            Dom.replaceChild(element.parentElement, newDomElement, element);
-            r;
+            Dom.replaceChild(element -> Dom.getParentNode, newDomElement, element) |> ignore;
           };
         }
       };
     }
   });
-
 }
+
+let rec walker = (element: Dom.domElement, patches, step: int) => {
+  let children = Dom.getChildren(element);
+  children |> List.iteri((i, child) => {
+    walker(child, patches, step + i + 1);
+  });
+
+  if (IntMap.mem(step, patches)) {
+    let currentPatches = IntMap.find(step, patches);
+    applyPatches(element, currentPatches)
+  }
+}
+
+let patch = (node, patches) => walker(node, patches, 0);

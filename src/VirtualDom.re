@@ -17,7 +17,7 @@ type patch = {
   moves: list(ListDiff.move),
 };
 
-type patches = IntMap(patch)
+type patches = IntMap.t(list(patch));
 
 let nthChildren = (nodes: option(node), index: int): option('a) => {
     switch (nodes) {
@@ -31,6 +31,12 @@ let nthChildren = (nodes: option(node), index: int): option('a) => {
       }
     }
 };
+
+/* TODO: */
+let addPatch = (patch: list(patch), patches: patches, index: int): patches => switch (patch) {
+  | [] => patches;
+  | _ => IntMap.add(index, patch, patches);
+}
 
 let rec setPositions = (~node: node, ~initialPosition: int): int => {
   let position = ref(initialPosition);
@@ -93,17 +99,21 @@ let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
 };
 
 let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
+  Js.log(index);
   let currentPatches = ref(patches);
-  getPatches(oldNode, newNode) |> List.iter((patch) => {
-    currentPatches := IntMap.add(index, patch, currentPatches^);
-  });
+  let patches = getPatches(oldNode, newNode);
+  /* currentPatches := IntMap.add(index, patches, currentPatches^); */
+  currentPatches := addPatch(patches, currentPatches^, index);
+
+  Js.log(currentPatches);
 
   let childrenPatches = switch (newNode) {
       | None => []
       | Some(node) => {
-        getChildrenPatches(oldNode.children, node.children) |> List.iter((patch) => {
-          currentPatches := IntMap.add(index, patch, currentPatches^);
-        });
+        let childrenPatches = getChildrenPatches(oldNode.children, node.children);
+        currentPatches := addPatch(childrenPatches, currentPatches^, index);
+        /* currentPatches := IntMap.add(index, childrenPatches, currentPatches^); */
+
         if (node.name === oldNode.name) {
           oldNode.children
             |> List.iteri((i, oldChildNode) => {
@@ -121,4 +131,4 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
   currentPatches^;
 }
 
-let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(patch) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)
+let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(list(patch)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)

@@ -19,9 +19,8 @@ let run = (~view, ~model, ~update) => {
         currentModel := update(currentModel^, action);
         let updatedView = view(currentModel^, dispatchAction^);
         VirtualDom.setPositions(~node=updatedView, ~initialPosition=0);
-        let root = updatedView |> render |> Dom.update("app");
         let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
-        VirtualDomPatch.applyPatches(root, diff);
+        VirtualDomPatch.patch(root^, diff);
         true;
     }
 

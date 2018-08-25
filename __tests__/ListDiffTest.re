@@ -1,7 +1,7 @@
 open Jest;
 
 open Utils;
-open Main;
+open Common;
 open ListDiff;
 
 describe("ListDiff", () => {

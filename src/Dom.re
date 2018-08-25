@@ -11,6 +11,15 @@ type domElement = {
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
 
+let getChildrenArray: (domElement) => array(domElement) = [%bs.raw
+  {|
+  function (element) {
+      return element.childNodes;
+    }
+  |}
+];
+let getChildren = (element: domElement): list(domElement) => getChildrenArray(element) -> Array.to_list;
+
 let getNthChild: (list(domElement), int) => domElement = [%bs.raw
   {|
   function (children, index) {
@@ -80,6 +89,14 @@ let createTextNode: (string) => domElement = [%bs.raw
   {|
     function(text) {
       return document.createTextNode(text);
+    }
+|}
+];
+
+let getParentNode: (domElement) => domElement = [%bs.raw
+  {|
+    function(element) {
+      return element.parentNode;
     }
 |}
 ];

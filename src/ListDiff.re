@@ -20,10 +20,8 @@ let key = "key";
 let identity = item => item;
 
 let getItemKey = (node: node): option(string)  => {
-  let item = node.attributes
-    |> List.find(((key, value)) => key === "key" && value !== "");
 
-  switch (item) {
+  switch (List.find(((key, value)) => key === "key" && value !== "", node.attributes)) {
     | (key, value) => Some(value)
     | exception Not_found => None
   };
