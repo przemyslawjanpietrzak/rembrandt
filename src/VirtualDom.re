@@ -121,4 +121,4 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
   currentPatches^;
 }
 
-let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)
+let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(patch) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)

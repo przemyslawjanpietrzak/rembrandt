@@ -15,7 +15,7 @@ let setProps = (element: Dom.domElement, attributes: attributes) => {
 };
 
 let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
-  let staticNodeList = element.childNodes;
+  let staticNodeList = ref(element.childNodes);
   let maps = ref(StringMap.empty);
 
   element.childNodes |> List.iter((childElement: Dom.domElement) => {
@@ -28,7 +28,8 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
     switch (move.moveType, move.item) {
       | (Remove, None) => {
         let childToRemove = Dom.getNthChild(element.children, move.index);
-        Dom.removeChild(element, childToRemove) |> ignore;
+        Dom.removeChild(element, childToRemove);
+        staticNodeList := removeFromList(staticNodeList^, move.index);
       };
       | (Insert, Some(item)) => {
         let insertNode = {
@@ -39,39 +40,46 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
             render(item);
           }
         }
-        Dom.insertBefore(element, insertNode, Dom.getNthChild(element.childNodes, move.index)) |> ignore;
+        staticNodeList := replaceInList(staticNodeList^, move.index, insertNode);
+        let _ = Dom.insertBefore(element, insertNode, Dom.getNthChild(element.childNodes, move.index));
       };
     }
   });
 };
 
-let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) => {
-  currentPatches |> List.iter((patch) => {
+let applyPatches = (element: Dom.domElement, currentPatches) => {
+  let r = a => 42 |> ignore;
+  currentPatches |> IntMap.iter((key) => {
+    let patch = IntMap.find(key, currentPatches);
     switch patch.patchType {
       | Replace => {
         switch patch.content {
           | Some(node) => {
             let newDomElement = render(node);
-            Dom.replaceChild(element.parentElement, newDomElement, element) |> ignore;
+            Dom.replaceChild(element.parentElement, newDomElement, element)
+            r;
           }
         }
       };
       | Props => {
         switch patch.attributes {
           | Some(attributes) => {
-            setProps(element, attributes) |> ignore;
+            setProps(element, attributes)
+            r;
           }
         }
       };
-      /* | Children => {
-
-      }; */
+      | Children => {
+        reorderChildren(element, patch.moves);
+        r;
+      }
       | Text => {
         switch patch.content {
           | Some(node) => {
             let newDomElement = render(node);
-            Dom.replaceChild(element.parentElement, newDomElement, element) |> ignore;
-          }
+            Dom.replaceChild(element.parentElement, newDomElement, element);
+            r;
+          };
         }
       };
     }
