@@ -3,3 +3,4 @@ node_modules
 e2e
 bundle
 .bsb.lock
+lib
