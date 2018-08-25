@@ -1,4 +1,5 @@
-open Main;
+open Common;
+open Utils;
 
 type moveType = Insert | Remove;
 type move = { index: int, moveType: moveType, item: option(node) };
@@ -6,7 +7,7 @@ type moves = list(move);
 
 type keyIndexes = {
   free: list(node),
-  keyIndex: Hashtbl.t(string, int),
+  keyIndex: StringMap.t(int),
 }
 
 type diff = {
@@ -19,22 +20,20 @@ let key = "key";
 let identity = item => item;
 
 let getItemKey = (node: node): option(string)  => {
-  let item = node.attributes
-    |> List.find(((key, value)) => key === "key" && value !== "");
 
-  switch (item) {
+  switch (List.find(((key, value)) => key === "key" && value !== "", node.attributes)) {
     | (key, value) => Some(value)
     | exception Not_found => None
   };
 };
 
-let isInHashTable = (hashTable, optionalKey: option('a)): bool => switch (optionalKey) {
+let isInMap = (map, optionalKey: option('a)): bool => switch (optionalKey) {
   | None => false;
-  | Some(key) => Hashtbl.mem(hashTable, key);
+  | Some(key) => StringMap.mem(key, map);
 }
 
 let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
-  let keyIndex = Hashtbl.create(10000);
+  let keyIndex = ref(StringMap.empty);
   let free = ref([]);
 
   let _ = list |>
@@ -45,28 +44,14 @@ let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
           free := List.append(free^, [item])
         }
         | Some(itemKey) => {
-          Hashtbl.add(keyIndex, itemKey, i);
+          keyIndex := StringMap.add(itemKey, i, keyIndex^)
         }
       }
     });
   {
     free: free^,
-    keyIndex,
+    keyIndex: keyIndex^,
   }
-}
-
-let removeFromSimulateList = (collection: list('a), index: int): list('a) => {
-  let rec removeFromSimulateListAcc = (collection, index: int, acc) => switch (collection) {
-    | [] => []
-    | [head, ...tail] => {
-      if (index === 0) {
-        List.append(acc, tail)
-      } else {
-        removeFromSimulateListAcc(tail, index - 1,  List.append(acc, [head]));
-      }
-    }
-  }
-  removeFromSimulateListAcc(collection, index, []);
 }
 
 let getFromSimulateList =  (collection: list('a), index: int): 'a => {
@@ -99,8 +84,8 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
         freeIndex := freeIndex^ + 1;
       }
       | Some(itemKey) => {
-        if (Hashtbl.mem(newKeyIndex, itemKey)) {
-          let newItemIndex = Hashtbl.find(newKeyIndex, itemKey);
+        if (StringMap.mem(itemKey, newKeyIndex)) {
+          let newItemIndex = StringMap.find(itemKey, newKeyIndex);
           let newItem = List.nth(newNodes, newItemIndex);
           children := List.append(children^, [Some(newItem)]);
         } else {
@@ -116,7 +101,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
   while (i^ < List.length(simulateList^)) {
     if (List.nth(simulateList^, i^) === None) {
       moves := List.append(moves^, [{ index: i^, moveType: Remove, item: None }]);
-      simulateList := removeFromSimulateList(simulateList^, i^);
+      simulateList := Utils.removeFromList(simulateList^, i^);
     } else {
       i := i^ + 1;
     }
@@ -130,14 +115,14 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
         let simulateItemKey = getItemKey(simulateItem);
         if (itemKey === simulateItemKey) {
           j := j^ + 1;
-        } else if (isInHashTable(oldKeyIndex, itemKey)) {
+        } else if (isInMap(oldKeyIndex, itemKey)) {
           /* new item, just inesrt it */
           switch (getFromSimulateList(simulateList^, j^ + 1)) {
             | Some(nextItem) => {
               let nextItemKey = getItemKey(nextItem);
               if (nextItemKey === itemKey) {
                 moves := List.append(moves^, [{ index: i, moveType: Remove, item: None }]);
-                simulateList := removeFromSimulateList(simulateList^, j^);
+                simulateList := Utils.removeFromList(simulateList^, j^);
                 j := j^ + 1;
                 /* after removing, current j is right, just jump to next one */
               } else {

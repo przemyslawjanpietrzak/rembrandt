@@ -1,4 +1,4 @@
-open Main
+open Common
 
 type model = int;
 type action =

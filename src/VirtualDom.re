@@ -1,5 +1,6 @@
-open Main;
+open Common;
 open Dom;
+open Utils;
 
 type attributes = list((string, string));
 
@@ -9,7 +10,6 @@ type patchType =
   | Text
   | Props;
 
-
 type patch = {
   patchType: patchType,
   content: option(node),
@@ -17,7 +17,7 @@ type patch = {
   moves: list(ListDiff.move),
 };
 
-type patches = list(patch);
+type patches = IntMap.t(list(patch));
 
 let nthChildren = (nodes: option(node), index: int): option('a) => {
     switch (nodes) {
@@ -31,6 +31,12 @@ let nthChildren = (nodes: option(node), index: int): option('a) => {
       }
     }
 };
+
+/* TODO: */
+let addPatch = (patch: list(patch), patches: patches, index: int): patches => switch (patch) {
+  | [] => patches;
+  | _ => IntMap.add(index, patch, patches);
+}
 
 let rec setPositions = (~node: node, ~initialPosition: int): int => {
   let position = ref(initialPosition);
@@ -46,8 +52,6 @@ let getPrevChildPosition = (children: list(node), index: int): int => switch (in
   | 0 => 0
   | _ => List.nth(children, index - 1).position
 };
-
-let isIgnoredNode = node => false;
 
 let diffProps = (oldNode: node, newNode: node) => {
 
@@ -95,22 +99,27 @@ let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
 };
 
 let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
-  getPatches(oldNode, newNode) |> List.iter((patch) => {
-    Hashtbl.add(patches, index, patch) |> ignore;
-  });
+  Js.log(index);
+  let currentPatches = ref(patches);
+  let patches = getPatches(oldNode, newNode);
+  /* currentPatches := IntMap.add(index, patches, currentPatches^); */
+  currentPatches := addPatch(patches, currentPatches^, index);
+
+  Js.log(currentPatches);
 
   let childrenPatches = switch (newNode) {
       | None => []
       | Some(node) => {
-        getChildrenPatches(oldNode.children, node.children) |> List.iter((patch) => {
-          Hashtbl.add(patches, index, patch) |> ignore;
-        });
+        let childrenPatches = getChildrenPatches(oldNode.children, node.children);
+        currentPatches := addPatch(childrenPatches, currentPatches^, index);
+        /* currentPatches := IntMap.add(index, childrenPatches, currentPatches^); */
+
         if (node.name === oldNode.name) {
           oldNode.children
             |> List.iteri((i, oldChildNode) => {
                 let newChildNode = nthChildren(newNode, i);
                 let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
-                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + currentNodeIndex + 1) |> ignore;
+                currentPatches := walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=currentPatches^, ~index=(index + currentNodeIndex + i + 1));
               });
           [];
         } else {
@@ -119,7 +128,7 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
       }
   }
 
-  patches;
+  currentPatches^;
 }
 
-let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=Hashtbl.create(10000), ~index=0)
+let getDiff = (~oldNode, ~newNode: option(node)): IntMap.t(list(patch)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=IntMap.empty, ~index=0)

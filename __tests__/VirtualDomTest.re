@@ -1,5 +1,5 @@
 /* open Jest;
-open Main;
+open Common;
 open VirtualDom;
 
 /* describe("setPositions", () => {

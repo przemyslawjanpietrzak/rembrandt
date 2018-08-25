@@ -1,119 +1,108 @@
-open Jest;
-open Main;
+/* open Jest;
+open Common;
 open VirtualDom;
+open ListDiff;
+
+let getPatchType = patches => List.nth(patches, 0).patchType;
 
 describe("Test diff algorithm", () => {
   open Expect;
 
   test("Node replacing", () => {
     let oldNode = <div>
-      <div id="1" key="1"/>
-      <div id="2" key="2"/>
-      <div id="3" key="3"/>
+      <div key="1"/>
+      <div key="2"/>
+      <div key="3"/>
     </div>;
     let newNode = <div>
-      <div id="1" key="1"/>
-      <div id="new2" key="2"/>
-      <div id="new3" key="3"/>
+      <div key="1"/>
+      <span key="2"/>
+      <div key="3"/>
     </div>;
+    setPositions(oldNode, 0);
+    setPositions(newNode, 0);
 
-    let patches = walker(
-      ~oldNode=oldNode,
-      ~newNode=Some(newNode),
-      ~patches=Hashtbl.create(10000),
-      ~index=0,
-    );
-    patches |> Hashtbl.length |> expect |> toBe(2)
+    let diff = getDiff(oldNode, Some(newNode));
+    let patch = diff |> Utils.IntMap.find(2);
 
-     Hashtbl.find(patches, 0).patchType |> expect |> toEqual(Children)
-      /* |> expect
-      |> toEqual({
-        patchType: Children,
-        content: None,
-        attributes: None,
-        moves: [
-          { index: 0, moveType: ListDiff.Insert, item: None },
-          { index: 2, moveType: ListDiff.Insert, item: Some(<div id="1" key="1"/>) },
-        ],
-      }); */
-  })
+    patch -> getPatchType |> expect |> toEqual(Replace)
+  });
 
-  /* it('Node replacing', function () {
-    var oldRoot = el('div', [el('p'), el('div'), el('section')])
-    var newRoot = el('div', [el('p'), el('span'), el('section')])
-
-    var patches = diff(oldRoot, newRoot)
-    patches[2][0].type.should.be.equal(patch.REPLACE)
-  }) */
-
-  /* test("Node propeties change", () => {
+  test("Node propeties change", () => {
     let oldNode = <div>
-      <span id="old1" key="1"/>
-      <span id="old2" key="2"/>
-      <span id="old3" key="3"/>
+      <div key="1" id="same"/>
+      <div key="2" id="old1" />
+      <div key="3" id="old2" />
     </div>;
     let newNode = <div>
-      <span id="new1" key="1"/>
-      <span id="new2" key="2"/>
-      <span id="new3" key="3"/>
+      <div key="1" id="same"/>
+      <div key="2" id="new1"/>
+      <div key="3"id="new2"/>
     </div>;
-    setPositions(~node=oldNode, ~initialPosition=0) |> ignore;
-    setPositions(~node=newNode, ~initialPosition=0) |> ignore;
+    setPositions(oldNode, 0);
+    setPositions(newNode, 0);
 
-    let patches = walker(
-      ~oldNode=oldNode,
-      ~newNode=Some(newNode),
-      ~patches=Hashtbl.create(10000),
-      ~index=0,
-    );
-    patches |> Hashtbl.length |> expect |> toBe(4)
-    Hashtbl.find_all(patches, 4)
-      |> expect
-      |> toEqual([
-        {
-          patchType: "children",
-          content: None,
-          attributes: None,
-          moves: [
-            { index: 0, moveType: ListDiff.Insert },
-            { index: 2, moveType: ListDiff.Insert },
-          ],
-        }
-      ]); */
-    /* var patches = diff(oldRoot, newRoot)
-    patches[2][0].type.should.be.equal(patch.PROPS)
-    patches[2][0].props.should.be.deep.equal({ index: '0' })
+    let diff = getDiff(oldNode, Some(newNode));
 
-    patches[4][0].type.should.be.equal(patch.PROPS)
-    patches[4][0].props.should.be.deep.equal({ style: void 555, class: 'fuck' })
+    let patch = diff |> Utils.IntMap.find(2);
+    patch.patchType |> expect |> toEqual(Props)
+    patch.attributes |> expect |> toEqual(Some([("id", "new1")]))
 
-    patches[6][0].type.should.be.equal(patch.PROPS) */
-    /* patches[6][0].props.should.be.deep.equal({ style: 'yellow green' }) */
-  /* }) */
-/* 
+    let patch1 = diff |> Utils.IntMap.find(3);
+    patch1.patchType |> expect |> toEqual(Props)
+    patch1.attributes |> expect |> toEqual(Some([("id", "new2")]))
+  });
+
   test("Node removing", () => {
-    var oldRoot = el('div', [
-      el('p', [el('span', { style: 'blue' })]),
-      el('p', [el('span', { style: 'red' }), el('p'), el('div')]),
-      el('p', [el('span', { style: 'yellow' })])
-    ])
+    let oldNode = <div>
+      <div key="1" />
+      <div key="2">
+        <span key="0" />
+        <span key="1" />
+      </div>
+      <div key="3"  />
+    </div>;
+    let newNode = <div>
+      <div key="1" />
+      <div key="2"  />
+      <div key="3"/>
+    </div>;
+    setPositions(oldNode, 0);
+    setPositions(newNode, 0);
 
-    var newRoot = el('div', [
-      el('p', [el('span', { style: 'blue' })]),
-      el('p', [el('span', { style: 'red' })]),
-      el('p', [el('span', { style: 'yellow' })])
-    ])
-
-    var diffs = diff(oldRoot, newRoot)
-    diffs[3][0].type.should.be.equal(patch.REORDER)
-    diffs[3][0].moves.should.be.deep.equal([
-      { type: 0, index: 1 },
-      { type: 0, index: 1 }
-    ])
+  let diff = getDiff(oldNode, Some(newNode));
+  let patch = diff |> Utils.IntMap.find(2);
+  patch.patchType |> expect |> toEqual(Children);
+  patch.moves |> expect |> toEqual([
+    { index: 0, moveType: Remove, item: None },
+    { index: 0, moveType: Remove, item: None },
+  ])
   })
 
-  test("Reordering with keyed items", () => {
-    var oldRoot = el('ul', {id: 'list'}, [
+  test("Text replacing", () => {
+    let oldNode = text("42");
+    let newNode = text("43");
+
+    let diff = getDiff(oldNode, Some(newNode));
+    let patch = diff |> Utils.IntMap.find(0);
+    patch.patchType |> expect |> toEqual(Text);
+    patch.content |> expect |> toEqual(Some(text("43")))
+  })
+
+  /* test("Reordering with keyed items", () => {
+    let oldNode = <div id="old0">
+      <div key="1" />
+      <div key="2" />
+      <div key="3"  />
+    </div>;
+    let newNode = <div id="new0">
+      <div key="2"  />
+      <div key="3"/>
+      <div key="1" id="id"/>
+    </div>;
+    setPositions(oldNode, 0);
+    setPositions(newNode, 0); */
+    /* var oldRoot = el('ul', {id: 'list'}, [
       el('li', {key: 'a'}),
       el('li', {key: 'b'}),
       el('li', {key: 'c', style: 'shit'}),
@@ -139,76 +128,7 @@ describe("Test diff algorithm", () => {
 
     diffs[0][0].type.should.equal(patch.PROPS)
     diffs[0][1].type.should.equal(patch.REORDER)
-    diffs[0][1].moves.length.should.equal(4)
-  })
+    diffs[0][1].moves.length.should.equal(4) */
+  /* }) */
 
-  test("Text replacing", () => {
-    var oldRoot = el('div', [
-      el('p', ['Jerry', 'is', 'my', 'love']),
-      el('p', ['Jerry', 'is', 'my', 'love'])
-    ])
-
-    var newRoot = el('div', [
-      el('p', ['Jerry', 'is', 'my', 'love']),
-      el('p', ['Lucy', 'is', 'my', 'hate'])
-    ])
-
-    var diffs = diff(oldRoot, newRoot)
-    diffs[7][0].type.should.be.equal(patch.TEXT)
-    diffs[10][0].type.should.be.equal(patch.TEXT)
-  })
-
-  test("Diff complicated dom", () => {
-    var color = 'blue'
-    var count = 0
-    var root1 = el('div', {'id': 'container'}, [
-      el('h1', {style: 'color: ' + color}, ['simple virtal dom']),
-      el('p', ['the count is :' + count]),
-      el('ul', [el('li')])
-    ])
-
-    var root2 = el('div', {'id': 'container'}, [
-      el('h1', {style: 'color: ' + color}, ['simple virtal dom']),
-      el('p', ['the count is :' + count]),
-      el('ul', [el('li'), el('li')])
-    ])
-
-    var patches = diff(root1, root2)
-    patches[5].should.be.an.Object
-  })
-
-  test("Skip element that has ignore tag when performing diff", () => {
-    var color = 'blue'
-    var count = 0
-    var root1 = el('div', {'id': 'container', 'ignore': 'true'}, [
-      el('h1', {style: 'color: ' + color}, ['simple virtal dom']),
-      el('p', ['the count is :' + count]),
-      el('ul', [el('li')])
-    ])
-
-    var root2 = el('div', {'id': 'container', 'ignore': 'true'}, [
-      el('h1', {style: 'color: ' + color}, ['simple virtal domk']),
-      el('p', ['the count is :' + count + 'k']),
-      el('ul', [el('li'), el('li'), el('li')])
-    ])
-
-    var patches = diff(root1, root2)
-    patches.should.be.deep.equal({})
-
-    root1 = el('div', {'id': 'container'}, [
-      el('h1', {style: 'color: ' + color, 'ignore': 'true'}, ['simple virtal dom']),
-      el('p', ['the count is :' + count]),
-      el('ul', [el('li')])
-    ])
-
-    root2 = el('div', {'id': 'container'}, [
-      el('h1', {style: 'color: ' + color, 'ignore': 'true'}, ['simple virtal dom 2']),
-      el('p', ['the count is :' + count]),
-      el('ul', [el('li'), el('li')])
-    ])
-
-    patches = diff(root1, root2)
-    chai.expect(patches[1]).to.be.equal(undefined)
-    chai.expect(patches[5]).to.be.an('array')
-  }) */
-})
+}); */

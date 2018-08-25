@@ -11,6 +11,15 @@ type domElement = {
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
 
+let getChildrenArray: (domElement) => array(domElement) = [%bs.raw
+  {|
+  function (element) {
+      return element.childNodes;
+    }
+  |}
+];
+let getChildren = (element: domElement): list(domElement) => getChildrenArray(element) -> Array.to_list;
+
 let getNthChild: (list(domElement), int) => domElement = [%bs.raw
   {|
   function (children, index) {
@@ -38,16 +47,18 @@ let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
 |}
 ];
 
-let setAttributes: (list((string, string)), domElement) => domElement = [%bs.raw
+let _setAttributes: ((string, string), domElement) => domElement = [%bs.raw
   {|
- function (attributes, element) {
-	for (let i=0; i <attributes.length; i++) {
-      element.setAttribute(attributes[i][0], attributes[i][1]);
-   }
-   return element;
- }
+ function (attribute, element) {
+    element.setAttribute(attribute[0], attribute[1]);
+    return element;
+  }
 |}
 ];
+let setAttributes = (attributes: list((string, string)), domElement: domElement) => {
+  attributes |> List.map((attribute) => _setAttributes(attribute, domElement));
+  domElement;
+}
 
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
     {|
@@ -78,6 +89,14 @@ let createTextNode: (string) => domElement = [%bs.raw
   {|
     function(text) {
       return document.createTextNode(text);
+    }
+|}
+];
+
+let getParentNode: (domElement) => domElement = [%bs.raw
+  {|
+    function(element) {
+      return element.parentNode;
     }
 |}
 ];

@@ -1,6 +1,7 @@
 open Jest;
 
-open Main;
+open Utils;
+open Common;
 open ListDiff;
 
 describe("ListDiff", () => {
@@ -14,20 +15,15 @@ describe("ListDiff", () => {
     ];
     let { keyIndex } = makeKeyIndexAndFree(list);
 
-    keyIndex
-      |> Hashtbl.length
-      |> expect
-      |> toEqual(3);
-
-    Hashtbl.find(keyIndex, "1")
+    StringMap.find("1", keyIndex)
       |> expect
       |> toEqual(0);
 
-    Hashtbl.find(keyIndex, "2")
+    StringMap.find("2", keyIndex)
       |> expect
       |> toEqual(1);
 
-    Hashtbl.find(keyIndex, "3")
+    StringMap.find("3", keyIndex)
       |> expect
       |> toEqual(2);
   });
