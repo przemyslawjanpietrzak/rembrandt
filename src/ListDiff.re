@@ -1,4 +1,4 @@
-open Main;
+open Common;
 open Utils;
 
 type moveType = Insert | Remove;
