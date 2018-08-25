@@ -1,11 +1,15 @@
 ####{BSB GENERATED: NO EDIT
 B lib/bs
 FLG -open Rembrant
-FLG -ppx /usr/local/lib/node_modules/bs-platform/lib/bsppx.exe
+FLG -ppx /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-platform/lib/bsppx.exe
 S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-platform/lib/ocaml
 B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-platform/lib/ocaml
 FLG -nostdlib -no-alias-deps -color always
 FLG -w -30-40+6+7+27+32..39+44+45+101
+S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@glennsl/bs-jest/lib/ocaml
+B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@glennsl/bs-jest/lib/ocaml
+S __tests__
+B lib/bs/__tests__
 S src
 B lib/bs/src
 ####BSB GENERATED: NO EDIT}

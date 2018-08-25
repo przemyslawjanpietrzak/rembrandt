@@ -1,47 +1,125 @@
 open Main;
 open Dom;
 
-type optionalNode =
-  | Node
-  | Null;
+type attributes = list((string, string));
 
-let changed = (node1: node, node2: node) =>
-  node1.name !== node2.name;
+type patchType =
+  | Replace
+  | Children
+  | Text
+  | Props;
 
-let max = (a: int, b: int) => a > b ? a : b;
 
-let nth = (items: list(node), index: int): node => {
-  if (List.length(items) >= index) {
-    List.nth(items, index);
-  } else {
-    null();
-  }
+type patch = {
+  patchType: patchType,
+  content: option(node),
+  attributes: option(attributes),
+  moves: list(ListDiff.move),
+};
+
+type patches = list(patch);
+
+let nthChildren = (nodes: option(node), index: int): option('a) => {
+    switch (nodes) {
+      | None => None
+      | Some({ children }) => {
+        if (List.length(children) > index) {
+          Some(List.nth(children, index))
+        } else {
+          None;
+        }
+      }
+    }
+};
+
+let rec setPositions = (~node: node, ~initialPosition: int): int => {
+  let position = ref(initialPosition);
+  node.children |> List.iter(child => {
+    position := position^ + setPositions(~node=child, ~initialPosition=position^);
+  });
+  position := position^ + 1;
+  node.position = position^;
+  position^;
 }
 
-/* let rec updateElement = (~parent: domElement, ~newNode: node, ~oldNode: node, ~index: int): domElement => {
-  if (oldNode.null) {
-    appendChild([render(newNode)], parent)
-  } else if (newNode.null) {
-    List.nth(parent.childNodes, index)
-      |>removeChild(parent);
-  } else if (changed(newNode, oldNode)) {
-    replaceChild(
-      parent,
-      render(newNode),
-      render(oldNode),
-    )
-  } else {
-    let newLength = List.length(newNode.children);
-    let oldLength = List.length(oldNode.children);
+let getPrevChildPosition = (children: list(node), index: int): int => switch (index) {
+  | 0 => 0
+  | _ => List.nth(children, index - 1).position
+};
 
-    for (i in max(newLength, oldLength) downto 0) {
-      updateElement(
-        ~parent=List.nth(parent.children, index),
-        ~newNode=nth(newNode.children, i),
-        ~oldNode=nth(oldNode.children, i),
-        ~index=i,
-      )
-    }
-    parent;
+let isIgnoredNode = node => false;
+
+let diffProps = (oldNode: node, newNode: node) => {
+
+  let changedProps = oldNode.attributes
+   |> List.filter(
+      ((oldKey, oldValue)) => List.exists(((newKey, newValue)) => newKey === oldKey && newValue !== oldValue, newNode.attributes),
+    )
+    |> List.map(((oldKey, oldValue)) => List.find(((newKey, newValue)) => oldKey === newKey, newNode.attributes))
+
+  let newProps = newNode.attributes
+    |> List.filter(
+      ((newKey, _)) => !List.exists(((oldKey, _)) => oldKey !== newKey, oldNode.attributes)
+    )
+
+  List.append(changedProps, newProps);
+}
+
+let getPatches = (oldNode, newNode: option(node)): list(patch) => {
+   switch (newNode) {
+    | None => []
+    | Some(node) => {
+         /* TextNode content replacing */
+        if (node.name === TEXT && oldNode.name === TEXT && node.text !== oldNode.text) {
+            [{ patchType: Text, content: Some(node), attributes: None, moves: [] }];
+        } else if (node.name === oldNode.name) {
+            /* Diff props */
+            let propsPatches = diffProps(oldNode, node);
+            switch (propsPatches) {
+              | [] => []
+              | _ =>  [{ patchType: Props, attributes: Some(propsPatches), content: None, moves: [] }]
+            }
+        } else {
+          [{ patchType: Replace, content: Some(node), attributes: None, moves: [] }];
+        }
+      }
+   }
+}
+
+let getChildrenPatches = (oldChildren, newChildren): list(patch) => {
+  let listDiff = ListDiff.getListDiff(oldChildren, newChildren);
+  switch (listDiff.moves) {
+    | [] => []
+    | _ => [{ patchType: Children, attributes: None, content: None, moves: listDiff.moves }]
+  };
+};
+
+let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
+  getPatches(oldNode, newNode) |> List.iter((patch) => {
+    Hashtbl.add(patches, index, patch) |> ignore;
+  });
+
+  let childrenPatches = switch (newNode) {
+      | None => []
+      | Some(node) => {
+        getChildrenPatches(oldNode.children, node.children) |> List.iter((patch) => {
+          Hashtbl.add(patches, index, patch) |> ignore;
+        });
+        if (node.name === oldNode.name) {
+          oldNode.children
+            |> List.iteri((i, oldChildNode) => {
+                let newChildNode = nthChildren(newNode, i);
+                let currentNodeIndex = getPrevChildPosition(oldNode.children, index);
+                walker(~oldNode=oldChildNode, ~newNode=newChildNode, ~patches=patches, ~index=index + currentNodeIndex + 1) |> ignore;
+              });
+          [];
+        } else {
+          [];
+        }
+      }
   }
-}; */
+
+  patches;
+}
+
+let getDiff = (~oldNode, ~newNode: option(node)) => walker(~oldNode=oldNode, ~newNode=newNode, ~patches=Hashtbl.create(10000), ~index=0)

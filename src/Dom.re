@@ -3,12 +3,42 @@ type eventHandler = string => bool
 type domElement = {
   children: list(domElement),
   childNodes: list(domElement),
+  parentElement: domElement,
+  nodeType: int,
+  getAttribute: string => string,
 };
 
 [@bs.val]
 external createElement : string => domElement = "document.createElement";
 
-let setAttributes: (array((string, string)), domElement) => domElement = [%bs.raw
+let getNthChild: (list(domElement), int) => domElement = [%bs.raw
+  {|
+  function (children, index) {
+      return chilren[index];
+    }
+  |}
+];
+
+let removeAttribute: (string, domElement) => domElement = [%bs.raw
+  {|
+  function (key, element) {
+      element.removeAttribute(key);
+      return element;
+    }
+  |}
+];
+
+
+let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
+  {|
+ function (attribute, element) {
+    element.setAttribute(attribute[0], attributes[1]);
+    return element;
+  }
+|}
+];
+
+let setAttributes: (list((string, string)), domElement) => domElement = [%bs.raw
   {|
  function (attributes, element) {
 	for (let i=0; i <attributes.length; i++) {
@@ -79,6 +109,15 @@ let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.ra
   {|
     function(handler, eventName, parent) {
       return parent.addEventListener(eventName, handler);
+    }
+  |}
+]
+
+let insertBefore: (domElement, domElement, domElement) => domElement = [%bs.raw
+  {|
+    function(parent, newElement, referenceElement) {
+      parentNode.insertBefore(newElement, referenceElement || null);
+      return parent;
     }
   |}
 ]
