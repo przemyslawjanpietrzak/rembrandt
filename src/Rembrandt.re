@@ -20,6 +20,7 @@ let run = (~view, ~model, ~update) => {
         let updatedView = view(currentModel^, dispatchAction^);
         VirtualDom.setPositions(~node=updatedView, ~initialPosition=0);
         let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
+        Js.log(diff);
         VirtualDom.patch(root^, diff);
         true;
     }

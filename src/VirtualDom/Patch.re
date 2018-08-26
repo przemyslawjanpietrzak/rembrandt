@@ -72,9 +72,8 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) => {
       | Text => {
         switch patch.content {
           | Some(node) => {
-            Js.log("flag");
-            let newDomElement = render(node);
-            Dom.replaceChild(element -> Dom.getParentNode, newDomElement, element) |> ignore;
+            /* let newDomElement = render(node); */
+            Dom.replaceTextNode(element, node.text) |> ignore;
           };
         }
       };
@@ -82,16 +81,17 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) => {
   });
 }
 
-let rec walker = (element: Dom.domElement, patches, step: int) => {
+let rec walker = (element: Dom.domElement, patches, step: ref(int)) => {
   let children = Dom.getChildren(element);
-  children |> List.iteri((i, child) => {
-    walker(child, patches, step + i + 1);
+  children |> List.iter((child) => {
+    step := step^ + 1;
+    walker(child, patches, step);
   });
 
-  if (IntMap.mem(step, patches)) {
-    let currentPatches = IntMap.find(step, patches);
+  if (IntMap.mem(step^, patches)) {
+    let currentPatches = IntMap.find(step^, patches);
     applyPatches(element, currentPatches)
   }
 }
 
-let patch = (node, patches) => walker(node, patches, 0);
+let patch = (node, patches) => walker(node, patches, ref(0));

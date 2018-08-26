@@ -68,6 +68,19 @@ let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
     |}
 ];
 
+let replaceTextNode: (domElement, string) => domElement = [%bs.raw
+{|
+  function(element, text) {
+    if (element.textContent) {
+      element.textContent = text
+    } else {
+      element.nodeValue = text
+    }
+    return element;
+  }
+|}
+];
+
 let init: (string, domElement) => domElement = [%bs.raw
   {|
     function(id, element) {
