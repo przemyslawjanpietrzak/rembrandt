@@ -4,3 +4,4 @@ e2e
 bundle
 .bsb.lock
 lib
+cypress/server/public
