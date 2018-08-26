@@ -15,7 +15,7 @@ let run = (~view, ~model, ~update) => {
     let dispatchAction = ref(_ => false);
     let currentModel = ref(model);
 
-    let dispatch = (action, model, update) => {
+    let dispatch = (action, update) => {
         currentModel := update(currentModel^, action);
         let updatedView = view(currentModel^, dispatchAction^);
         VirtualDom.setPositions(~node=updatedView, ~initialPosition=0);
@@ -24,7 +24,7 @@ let run = (~view, ~model, ~update) => {
         true;
     }
 
-    dispatchAction := action => dispatch(action, model, update);
+    dispatchAction := action => dispatch(action, update);
 
     currentView := view(model, dispatchAction^);
     root := render(currentView^)
