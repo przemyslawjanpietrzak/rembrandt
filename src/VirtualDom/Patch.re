@@ -72,7 +72,6 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) => {
       | Text => {
         switch patch.content {
           | Some(node) => {
-            /* let newDomElement = render(node); */
             Dom.replaceTextNode(element, node.text) |> ignore;
           };
         }
