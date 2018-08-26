@@ -24,6 +24,7 @@ let nthChildren = (nodes: option(node), index: int): option('a) => {
       | None => None
       | Some({ children }) => {
         if (List.length(children) > index) {
+
           Some(List.nth(children, index))
         } else {
           None;
@@ -40,7 +41,12 @@ let addPatch = (patch: list(patch), patches: patches, index: int): patches => sw
 
 let getPrevChildPosition = (children: list(node), index: int): int => switch (index) {
   | 0 => 0
-  | _ => List.nth(children, index - 1).position
+  | _ => {
+    switch (List.nth(children, index - 1)) {
+      | exception nth => 0
+      | _ => List.nth(children, index - 1).position
+    }
+  }
 };
 
 let diffProps = (oldNode: node, newNode: node) => {

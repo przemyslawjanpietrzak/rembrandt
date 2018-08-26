@@ -5,6 +5,7 @@ type nodeName =
   | TEXT
   | SPAN
   | Null
+  | Button
 
 type attributes = list((string, string));
 
@@ -49,6 +50,14 @@ let span = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defau
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
+let button = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
+  name: Button,
+  text: "",
+  position: 0,
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
+  children,
+};
 
 let null = (): node => {
   name: Null,
@@ -70,4 +79,9 @@ let rec render = (node: node) =>
       |> setAttributes(node.attributes)
       |> setHandlers(node.handlers)
       |> appendChild(List.map(child => render(child), node.children))
+    | Button => createElement("button")
+      |> setAttributes(node.attributes)
+      |> setHandlers(node.handlers)
+      |> appendChild(List.map(child => render(child), node.children))
+    
   };

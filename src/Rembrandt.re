@@ -30,5 +30,3 @@ let run = (~view, ~model, ~update) => {
     root := render(currentView^)
         |> Dom.init("app")
 }
-
-
