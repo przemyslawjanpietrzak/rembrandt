@@ -4,8 +4,14 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world",
-    "test": "jest"
+    "clean:bs": "bsb -clean-world",
+    "clean:server": "rm -rf cypress/server/public",
+    "clean": "npm run clean:bs && npm run clean:server",
+    "test": "jest",
+    "cy": "cypress open",
+    "cy:server": "node cypress/server/main.js",
+    "prepare-examples": "cp examples/*.html cypress/server/public/basic",
+    "build-examples": "fpack examples/Basic.bs.js --output=cypress/server/public/basic"
   },
   "keywords": [
     "BuckleScript"
@@ -16,6 +22,8 @@
     "@glennsl/bs-jest": "^0.4.3",
     "bs-jest": "^0.3.2",
     "bs-platform": "^4.0.3",
+    "cypress": "^3.1.0",
+    "express": "^4.16.3",
     "fpack": "^0.5.3"
   },
   "jest": {

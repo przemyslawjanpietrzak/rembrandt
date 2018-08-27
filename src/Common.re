@@ -33,12 +33,21 @@ let text = (s: string) : node => {
   children: [],
 };
 
+/* let nodeFactory = (nodeName: nodeName) => (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
+  name: DIV,
+  text: "",
+  position: 0,
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
+  children,
+}; */
+
 let defaultHandler = (a: string) => false;
 let div = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
   name: DIV,
   text: "",
   position: 0,
-  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)] |> List.filter  (((_, value)) => value !== ""),
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
@@ -46,7 +55,7 @@ let span = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defau
   name: SPAN,
   text: "",
   position: 0,
-  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)] |> List.filter  (((_, value)) => value !== ""),
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
@@ -54,7 +63,7 @@ let button = (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=def
   name: Button,
   text: "",
   position: 0,
-  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
+  attributes: [("id", id), ("class", _class), ("style", style), ("key", key)] |> List.filter  (((_, value)) => value !== ""),
   handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
   children,
 };
@@ -83,5 +92,4 @@ let rec render = (node: node) =>
       |> setAttributes(node.attributes)
       |> setHandlers(node.handlers)
       |> appendChild(List.map(child => render(child), node.children))
-    
   };
