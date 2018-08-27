@@ -8,7 +8,5 @@ describe('My First Test', function() {
     cy.get('#count').should('contain', '44');
     cy.get('#minus').click();
     cy.get('#count').should('contain', '43');
-    cy.get('#minus').click();
-    cy.get('#count').should('contain', '42');
   })
 })
