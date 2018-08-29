@@ -10,13 +10,13 @@
     "test": "jest",
     "cy": "cypress open",
     "cy:server": "node cypress/server/main.js",
-    "prepare-examples": "cp examples/*.html cypress/server/public/basic",
-    "build-examples": "fpack examples/Async.bs.js --output=cypress/server/public/basic"
+    "prepare-examples": "mkdir -p cypress/server/public/basic && mkdir -p cypress/server/public/async && cp examples/*.html cypress/server/public/basic && cp examples/*.html cypress/server/public/async",
+    "build-examples": "fpack examples/Basic.bs.js --output=cypress/server/public/basic && fpack examples/Async.bs.js --output=cypress/server/public/async"
   },
   "keywords": [
     "BuckleScript"
   ],
-  "author": "",
+  "author": "Przemyslaw Jan Pietrzak",
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.3",
