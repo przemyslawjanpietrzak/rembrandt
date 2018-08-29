@@ -11,7 +11,7 @@
     "cy": "cypress open",
     "cy:server": "node cypress/server/main.js",
     "prepare-examples": "cp examples/*.html cypress/server/public/basic",
-    "build-examples": "fpack examples/Basic.bs.js --output=cypress/server/public/basic"
+    "build-examples": "fpack examples/Async.bs.js --output=cypress/server/public/basic"
   },
   "keywords": [
     "BuckleScript"
