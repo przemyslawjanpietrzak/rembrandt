@@ -42,7 +42,7 @@ let text = (s: string): node => {
      children,
    }; */
 
-let defaultHandler = (a: string) => false;
+let defaultHandler = (a: string) => false |> ignore;
 let div =
     (
       ~id="",

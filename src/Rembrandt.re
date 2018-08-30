@@ -21,7 +21,7 @@ let run =
     ) => {
   let root = ref(Dom.createElement("div"));
   let currentView = ref(<div />);
-  let dispatchAction = ref(_ => false);
+  let dispatchAction = ref(_ => 42 |> ignore);
   let currentModel = ref(model);
 
   let rec dispatch = (~action, ~update) => {
@@ -33,16 +33,20 @@ let run =
       VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
     VirtualDom.patch(root^, diff);
 
-    switch (command.commandType, command.commandAction) {
-    | (CAction, Some(commandAction)) =>
-      Js.Promise.make((~resolve, ~reject) =>
-        dispatchAction^(commandAction) |> ignore
-      )
-      |> ignore
-    | (_, _) => 42 |> ignore
-    };
-
-    true;
+    (
+      switch (command.commandType, command.commandAction, command.callback) {
+      | (CAction, Some(commandAction), _) =>
+        Js.Promise.make((~resolve, ~reject) =>
+          dispatchAction^(commandAction) |> ignore
+        )
+      | (Run, _, Some(callback)) =>
+        Js.Promise.make((~resolve, ~reject) =>
+          callback(dispatchAction^) |> ignore
+        )
+      | (_, _, _) => Js.Promise.resolve()
+      }
+    )
+    |> ignore;
   };
 
   dispatchAction := (action => dispatch(~action, ~update));
