@@ -23,8 +23,10 @@
     "in-source": true
   },
   "suffix": ".bs.js",
-  "bs-dependencies": [],
-  "bs-dev-dependencies": ["@glennsl/bs-jest"],
+  "bs-dependencies": ["bs-fetch"],
+  "bs-dev-dependencies": [
+    "@glennsl/bs-jest"
+  ],
   "warnings": {
     "error" : "+101"
   },

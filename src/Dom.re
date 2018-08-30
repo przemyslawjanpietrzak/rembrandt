@@ -1,4 +1,4 @@
-type eventHandler = string => bool
+type eventHandler = string => unit
 
 type domElement = {
   children: list(domElement),

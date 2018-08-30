@@ -5,10 +5,10 @@ type action =
   | ADD
   | SUB;
 
-let update = (model: model, action: action): model => {
+let update = (model: model, action: action): (model, Command.command('action)) => {
   switch action {
-  | ADD => model + 1
-  | SUB => model - 1
+  | ADD => (model + 1, Command.null)
+  | SUB => (model - 1, Command.null)
   };
 };
 
