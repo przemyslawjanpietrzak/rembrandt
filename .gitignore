@@ -4,3 +4,4 @@ bundle
 .bsb.lock
 lib
 cypress/server/public
+.bsb.lock
