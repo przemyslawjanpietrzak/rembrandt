@@ -13,6 +13,7 @@ let update = (model: model, action: action): (model, Command.command('action)) =
 };
 
 Rembrandt.run(
+  ~rootId="app",
   ~model=42,
   ~update=update,
   ~view=(model, dispatch) => <div>
@@ -21,5 +22,6 @@ Rembrandt.run(
     </div>
     <button key="2" id="plus" onClick={ _ => ADD |> dispatch }>{ text("+") }</button>
     <button key="3" id="minus" onClick={ _ => SUB |> dispatch }>{ text("-") }</button>
-  </div>
+  </div>,
+  (),
 );

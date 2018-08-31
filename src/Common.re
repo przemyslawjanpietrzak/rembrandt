@@ -35,33 +35,43 @@ let text = (s: string): node => {
 
 let defaultHandler = _ => false |> ignore;
 
-let generateNode = (~name: nodeName, ~text="", ~id, ~_class, ~style, ~key, ~onClick, ~onChange=defaultHandler, ~onInput=defaultHandler, ~children, ~_type="", ()): node => {
+let generateNode =
+    (
+      ~name: nodeName,
+      ~text="",
+      ~id,
+      ~_class,
+      ~style,
+      ~key,
+      ~value="",
+      ~onClick,
+      ~onChange=defaultHandler,
+      ~onInput=defaultHandler,
+      ~children,
+      ~_type="",
+      (),
+    )
+    : node => {
   name,
   text,
   position: 0,
   attributes:
-    [("id", id), ("class", _class), ("style", style), ("key", key), ("type", _type)]
+    [
+      ("id", id),
+      ("class", _class),
+      ("style", style),
+      ("key", key),
+      ("type", _type),
+      ("value", value)
+    ]
     |> List.filter(((_, value)) => value !== ""),
   handlers: [
     ("click", onClick !== defaultHandler ? Some(onClick) : None),
     ("change", onChange !== defaultHandler ? Some(onChange) : None),
-    ("input", onInput !== defaultHandler ? Some(onChange) : None),
+    ("input", onInput !== defaultHandler ? Some(onInput) : None),
   ],
   children,
 };
-
-let input =
-    (
-      ~id="",
-      ~_class="",
-      ~style="",
-      ~key="",
-      ~_type="",
-      ~onClick: eventHandler=defaultHandler,
-      ~onInput: eventHandler=defaultHandler,
-      ~children,
-      _rest,
-    ): node => generateNode(~name=Input, ~id, ~_class, ~style, ~key, ~onClick, ~children, ~onInput, ~_type, ());
 
 let div =
     (
@@ -72,7 +82,46 @@ let div =
       ~onClick: eventHandler=defaultHandler,
       ~children,
       _rest,
-    ): node => generateNode(~name=DIV, ~id, ~_class, ~style, ~key, ~onClick, ~children, ());
+    )
+    : node =>
+  generateNode(
+    ~name=DIV,
+    ~id,
+    ~_class,
+    ~style,
+    ~key,
+    ~onClick,
+    ~children,
+    (),
+  );
+
+let input =
+    (
+      ~id="",
+      ~_class="",
+      ~style="",
+      ~key="",
+      ~value="",
+      ~onClick: eventHandler=defaultHandler,
+      ~onChange: eventHandler=defaultHandler,
+      ~onInput: eventHandler=defaultHandler,
+      ~children,
+      _rest,
+    )
+    : node =>
+  generateNode(
+    ~name=Input,
+    ~id,
+    ~_class,
+    ~style,
+    ~key,
+    ~value,
+    ~children,
+    ~onClick,
+    ~onInput,
+    ~onChange,
+    (),
+  );
 
 let span =
     (
@@ -83,7 +132,18 @@ let span =
       ~onClick: eventHandler=defaultHandler,
       ~children,
       _rest,
-    ): node => generateNode(~name=SPAN,  ~id, ~_class, ~style, ~key, ~onClick, ~children, ());
+    )
+    : node =>
+  generateNode(
+    ~name=SPAN,
+    ~id,
+    ~_class,
+    ~style,
+    ~key,
+    ~onClick,
+    ~children,
+    (),
+  );
 
 let button =
     (
@@ -94,12 +154,25 @@ let button =
       ~onClick: eventHandler=defaultHandler,
       ~children,
       _rest,
-    ): node => generateNode(~name=Button, ~text="", ~id, ~_class, ~style, ~key, ~onClick, ~children, ());
+    )
+    : node =>
+  generateNode(
+    ~name=Button,
+    ~text="",
+    ~id,
+    ~_class,
+    ~style,
+    ~key,
+    ~onClick,
+    ~children,
+    (),
+  );
 
-let createNodeElement = (node, render, name) => createElement(name)
+let createNodeElement = (node, render, name) =>
+  createElement(name)
   |> setAttributes(node.attributes)
   |> setHandlers(node.handlers)
-  |> appendChild(List.map(child => render(child), node.children))
+  |> appendChild(List.map(child => render(child), node.children));
 
 let rec render = (node: node) =>
   switch (node.name) {
@@ -108,4 +181,4 @@ let rec render = (node: node) =>
   | SPAN => createNodeElement(node, render, "span")
   | Button => createNodeElement(node, render, "button")
   | Input => createNodeElement(node, render, "input")
-};
+  };

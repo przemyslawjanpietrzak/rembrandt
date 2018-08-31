@@ -35,10 +35,11 @@ let run =
       ~view: ('model, 'dispatch) => node,
       ~model: 'model,
       ~update: ('model, 'action) => ('model, Command.command('action)),
+      (),
     ) => {
   let root = ref(Dom.createElement("div"));
   let currentView = ref(<div />);
-  let dispatchAction = ref(_ => 42 |> ignore);
+  let dispatchAction = ref(_ => ());
   let currentModel = ref(model);
 
   let rec dispatch = (~action, ~update) => {

@@ -8,7 +8,7 @@ type domElement = {
   parentElement: domElement,
   nodeType: int,
   getAttribute: string => string,
-  value: domElementValue,
+  value: string,
 };
 
 type event = {target: domElement};
@@ -48,7 +48,7 @@ let removeAttribute: (string, domElement) => domElement = [%bs.raw
 let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
   {|
  function (attribute, element) {
-    element.setAttribute(attribute[0], attributes[1]);
+    element.setAttribute(attribute[0], attribute[1]);
     return element;
   }
 |}
