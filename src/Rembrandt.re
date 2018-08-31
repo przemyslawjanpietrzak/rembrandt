@@ -12,9 +12,25 @@ type run('model, 'action) = {
   model: 'model,
 };
 
+let runCommand = (command, dispatchAction) => {
+  switch (command.commandType, command.commandAction, command.callback) {
+    | (CAction, Some(commandAction), _) =>
+      Js.Promise.make((~resolve, ~reject) =>
+        dispatchAction(commandAction) |> ignore
+      )
+    | (Run, _, Some(callback)) =>
+      Js.Promise.make((~resolve, ~reject) =>
+        callback(dispatchAction) |> ignore
+      )
+    | (_, _, _) => Js.Promise.resolve()
+    } |> ignore;
+}
+
 let dispatch = (action, model, update) => update(model, action);
 let run =
     (
+      ~rootId="app",
+      ~init=Command.null,
       ~view: ('model, 'dispatch) => node,
       ~model: 'model,
       ~update: ('model, 'action) => ('model, Command.command('action)),
@@ -32,25 +48,12 @@ let run =
     let diff =
       VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
     VirtualDom.patch(root^, diff);
-
-    (
-      switch (command.commandType, command.commandAction, command.callback) {
-      | (CAction, Some(commandAction), _) =>
-        Js.Promise.make((~resolve, ~reject) =>
-          dispatchAction^(commandAction) |> ignore
-        )
-      | (Run, _, Some(callback)) =>
-        Js.Promise.make((~resolve, ~reject) =>
-          callback(dispatchAction^) |> ignore
-        )
-      | (_, _, _) => Js.Promise.resolve()
-      }
-    )
-    |> ignore;
+    runCommand(command, dispatchAction^);
   };
 
   dispatchAction := (action => dispatch(~action, ~update));
+  runCommand(init, dispatchAction^);
 
   currentView := view(model, dispatchAction^);
-  root := render(currentView^) |> Dom.init("app");
+  root := render(currentView^) |> Dom.init(rootId);
 };

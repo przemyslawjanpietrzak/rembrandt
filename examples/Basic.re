@@ -19,7 +19,7 @@ Rembrandt.run(
     <div key="0" id="count">
       { string_of_int(model) |> text }
     </div>
-    <button key="2" id="plus" onClick={(a: string) => ADD |> dispatch }>{ text("+") }</button>
-    <button key="3" id="minus" onClick={(a: string) => SUB |> dispatch }>{ text("-") }</button>
+    <button key="2" id="plus" onClick={ _ => ADD |> dispatch }>{ text("+") }</button>
+    <button key="3" id="minus" onClick={ _ => SUB |> dispatch }>{ text("-") }</button>
   </div>
 );

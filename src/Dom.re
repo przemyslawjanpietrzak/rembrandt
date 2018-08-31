@@ -1,4 +1,6 @@
-type eventHandler = string => unit
+type domElementValue =
+  | String
+  | Int;
 
 type domElement = {
   children: list(domElement),
@@ -6,19 +8,25 @@ type domElement = {
   parentElement: domElement,
   nodeType: int,
   getAttribute: string => string,
+  value: domElementValue,
 };
 
-[@bs.val]
-external createElement : string => domElement = "document.createElement";
+type event = {target: domElement};
 
-let getChildrenArray: (domElement) => array(domElement) = [%bs.raw
+type eventHandler = event => unit;
+
+[@bs.val]
+external createElement: string => domElement = "document.createElement";
+
+let getChildrenArray: domElement => array(domElement) = [%bs.raw
   {|
   function (element) {
       return element.childNodes;
     }
   |}
 ];
-let getChildren = (element: domElement): list(domElement) => getChildrenArray(element) -> Array.to_list;
+let getChildren = (element: domElement): list(domElement) =>
+  getChildrenArray(element)->Array.to_list;
 
 let getNthChild: (list(domElement), int) => domElement = [%bs.raw
   {|
@@ -37,7 +45,6 @@ let removeAttribute: (string, domElement) => domElement = [%bs.raw
   |}
 ];
 
-
 let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
   {|
  function (attribute, element) {
@@ -55,13 +62,15 @@ let _setAttributes: ((string, string), domElement) => domElement = [%bs.raw
   }
 |}
 ];
-let setAttributes = (attributes: list((string, string)), domElement: domElement) => {
-  attributes |> List.map((attribute) => _setAttributes(attribute, domElement));
+
+let setAttributes =
+    (attributes: list((string, string)), domElement: domElement) => {
+  attributes |> List.map(attribute => _setAttributes(attribute, domElement));
   domElement;
-}
+};
 
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
-    {|
+  {|
         function(parent, newNode, oldNode) {
             return parent.replaceChild(newNode, oldNode);
         }
@@ -69,16 +78,16 @@ let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
 ];
 
 let replaceTextNode: (domElement, string) => domElement = [%bs.raw
-{|
-  function(element, text) {
-    if (element.textContent) {
-      element.textContent = text
-    } else {
-      element.nodeValue = text
+  {|
+    function(element, text) {
+      if (element.textContent) {
+        element.textContent = text
+      } else {
+        element.nodeValue = text
+      }
+      return element;
     }
-    return element;
-  }
-|}
+  |}
 ];
 
 let init: (string, domElement) => domElement = [%bs.raw
@@ -98,7 +107,7 @@ let update: (string, domElement) => domElement = [%bs.raw
   |}
 ];
 
-let createTextNode: (string) => domElement = [%bs.raw
+let createTextNode: string => domElement = [%bs.raw
   {|
     function(text) {
       return document.createTextNode(text);
@@ -106,7 +115,7 @@ let createTextNode: (string) => domElement = [%bs.raw
 |}
 ];
 
-let getParentNode: (domElement) => domElement = [%bs.raw
+let getParentNode: domElement => domElement = [%bs.raw
   {|
     function(element) {
       return element.parentNode;
@@ -115,12 +124,12 @@ let getParentNode: (domElement) => domElement = [%bs.raw
 ];
 
 let removeChild: (domElement, domElement) => domElement = [%bs.raw
-    {|
+  {|
       function(parent, child) {
         return parent.removeChild(child);
       }
   |}
-]
+];
 
 let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
   {|
@@ -143,7 +152,7 @@ let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.ra
       return parent.addEventListener(eventName, handler);
     }
   |}
-]
+];
 
 let insertBefore: (domElement, domElement, domElement) => domElement = [%bs.raw
   {|
@@ -152,13 +161,17 @@ let insertBefore: (domElement, domElement, domElement) => domElement = [%bs.raw
       return parent;
     }
   |}
-]
+];
 
-let setHandlers = (handlers: list((string, option(eventHandler))), parent: domElement): domElement => {
+let setHandlers =
+    (handlers: list((string, option(eventHandler))), parent: domElement)
+    : domElement => {
   handlers
-    |> List.map(((name, handler)) => switch (handler) {
-      | None => parent
-      | Some(h) => addEventListener(h, name, parent)
-    })
+  |> List.map(((name, handler)) =>
+       switch (handler) {
+       | None => parent
+       | Some(h) => addEventListener(h, name, parent)
+       }
+     );
   parent;
 };

@@ -4,7 +4,6 @@ type nodeName =
   | DIV
   | TEXT
   | SPAN
-  | Null
   | Button;
 
 type attributes = list((string, string));
@@ -33,16 +32,19 @@ let text = (s: string): node => {
   children: [],
 };
 
-/* let nodeFactory = (nodeName: nodeName) => (~id="", ~_class="", ~style="", ~key="", ~onClick: eventHandler=defaultHandler, ~children, rest) : node => {
-     name: DIV,
-     text: "",
-     position: 0,
-     attributes: [("id", id), ("class", _class), ("style", style), ("key", key)],
-     handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
-     children,
-   }; */
+let defaultHandler = _ => false |> ignore;
 
-let defaultHandler = (a: string) => false |> ignore;
+let generateNode = (~name: nodeName, ~text, ~id, ~_class, ~style, ~key, ~onClick, ~children): node => {
+  name,
+  text,
+  position: 0,
+  attributes:
+    [("id", id), ("class", _class), ("style", style), ("key", key)]
+    |> List.filter(((_, value)) => value !== ""),
+  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
+  children,
+};
+
 let div =
     (
       ~id="",
@@ -51,18 +53,9 @@ let div =
       ~key="",
       ~onClick: eventHandler=defaultHandler,
       ~children,
-      rest,
-    )
-    : node => {
-  name: DIV,
-  text: "",
-  position: 0,
-  attributes:
-    [("id", id), ("class", _class), ("style", style), ("key", key)]
-    |> List.filter(((_, value)) => value !== ""),
-  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
-  children,
-};
+      _rest,
+    ): node => generateNode(~name=DIV, ~text="", ~id, ~_class, ~style, ~key, ~onClick, ~children);
+
 let span =
     (
       ~id="",
@@ -71,18 +64,9 @@ let span =
       ~key="",
       ~onClick: eventHandler=defaultHandler,
       ~children,
-      rest,
-    )
-    : node => {
-  name: SPAN,
-  text: "",
-  position: 0,
-  attributes:
-    [("id", id), ("class", _class), ("style", style), ("key", key)]
-    |> List.filter(((_, value)) => value !== ""),
-  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
-  children,
-};
+      _rest,
+    ): node => generateNode(~name=SPAN, ~text="", ~id, ~_class, ~style, ~key, ~onClick, ~children);
+
 let button =
     (
       ~id="",
@@ -91,45 +75,18 @@ let button =
       ~key="",
       ~onClick: eventHandler=defaultHandler,
       ~children,
-      rest,
-    )
-    : node => {
-  name: Button,
-  text: "",
-  position: 0,
-  attributes:
-    [("id", id), ("class", _class), ("style", style), ("key", key)]
-    |> List.filter(((_, value)) => value !== ""),
-  handlers: [("click", onClick !== defaultHandler ? Some(onClick) : None)],
-  children,
-};
+      _rest,
+    ): node => generateNode(~name=Button, ~text="", ~id, ~_class, ~style, ~key, ~onClick, ~children);
 
-let null = (): node => {
-  name: Null,
-  text: "",
-  position: 0,
-  attributes: [],
-  handlers: [],
-  children: [],
-};
+let createNodeElement = (node, render, name) => createElement(name)
+  |> setAttributes(node.attributes)
+  |> setHandlers(node.handlers)
+  |> appendChild(List.map(child => render(child), node.children))
 
 let rec render = (node: node) =>
   switch (node.name) {
-  /* TODO: */
   | TEXT => createTextNode(node.text)
-  | DIV =>
-    createElement("div")
-    |> setAttributes(node.attributes)
-    |> setHandlers(node.handlers)
-    |> appendChild(List.map(child => render(child), node.children))
-  | SPAN =>
-    createElement("span")
-    |> setAttributes(node.attributes)
-    |> setHandlers(node.handlers)
-    |> appendChild(List.map(child => render(child), node.children))
-  | Button =>
-    createElement("button")
-    |> setAttributes(node.attributes)
-    |> setHandlers(node.handlers)
-    |> appendChild(List.map(child => render(child), node.children))
-  };
+  | DIV => createNodeElement(node, render, "div")
+  | SPAN => createNodeElement(node, render, "span")
+  | Button => createNodeElement(node, render, "button")
+};
