@@ -6,10 +6,16 @@ S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-
 B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-platform/lib/ocaml
 FLG -nostdlib -no-alias-deps -color always
 FLG -w -30-40+6+7+27+32..39+44+45+101
+S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-fetch/lib/ocaml
+B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/bs-fetch/lib/ocaml
 S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@glennsl/bs-jest/lib/ocaml
 B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@glennsl/bs-jest/lib/ocaml
-S __tests__
-B lib/bs/__tests__
+S examples
+B lib/bs/examples
+S src/__tests__
+B lib/bs/src/__tests__
 S src
 B lib/bs/src
+S src/VirtualDom
+B lib/bs/src/VirtualDom
 ####BSB GENERATED: NO EDIT}

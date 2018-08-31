@@ -17,11 +17,13 @@ describe("ListDiff", () => {
 
     StringMap.find("1", keyIndex)
       |> expect
-      |> toEqual(0);
+      |> toEqual(0)
+      |> ignore;
 
     StringMap.find("2", keyIndex)
       |> expect
-      |> toEqual(1);
+      |> toEqual(1)
+      |> ignore;
 
     StringMap.find("3", keyIndex)
       |> expect
