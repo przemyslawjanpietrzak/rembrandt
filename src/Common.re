@@ -206,6 +206,7 @@ let button =
 let createNodeElement = (node, render, name) =>
   createElement(name)
   |> setAttributes(node.attributes)
+  |> setPosition(node.position)
   |> setHandlers(node.handlers)
   |> appendChild(List.map(child => render(child), node.children));
 

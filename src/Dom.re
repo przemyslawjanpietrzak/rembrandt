@@ -72,6 +72,15 @@ let setAttributes =
   domElement;
 };
 
+let setPosition: (int, domElement) => domElement = [%bs.raw
+  {|
+function (position, element) {
+  element.position = position;
+  return element;
+}
+|}
+];
+
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
   {|
         function(parent, newNode, oldNode) {
