@@ -5,3 +5,5 @@ let getValue: Dom.event => string = [%bs.raw
     }
   |}
 ];
+
+let x = e: Dom.event => e#targer#value;
