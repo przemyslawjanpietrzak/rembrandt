@@ -11,7 +11,10 @@ type domElement = {
   value: string,
 };
 
-type event = {target: domElement};
+type event = {
+  target: domElement,
+  preventDefault: unit => unit,
+};
 
 type eventHandler = event => unit;
 
@@ -48,7 +51,7 @@ let removeAttribute: (string, domElement) => domElement = [%bs.raw
 let setAttribute: ((string, string), domElement) => domElement = [%bs.raw
   {|
  function (attribute, element) {
-    element.setAttribute(attribute[0], attribute[1]);
+    element.setAttribute && element.setAttribute(attribute[0], attribute[1]);
     return element;
   }
 |}

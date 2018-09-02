@@ -4,39 +4,71 @@ open Forms;
 type model = {
   first: string,
   second: string,
+  response: string,
+  loading: bool,
   submited: bool,
 };
+
 type action =
   | FirstInputChange(string)
   | SecondInputChange(string)
+  | Submit
+  | LoadResponse(string);
 
-let update =
-    (model: model, action: action): (model, Command.command('action)) =>
+let send = dispatch =>
+  Js.Promise.(
+    Fetch.fetch("/api/example/2")
+    |> then_(Fetch.Response.text)
+    |> then_(text => LoadResponse(text) |> dispatch |> resolve)
+  )
+  |> ignore;
+
+let update = (model, action: action): (model, Command.command('action)) =>
   switch (action) {
-  | FirstInputChange(value) => ({ ...model, first: value }, Command.null)
-  | SecondInputChange(value) => ({ ...model, second: value }, Command.null)
+  | FirstInputChange(value) => ({...model, first: value}, Command.null)
+  | SecondInputChange(value) => ({...model, second: value}, Command.null)
+  | Submit => ({...model, submited: true, loading: true}, Command.run(send))
+  | LoadResponse(response) => (
+      {...model, loading: false, response},
+      Command.null,
+    )
   };
 
 Rembrandt.run(
   ~model={
     first: "first",
     second: "second",
+    response: "",
     submited: false,
+    loading: false,
   },
   ~update,
   ~view=
-    ({ first, second }, dispatch) =>
-      <div>
-        { text(first) }
-        <input
-          value=first
-          onInput={e => getValue(e) -> FirstInputChange -> dispatch}
-        />
-        { text(second) }
-        <input
-          value=second
-          onInput={e => getValue(e) -> SecondInputChange -> dispatch}
-        />
-      </div>,
+    ({first, second, loading, response}, dispatch) =>
+      <form
+        onSubmit={({ preventDefault }) => {
+          preventDefault(());
+          Submit |> dispatch;
+        }}
+        action=""
+      >
+        /* <span key="1">{text(loading ? "loading" : "")}</span>
+        <span key="2"> {text("response: " ++ response)} </span>
+        <span key="5"> {text("first: " ++ first)} </span>
+        <span key="6"> {text("second: " ++ second)} </span> */
+        <div key="3">
+          <input
+            key="1"
+            value=first
+            onInput={e => getValue(e)->FirstInputChange->dispatch}
+          />
+          <input
+            key="2"
+            value=second
+            onInput={e => getValue(e)->SecondInputChange->dispatch}
+          />
+        </div>
+        <button key="4"> {text("send")} </button>
+      </form>,
   (),
 );

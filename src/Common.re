@@ -5,7 +5,8 @@ type nodeName =
   | TEXT
   | SPAN
   | Button
-  | Input;
+  | Input
+  | Form;
 
 type attributes = list((string, string));
 
@@ -44,9 +45,12 @@ let generateNode =
       ~style,
       ~key,
       ~value="",
+      ~action="",
+      ~method="",
       ~onClick,
       ~onChange=defaultHandler,
       ~onInput=defaultHandler,
+      ~onSubmit=defaultHandler,
       ~children,
       ~_type="",
       (),
@@ -62,13 +66,16 @@ let generateNode =
       ("style", style),
       ("key", key),
       ("type", _type),
-      ("value", value)
+      ("value", value),
+      ("method", method),
+      ("action", action)
     ]
     |> List.filter(((_, value)) => value !== ""),
   handlers: [
     ("click", onClick !== defaultHandler ? Some(onClick) : None),
     ("change", onChange !== defaultHandler ? Some(onChange) : None),
     ("input", onInput !== defaultHandler ? Some(onInput) : None),
+    ("submit", onSubmit !== defaultHandler ? Some(onSubmit) : None),
   ],
   children,
 };
@@ -122,6 +129,34 @@ let input =
     ~onChange,
     (),
   );
+
+let form =
+  (
+    ~id="",
+    ~_class="",
+    ~style="",
+    ~key="",
+    ~action="",
+    ~method="",
+    ~onClick: eventHandler=defaultHandler,
+    ~onSubmit: eventHandler=defaultHandler,
+    ~children,
+    _rest,
+  )
+  : node =>
+generateNode(
+  ~name=Form,
+  ~id,
+  ~_class,
+  ~style,
+  ~key,
+  ~action,
+  ~method,
+  ~children,
+  ~onClick,
+  ~onSubmit,
+  (),
+);
 
 let span =
     (
@@ -181,4 +216,5 @@ let rec render = (node: node) =>
   | SPAN => createNodeElement(node, render, "span")
   | Button => createNodeElement(node, render, "button")
   | Input => createNodeElement(node, render, "input")
+  | Form => createNodeElement(node, render, "form")
   };
