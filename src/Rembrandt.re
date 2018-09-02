@@ -16,4 +16,8 @@ module Forms = {
   let getValue = Forms.getValue;
 }
 
+module MiddleWares = {
+  let logger = Logger.loggerMiddleWare;
+}
+
 let run = Run.run;

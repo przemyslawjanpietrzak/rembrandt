@@ -42,6 +42,7 @@ Rembrandt.run(
     submited: false,
     loading: false,
   },
+  ~middleWare=Rembrandt.MiddleWares.logger,
   ~update,
   ~view=
     ({first, second, loading, response}, dispatch) =>
@@ -52,10 +53,10 @@ Rembrandt.run(
         }}
         action=""
       >
-        /* <span key="1">{text(loading ? "loading" : "")}</span>
-        <span key="2"> {text("response: " ++ response)} </span>
-        <span key="5"> {text("first: " ++ first)} </span>
-        <span key="6"> {text("second: " ++ second)} </span> */
+        <span key="1"></span>
+        <span key="2"> </span>
+        <span key="5"> </span>
+        <span key="6"> </span>
         <div key="3">
           <input
             key="1"

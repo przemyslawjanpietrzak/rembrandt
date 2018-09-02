@@ -35,6 +35,7 @@ let run =
       ~view: ('model, 'dispatch) => node,
       ~model: 'model,
       ~update: ('model, 'action) => ('model, Command.command('action)),
+      ~middleWare:('model, 'model) => unit = (_, _) => (),
       (),
     ) => {
   let root = ref(Dom.createElement("div"));
@@ -44,6 +45,7 @@ let run =
 
   let rec dispatch = (~action, ~update) => {
     let (updatedModel, command) = update(currentModel^, action);
+    middleWare(currentModel^, updatedModel);
     currentModel := updatedModel;
     let updatedView = view(currentModel^, dispatchAction^);
     VirtualDom.setPositions(~node=updatedView, ~initialPosition=0) |> ignore;
