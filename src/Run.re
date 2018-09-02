@@ -30,11 +30,11 @@ let dispatch = (action, model, update) => update(model, action);
 
 let run =
     (
-      ~rootId="app",
-      ~init=Command.null,
       ~view: ('model, 'dispatch) => node,
       ~model: 'model,
       ~update: ('model, 'action) => ('model, Command.command('action)),
+      ~init=Command.null,
+      ~rootId="app",
       ~middleWare:('model, 'model) => unit = (_, _) => (),
       (),
     ) => {

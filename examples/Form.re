@@ -53,23 +53,22 @@ Rembrandt.run(
         }}
         action=""
       >
-        <span key="1"></span>
-        <span key="2"> </span>
-        <span key="5"> </span>
-        <span key="6"> </span>
-        <div key="3">
+        <span key="1">{text(first)}</span>
+        <span key="2"> {text(second)}</span>
+        <span key="3"> {text(response)}</span>
+        <div key="5">
           <input
-            key="1"
+            key="99"
             value=first
             onInput={e => getValue(e)->FirstInputChange->dispatch}
           />
           <input
-            key="2"
+            key="698"
             value=second
             onInput={e => getValue(e)->SecondInputChange->dispatch}
           />
         </div>
-        <button key="4"> {text("send")} </button>
+        <button key="7"> {text("send")} </button>
       </form>,
   (),
 );
