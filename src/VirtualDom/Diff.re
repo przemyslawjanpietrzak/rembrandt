@@ -132,7 +132,7 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
   let patches = getPatches(oldNode, newNode);
   currentPatches := addPatch(patches, currentPatches^, index);
 
-  let childrenPatches =
+  let _childrenPatches =
     switch (newNode) {
     | None => []
     | Some(node) =>

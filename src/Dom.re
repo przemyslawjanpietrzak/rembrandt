@@ -11,7 +11,10 @@ type domElement = {
   value: string,
 };
 
-type event = {target: domElement};
+type event = {
+  target: domElement,
+  preventDefault: unit => unit,
+};
 
 type eventHandler = event => unit;
 
@@ -68,6 +71,15 @@ let setAttributes =
   attributes |> List.map(attribute => _setAttributes(attribute, domElement));
   domElement;
 };
+
+let setPosition: (int, domElement) => domElement = [%bs.raw
+  {|
+function (position, element) {
+  element.position = position;
+  return element;
+}
+|}
+];
 
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
   {|

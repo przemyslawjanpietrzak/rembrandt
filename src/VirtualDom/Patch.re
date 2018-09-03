@@ -91,6 +91,7 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
      );
 
 let rec walker = (element: Dom.domElement, patches, step: ref(int)) => {
+  Js.log3(element, patches, step);
   let children = Dom.getChildren(element);
   children
   |> List.iter(child => {

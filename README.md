@@ -1,6 +1,6 @@
-# Basic Reason Template
+# Rembrandt
 
-Hello! This project allows you to quickly get started with Reason and BuckleScript. If you wanted a more sophisticated version, try the `react` template (`bsb -theme react -init .`).
+Simple functional UI framework written in Reasonml.
 
 # Build
 ```

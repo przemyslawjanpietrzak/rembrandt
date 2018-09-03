@@ -15,7 +15,7 @@ let request = dispatch =>
   |> ignore;
 
 let update =
-    (model: model, action: action): (model, Command.command('action)) =>
+    (_model: model, action: action): (model, Command.command('action)) =>
   switch (action) {
   | FetchData => ("loading", Command.run(request))
   | LoadData(text) => (text, Command.null)
