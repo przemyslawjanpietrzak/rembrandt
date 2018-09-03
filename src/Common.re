@@ -34,7 +34,7 @@ let text = (s: string): node => {
   children: [],
 };
 
-let defaultHandler = _ => false |> ignore;
+let defaultHandler = _ => ();
 
 let generateNode =
     (

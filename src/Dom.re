@@ -161,7 +161,10 @@ let appendChild: (list(domElement), domElement) => domElement = [%bs.raw
 let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.raw
   {|
     function(handler, eventName, parent) {
-      return parent.addEventListener(eventName, handler);
+      return parent.addEventListener(eventName, function(e) {
+        handler(e);
+        return false;
+      });
     }
   |}
 ];

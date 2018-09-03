@@ -1,4 +1,4 @@
-open Common
+open Rembrandt.Elements
 
 type model = int;
 type action =
@@ -19,7 +19,7 @@ Rembrandt.run(
   ~model=42,
   ~update=update,
   ~view=(model, dispatch) => <div>
-    <div key="0" id="count">
+    <div key="1" id="count">
       { string_of_int(model) |> text }
     </div>
     <button key="2" id="plus" onClick={ _ => Add |> dispatch }>{ text("+") }</button>

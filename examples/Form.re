@@ -1,5 +1,5 @@
-open Common;
-open Forms;
+open Rembrandt.Elements;
+open Rembrandt.Forms;
 
 type model = {
   first: string,
@@ -46,24 +46,19 @@ Rembrandt.run(
   ~update,
   ~view=
     ({first, second, loading, response}, dispatch) =>
-      <form
-        onSubmit={({ preventDefault }) => {
-          preventDefault(());
-          Submit |> dispatch;
-        }}
-        action=""
-      >
-        <span key="1">{text(first)}</span>
-        <span key="2"> {text(second)}</span>
-        <span key="3"> {text(response)}</span>
+      <form onSubmit={_ => Submit |> dispatch} action="">
+        <span key="1"> {text("first" ++ first)} </span>
+        <span key="2"> {text("second" ++ second)} </span>
+        <span key="3"> {text("response" ++ response)} </span>
+        <span key="4"> {text(loading ? "loading" : "loaded")} </span>
         <div key="5">
           <input
-            key="99"
+            key="1"
             value=first
             onInput={e => getValue(e)->FirstInputChange->dispatch}
           />
           <input
-            key="698"
+            key="2"
             value=second
             onInput={e => getValue(e)->SecondInputChange->dispatch}
           />

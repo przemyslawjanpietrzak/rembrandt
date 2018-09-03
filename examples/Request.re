@@ -1,4 +1,4 @@
-open Common;
+open Rembrandt.Elements;
 
 type model = string;
 type action =

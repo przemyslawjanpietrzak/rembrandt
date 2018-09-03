@@ -4,6 +4,7 @@ module Elements = {
   let button = Common.button;
   let input = Common.input;
   let text = Common.text;
+  let form = Common.form;
 }
 
 module Commands = {

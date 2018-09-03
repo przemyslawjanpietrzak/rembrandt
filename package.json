@@ -2,17 +2,7 @@
   "name": "rembrant",
   "version": "0.1.0",
   "scripts": {
-    "build": "bsb -make-world",
-    "start": "bsb -make-world -w",
-    "clean:bs": "bsb -clean-world",
-    "clean:server": "rm -rf cypress/server/public",
-    "clean": "npm run clean:bs && npm run clean:server",
-    "test": "jest",
-    "cy": "cypress open",
-    "cy:server": "node cypress/server/main.js",
-    "prepare-examples": "mkdir -p cypress/server/public/basic && mkdir -p cypress/server/public/form && mkdir -p cypress/server/public/request && cp examples/*.html cypress/server/public/basic && cp examples/*.html cypress/server/public/request  && cp examples/*.html cypress/server/public/form",
-    "build-examples": "fpack examples/Basic.bs.js --output=cypress/server/public/basic && fpack examples/Request.bs.js --output=cypress/server/public/request && fpack examples/Request.bs.js --output=cypress/server/public/request && fpack examples/Form.bs.js --output=cypress/server/public/form",
-    "ci": "npm run clean && npm run build && npm run build-examples && npm run prepare-examples"
+    "start": "nps"
   },
   "keywords": [
     "BuckleScript"
