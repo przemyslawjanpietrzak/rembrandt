@@ -7,9 +7,9 @@ describe("Position", () => {
   open Expect;
 
   test("single node", () => {
-    let node = </div>;
+    let node = <div/>;
     node.position |> expect |> toBe(1);
-  })
+  });
 
   test("Mulitple nodes", () => {
     let node = <div>
