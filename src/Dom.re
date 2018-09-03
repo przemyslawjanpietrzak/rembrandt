@@ -163,7 +163,6 @@ let addEventListener: (eventHandler, string, domElement) => domElement = [%bs.ra
     function(handler, eventName, parent) {
       return parent.addEventListener(eventName, function(e) {
         handler(e);
-        return false;
       });
     }
   |}

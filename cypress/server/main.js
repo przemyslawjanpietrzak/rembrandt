@@ -10,5 +10,5 @@ app.listen(3000, () => console.log('Listening on port 3000!'))
 app.get('/api/example/1', (req, res) => {
   setTimeout(() => {
     res.send('example string #1');
-  }, 5000);
+  }, 3000);
 });

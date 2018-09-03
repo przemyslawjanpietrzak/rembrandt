@@ -1,4 +1,5 @@
 open Rembrandt.Elements;
+open Rembrandt.Commands;
 
 type model = string;
 type action =
@@ -22,11 +23,16 @@ let update =
   | Error => ("error", Command.null)
   };
 
-Rembrandt.run(~model="begin", ~update, ~view=(model, dispatch) =>
-  <div>
-    <div key="0" id="data"> {model |> text} </div>
-    <button key="2" id="request" onClick={_ => FetchData |> dispatch}>
-      {text("Load Data")}
-    </button>
-  </div>
+Rembrandt.run(
+  ~model="begin",
+  ~update,
+  ~view=
+    (model, dispatch) =>
+      <div>
+        <div key="0" id="data"> {model |> text} </div>
+        <button key="2" id="request" onClick={_ => FetchData |> dispatch}>
+          {text("Load Data")}
+        </button>
+      </div>,
+  (),
 );

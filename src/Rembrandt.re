@@ -11,6 +11,7 @@ module Commands = {
   let null = Command.null;
   let action = Command.action;
   let run = Command.run;
+  type command('a) = Command.command('a);
 }
 
 module Forms = {

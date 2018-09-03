@@ -19,7 +19,7 @@ module.exports = {
     test: {
       default: 'jest __tests__',
       e2e: {
-        script: 'node cypress/server/main.js & ./node_modules/.bin/cypress run'
+        script: `node cypress/server/main.js & ./node_modules/.bin/cypress run --spec 'cypress/integration/**'`
       }
     },
     clean: {
