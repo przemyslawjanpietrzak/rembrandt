@@ -27,5 +27,12 @@ describe("Test diff algorithm", () => {
       <div key="1"></div>,
       <div key="1" id="new"></div>,
     ) |> expect |> toEqual([("id", "new")])
+  });
+
+  test("removed props", () => {
+    diffProps(
+      <div key="1" id="old"></div>,
+      <div key="1"></div>,
+    ) |> expect |> toEqual([("id", "")])
   })
 });

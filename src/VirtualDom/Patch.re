@@ -48,7 +48,7 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
                maps^,
              );
            } else {
-             render(item);
+             Render.render(item);
            };
          staticNodeList :=
            replaceInList(staticNodeList^, move.index, insertNode);
@@ -70,7 +70,7 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
        | Replace =>
          switch (patch.content) {
          | Some(node) =>
-           let newDomElement = render(node);
+           let newDomElement = Render.render(node);
            Dom.replaceChild(
              element->Dom.getParentNode,
              newDomElement,

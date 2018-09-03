@@ -8,7 +8,7 @@ describe("Position", () => {
 
   test("single node", () => {
     let node = <div/>;
-    node.position |> expect |> toBe(1);
+    node.position |> expect |> toBe(0);
   });
 
   test("Mulitple nodes", () => {

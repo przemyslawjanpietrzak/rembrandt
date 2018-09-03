@@ -70,8 +70,7 @@ let generateNode =
         ("value", value),
         ("method", method),
         ("action", action),
-      ]
-      |> List.filter(((_, value)) => value !== ""),
+      ],
     handlers: [
       ("click", onClick !== defaultHandler ? Some(onClick) : None),
       ("change", onChange !== defaultHandler ? Some(onChange) : None),
@@ -81,7 +80,6 @@ let generateNode =
     children,
   };
   children
-  /* |> List.filter(({ name }) => name !== TEXT) */
   |> List.iter((child) => {
     if (child.name != TEXT) {
       r.position = r.position + child.position;
@@ -213,20 +211,3 @@ let button =
     ~children,
     (),
   );
-
-let createNodeElement = (node, render, name) =>
-  createElement(name)
-  |> setAttributes(node.attributes)
-  /* |> setPosition(node.position) */
-  |> setHandlers(node.handlers)
-  |> appendChild(List.map(child => render(child), node.children));
-
-let rec render = (node: node) =>
-  switch (node.name) {
-  | TEXT => createTextNode(node.text)
-  | DIV => createNodeElement(node, render, "div")
-  | SPAN => createNodeElement(node, render, "span")
-  | Button => createNodeElement(node, render, "button")
-  | Input => createNodeElement(node, render, "input")
-  | Form => createNodeElement(node, render, "form")
-  };

@@ -2,13 +2,15 @@ open Common
 
 type model = int;
 type action =
-  | ADD
-  | SUB;
+  | Add
+  | Sub
+  | Twice
 
 let update = (model: model, action: action): (model, Command.command('action)) => {
   switch action {
-  | ADD => (model + 1, Command.null)
-  | SUB => (model - 1, Command.null)
+  | Add => (model + 1, Command.null)
+  | Sub => (model - 1, Command.null)
+  | Twice => (model + 1, Command.action(Add))
   };
 };
 
@@ -20,8 +22,9 @@ Rembrandt.run(
     <div key="0" id="count">
       { string_of_int(model) |> text }
     </div>
-    <button key="2" id="plus" onClick={ _ => ADD |> dispatch }>{ text("+") }</button>
-    <button key="3" id="minus" onClick={ _ => SUB |> dispatch }>{ text("-") }</button>
+    <button key="2" id="plus" onClick={ _ => Add |> dispatch }>{ text("+") }</button>
+    <button key="3" id="minus" onClick={ _ => Sub |> dispatch }>{ text("-") }</button>
+    <button key="4" id="minus" onClick={ _ => Twice |> dispatch }>{ text("twice +") }</button>
   </div>,
   (),
 );

@@ -1,6 +1,5 @@
 open Common;
 
-/* TODO: remove attr?? */
 let diffProps = (oldNode: node, newNode: node) => {
   let changedProps =
     oldNode.attributes

@@ -6,12 +6,6 @@ type update('model, 'action) =
 
 type view('model, 'action) = ('model, 'action => bool) => node;
 
-type run('model, 'action) = {
-  view: ('model, 'action => 'model) => node,
-  update: ('model, 'action) => 'model,
-  model: 'model,
-};
-
 let runCommand = (command, dispatchAction) => {
   switch (command.commandType, command.commandAction, command.callback) {
     | (CAction, Some(commandAction), _) =>
@@ -48,7 +42,6 @@ let run =
     middleWare(currentModel^, updatedModel);
     currentModel := updatedModel;
     let updatedView = view(currentModel^, dispatchAction^);
-    /* VirtualDom.setPositions(~node=updatedView, ~initialPosition=0) |> ignore; */
     let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
     VirtualDom.patch(root^, diff);
     runCommand(command, dispatchAction^);
@@ -58,5 +51,5 @@ let run =
   runCommand(init, dispatchAction^);
 
   currentView := view(model, dispatchAction^);
-  root := render(currentView^) |> Dom.init(rootId);
+  root := Render.render(currentView^) |> Dom.init(rootId);
 };

@@ -34,7 +34,14 @@ let nthChildren = (nodes: option(node), index: int): option('a) =>
 let addPatch = (patch: list(patch), patches: patches, index: int): patches =>
   switch (patch) {
   | [] => patches
-  | _ => IntMap.add(index, patch, patches)
+  | _ =>
+    if (IntMap.mem(index, patches)) {
+      let existingPatch = IntMap.find(index, patches);
+      let concatedPatches = List.append(existingPatch, patch);
+      IntMap.add(index, concatedPatches, patches);
+    } else {
+      IntMap.add(index, patch, patches);
+    }
   };
 
 let getPrevChildPosition = (children: list(node), index: int): int =>
@@ -118,8 +125,6 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
              let prevChildPosition =
                getPrevChildPosition(oldNode.children, i);
              currentNodeIndex := currentNodeIndex^ + prevChildPosition + 1;
-          
-
              currentPatches :=
                walker(
                  ~oldNode=oldChildNode,

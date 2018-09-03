@@ -2,15 +2,12 @@
   "name": "rembrant",
   "version": "0.1.0",
   "sources": [
-
     {
-      "dir": "src/VirtualDom"
+      "dir": "src",
+      "subdirs": true
     },
     {
-      "dir": "src"
-    },
-    {
-      "dir": "src/__tests__",
+      "dir": "__tests__",
       "type": "dev"
     },
     {

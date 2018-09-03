@@ -32,7 +32,7 @@ let getItemKey = (node: node): option(string) =>
       node.attributes,
     )
   ) {
-  | (key, value) => Some(value)
+  | (_key, value) => Some(value)
   | exception Not_found => None
   };
 
@@ -83,7 +83,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
 
   /* first pass to check item in old list: if it's removed or not */
   oldNodes
-  |> List.map(node => {
+  |> List.iter(node => {
        switch (getItemKey(node)) {
        | None =>
          let freeItem = List.nth(newFree, freeIndex^);
@@ -98,7 +98,6 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
            children := List.append(children^, [None]);
          }
        };
-       node;
      });
   let simulateList = ref(List.map(identity, children^));
   /* remove items no longer exist */

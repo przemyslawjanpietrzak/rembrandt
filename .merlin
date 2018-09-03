@@ -12,8 +12,8 @@ S /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@gl
 B /Users/przemyslawpietrzak/code/open-source/rembrandt/rembrant/node_modules/@glennsl/bs-jest/lib/ocaml
 S examples
 B lib/bs/examples
-S src/__tests__
-B lib/bs/src/__tests__
+S __tests__
+B lib/bs/__tests__
 S src
 B lib/bs/src
 S src/VirtualDom
