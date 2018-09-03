@@ -157,4 +157,5 @@ describe("Test diff algorithm", () => {
     diffs[0][1].moves.length.should.equal(4) */
   /* }) */
 
+ 
 });
