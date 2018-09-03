@@ -48,7 +48,7 @@ let run =
     middleWare(currentModel^, updatedModel);
     currentModel := updatedModel;
     let updatedView = view(currentModel^, dispatchAction^);
-    VirtualDom.setPositions(~node=updatedView, ~initialPosition=0) |> ignore;
+    /* VirtualDom.setPositions(~node=updatedView, ~initialPosition=0) |> ignore; */
     let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
     VirtualDom.patch(root^, diff);
     runCommand(command, dispatchAction^);

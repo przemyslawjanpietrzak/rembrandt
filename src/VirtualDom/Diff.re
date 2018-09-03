@@ -43,39 +43,9 @@ let getPrevChildPosition = (children: list(node), index: int): int =>
   | _ =>
     switch (List.nth(children, index - 1)) {
     | exception nth => 0
-    | _ => List.nth(children, index - 1).position
+    | child => child.position
     }
   };
-
-let diffProps = (oldNode: node, newNode: node) => {
-  let changedProps =
-    oldNode.attributes
-    |> List.filter(((oldKey, oldValue)) =>
-         List.exists(
-           ((newKey, newValue)) =>
-             newKey === oldKey && newValue !== oldValue,
-           newNode.attributes,
-         )
-       )
-    |> List.map(((oldKey, oldValue)) =>
-         List.find(
-           ((newKey, newValue)) => oldKey === newKey,
-           newNode.attributes,
-         )
-       );
-
-  let newProps =
-    newNode.attributes
-    |> List.filter(((newKey, _)) =>
-         !
-           List.exists(
-             ((oldKey, _)) => oldKey !== newKey,
-             oldNode.attributes,
-           )
-       );
-
-  List.append(changedProps, newProps);
-};
 
 let getPatches = (oldNode, newNode: option(node)): list(patch) =>
   switch (newNode) {
@@ -88,7 +58,7 @@ let getPatches = (oldNode, newNode: option(node)): list(patch) =>
       [{patchType: Text, content: Some(node), attributes: None, moves: []}];
     } else if (node.name === oldNode.name) {
       /* Diff props */
-      let propsPatches = diffProps(oldNode, node);
+      let propsPatches = DiffProps.diffProps(oldNode, node);
       switch (propsPatches) {
       | [] => []
       | _ => [
@@ -141,17 +111,21 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
       currentPatches := addPatch(childrenPatches, currentPatches^, index);
 
       if (node.name === oldNode.name) {
+        let currentNodeIndex = ref(index);
         oldNode.children
         |> List.iteri((i, oldChildNode) => {
              let newChildNode = nthChildren(newNode, i);
-             let currentNodeIndex =
-               getPrevChildPosition(oldNode.children, index);
+             let prevChildPosition =
+               getPrevChildPosition(oldNode.children, i);
+             currentNodeIndex := currentNodeIndex^ + prevChildPosition + 1;
+          
+
              currentPatches :=
                walker(
                  ~oldNode=oldChildNode,
                  ~newNode=newChildNode,
                  ~patches=currentPatches^,
-                 ~index=index + currentNodeIndex + i + 1,
+                 ~index=currentNodeIndex^,
                );
            });
         [];

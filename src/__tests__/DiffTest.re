@@ -2,11 +2,8 @@ open Jest;
 
 open Common;
 
-open Positions;
 open Diff;
 open ListDiff;
-
-/* let getPatchType = patches => List.nth(patches, 0).patchType; */
 
 describe("Test diff algorithm", () => {
   open Expect;
@@ -23,8 +20,6 @@ describe("Test diff algorithm", () => {
       { updatedNode }
       <div key="3"/>
     </div>;
-    setPositions(oldNode, 0) |> ignore;
-    setPositions(newNode, 0) |> ignore;
 
     let diff = getDiff(oldNode, Some(newNode));
     let patch = diff |> Utils.IntMap.find(2);
@@ -48,8 +43,6 @@ describe("Test diff algorithm", () => {
       <div key="2" id="new1"/>
       <div key="3"id="new2"/>
     </div>;
-    setPositions(oldNode, 0) |> ignore;
-    setPositions(newNode, 0) |> ignore;
 
     let diff = getDiff(oldNode, Some(newNode));
 
@@ -84,8 +77,6 @@ describe("Test diff algorithm", () => {
       <div key="2"  />
       <div key="3"/>
     </div>;
-    setPositions(oldNode, 0) |> ignore;
-    setPositions(newNode, 0) |> ignore;
 
   let diff = getDiff(oldNode, Some(newNode));
   let patch = diff |> Utils.IntMap.find(2);
@@ -157,4 +148,5 @@ describe("Test diff algorithm", () => {
     diffs[0][1].moves.length.should.equal(4) */
   /* }) */
 
+ 
 });
