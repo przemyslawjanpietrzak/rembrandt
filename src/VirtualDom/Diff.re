@@ -34,9 +34,7 @@ let nthChildren = (nodes: option(node), index: int): option('a) =>
 let addPatch = (patch: list(patch), patches: patches, index: int): patches =>
   switch (patch) {
   | [] => patches
-  | _ =>
-    /* Js.log4("patch", index, patch, patches); */
-    IntMap.add(index, patch, patches);
+  | _ => IntMap.add(index, patch, patches)
   };
 
 let getPrevChildPosition = (children: list(node), index: int): int =>
@@ -49,43 +47,10 @@ let getPrevChildPosition = (children: list(node), index: int): int =>
     }
   };
 
-/* let diffProps = (oldNode: node, newNode: node) => {
-  /* Js.log3("diff props", oldNode, newNode); */
-
-  let changedProps =
-    oldNode.attributes
-    |> List.filter(((oldKey, oldValue)) =>
-         List.exists(
-           ((newKey, newValue)) =>
-             newKey == oldKey && newValue != oldValue,
-           newNode.attributes,
-         )
-       )
-    |> List.map(((oldKey, oldValue)) =>
-         List.find(
-           ((newKey, _newValue)) => oldKey == newKey,
-           newNode.attributes,
-         )
-       );
-
-  let newProps =
-    newNode.attributes
-    |> List.filter(((newKey, _)) =>
-         !
-           List.exists(
-             ((oldKey, _)) => oldKey != newKey,
-             oldNode.attributes,
-           )
-       );
-  /* Js.log3("changed props", changedProps, newProps); */
-  List.append(changedProps, newProps);
-}; */
-
 let getPatches = (oldNode, newNode: option(node)): list(patch) =>
   switch (newNode) {
   | None => []
   | Some(node) =>
-    /* Js.log3("getPatches", oldNode, node); */
     /* TextNode content replacing */
     if (node.name === TEXT
         && oldNode.name === TEXT
@@ -96,9 +61,7 @@ let getPatches = (oldNode, newNode: option(node)): list(patch) =>
       let propsPatches = DiffProps.diffProps(oldNode, node);
       switch (propsPatches) {
       | [] => []
-      | _ => {
-        /* Js.log4("getProps", propsPatches, oldNode, newNode); */
-        [
+      | _ => [
           {
             patchType: Props,
             attributes: Some(propsPatches),
@@ -106,7 +69,6 @@ let getPatches = (oldNode, newNode: option(node)): list(patch) =>
             moves: [],
           },
         ]
-        }
       };
     } else {
       [
@@ -154,8 +116,10 @@ let rec walker = (~oldNode, ~newNode: option(node), ~patches, ~index) => {
         |> List.iteri((i, oldChildNode) => {
              let newChildNode = nthChildren(newNode, i);
              let prevChildPosition =
-               getPrevChildPosition(oldNode.children, index);
+               getPrevChildPosition(oldNode.children, i);
              currentNodeIndex := currentNodeIndex^ + prevChildPosition + 1;
+          
+
              currentPatches :=
                walker(
                  ~oldNode=oldChildNode,

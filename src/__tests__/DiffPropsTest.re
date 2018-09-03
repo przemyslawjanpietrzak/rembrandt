@@ -2,11 +2,8 @@ open Jest;
 
 open Common;
 
-open Positions;
 open Diff;
 open DiffProps;
-
-/* let getPatchType = patches => List.nth(patches, 0).patchType; */
 
 describe("Test diff algorithm", () => {
   open Expect;

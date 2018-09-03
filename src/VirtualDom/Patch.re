@@ -65,7 +65,7 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
 
 let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
   currentPatches
-  |> List.iter((patch) =>
+  |> List.iter(patch =>
        switch (patch.patchType) {
        | Replace =>
          switch (patch.content) {
@@ -91,7 +91,6 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
      );
 
 let rec walker = (element: Dom.domElement, patches, step: ref(int)) => {
-  /* Js.log2(step^, "step") */
   let children = Dom.getChildren(element);
   children
   |> List.iter(child => {
