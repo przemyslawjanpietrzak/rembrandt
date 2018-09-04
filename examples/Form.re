@@ -6,7 +6,6 @@ type model = {
   second: string,
   response: string,
   loading: bool,
-  submited: bool,
 };
 
 type action =
@@ -17,7 +16,10 @@ type action =
 
 let send = dispatch =>
   Js.Promise.(
-    Fetch.fetch("/api/example/2")
+    Fetch.fetchWithInit(
+      "/api/form",
+      Fetch.RequestInit.make(~method_=Post, ()),
+    )
     |> then_(Fetch.Response.text)
     |> then_(text => LoadResponse(text) |> dispatch |> resolve)
   )
@@ -27,7 +29,7 @@ let update = (model, action: action): (model, Command.command('action)) =>
   switch (action) {
   | FirstInputChange(value) => ({...model, first: value}, Command.null)
   | SecondInputChange(value) => ({...model, second: value}, Command.null)
-  | Submit => ({...model, submited: true, loading: true}, Command.run(send))
+  | Submit => ({...model, loading: true, response: "in progress"}, Command.run(send))
   | LoadResponse(response) => (
       {...model, loading: false, response},
       Command.null,
@@ -36,31 +38,32 @@ let update = (model, action: action): (model, Command.command('action)) =>
 
 Rembrandt.run(
   ~model={
-    first: "first",
-    second: "second",
-    response: "",
-    submited: false,
+    first: "",
+    second: "",
+    response: "example string #2",
     loading: false,
   },
   ~middleWare=Rembrandt.MiddleWares.logger,
   ~update,
   ~view=
     ({first, second, loading, response}, dispatch) =>
-      <form onSubmit={_ => Submit |> dispatch} action="">
-        <span key="1"> {text("first" ++ first)} </span>
-        <span key="2"> {text("second" ++ second)} </span>
-        <span key="3"> {text("response" ++ response)} </span>
-        <span key="4"> {text(loading ? "loading" : "loaded")} </span>
+      <form onSubmit={_ => Submit |> dispatch} action="#">
+        <div key="1" id="first"> {text("first: " ++ first)} </div>
+        <div key="2" id="second"> {text("second: " ++ second)} </div>
+        <div key="3" id="response"> {text( response)} </div>
+        <div key="4" id="loading"> {text(loading ? "loading" : "loaded")} </div>
         <div key="5">
           <input
             key="1"
+            id="first-input"
             value=first
-            onInput={e => getValue(e)->FirstInputChange->dispatch}
+            onInput={e => FirstInputChange(getValue(e)) |> dispatch}
           />
           <input
             key="2"
+            id="second-input"
             value=second
-            onInput={e => getValue(e)->SecondInputChange->dispatch}
+            onInput={e => SecondInputChange(getValue(e)) |> dispatch}
           />
         </div>
         <button key="7"> {text("send")} </button>

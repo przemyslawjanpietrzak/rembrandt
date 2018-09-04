@@ -27,5 +27,10 @@ module.exports = {
       bs: 'bsb -clean-world',
       server: 'rm -rf cypress/server/public',
     },
+    server: 'node cypress/server/main.js',
+    cy: {
+      default: './node_modules/.bin/cypress open',
+      run: `./node_modules/.bin/cypress run --spec 'cypress/integration/**'`,
+    }
   },
 }

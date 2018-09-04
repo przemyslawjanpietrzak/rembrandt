@@ -29,7 +29,7 @@ let run =
       ~update: ('model, 'action) => ('model, Command.command('action)),
       ~init=Command.null,
       ~rootId="app",
-      ~middleWare:('model, 'model) => unit = (_, _) => (),
+      ~middleWare:('model, 'model, 'action) => unit = (_, _, _) => (),
       (),
     ) => {
   let root = ref(Dom.createElement("div"));
@@ -37,13 +37,16 @@ let run =
   let dispatchAction = ref(_ => ());
   let currentModel = ref(model);
 
-  let rec dispatch = (~action, ~update) => {
+  let dispatch = (~action, ~update) => {
     let (updatedModel, command) = update(currentModel^, action);
-    middleWare(currentModel^, updatedModel);
+    middleWare(currentModel^, updatedModel, action);
     currentModel := updatedModel;
     let updatedView = view(currentModel^, dispatchAction^);
+    Js.log3("pre diff", currentView^, updatedView);
     let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
+    Js.log2("diff", diff);
     VirtualDom.patch(root^, diff);
+    currentView := updatedView;
     runCommand(command, dispatchAction^);
   };
 

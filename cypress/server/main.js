@@ -12,3 +12,10 @@ app.get('/api/example/1', (req, res) => {
     res.send('example string #1');
   }, 3000);
 });
+
+
+app.post('/api/form', (req, res) => {
+  setTimeout(() => {
+    res.send('example string #2');
+  }, 3000);
+});
