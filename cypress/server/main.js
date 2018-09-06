@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
-const app = express()
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use(express.static(path.join(__dirname, 'public')));
@@ -16,6 +19,11 @@ app.get('/api/example/1', (req, res) => {
 
 app.post('/api/form', (req, res) => {
   setTimeout(() => {
-    res.send('example string #2');
+    const { firstName, lastName } = req.body;
+    if (firstName === 'John' && lastName === 'Doe') {
+      res.send('correct!');
+    } else {
+      res.send('wrong!');
+    }
   }, 3000);
 });

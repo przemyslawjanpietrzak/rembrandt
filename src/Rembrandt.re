@@ -1,4 +1,5 @@
 module Elements = {
+  type node = Common.node;
   let div = Common.div;
   let span = Common.span;
   let button = Common.button;
@@ -8,10 +9,10 @@ module Elements = {
 }
 
 module Commands = {
+  type command('a) = Command.command('a);
   let null = Command.null;
   let action = Command.action;
   let run = Command.run;
-  type command('a) = Command.command('a);
 }
 
 module Forms = {

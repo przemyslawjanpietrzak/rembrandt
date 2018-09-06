@@ -11,11 +11,13 @@
   "license": "MIT",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.3",
+    "body-parser": "^1.18.3",
     "bs-jest": "^0.3.2",
     "bs-platform": "^4.0.3",
     "cypress": "^3.1.0",
     "express": "^4.16.3",
-    "fpack": "^0.5.3"
+    "fpack": "^0.5.3",
+    "nps": "^5.9.3"
   },
   "jest": {
     "verbose": true,

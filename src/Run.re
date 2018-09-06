@@ -42,9 +42,7 @@ let run =
     middleWare(currentModel^, updatedModel, action);
     currentModel := updatedModel;
     let updatedView = view(currentModel^, dispatchAction^);
-    Js.log3("pre diff", currentView^, updatedView);
     let diff = VirtualDom.getDiff(~oldNode=currentView^, ~newNode=Some(updatedView));
-    Js.log2("diff", diff);
     VirtualDom.patch(root^, diff);
     currentView := updatedView;
     runCommand(command, dispatchAction^);
