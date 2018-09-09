@@ -1,7 +1,8 @@
-.DS_Store
-.merlin
+node_modules
+**/*.bs.js
+bundle
 .bsb.lock
-npm-debug.log
-/lib/bs/
-/node_modules/
-src/*.bs.js
+lib
+cypress/server/public
+.bsb.lock
+.merlin
