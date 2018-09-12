@@ -1,5 +1,8 @@
 # Rembrandt
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![npm version](https://img.shields.io/npm/v/bs-rembrandt.svg?style=flat)
+
 ![alt text](./logo.svg "Logo Title Text 1")
 
 Simple functional UI framework written in Reasonml.
@@ -12,10 +15,9 @@ Add `bs-rembrandt` to `bs-dependencies` in `bsconfig.json`
 
 To start empty reasonml project `bsb -init my-new-project -theme basic-reason` (required `bs-platform`)
 
-
 ## Example
 
-```reasonml
+```reason
 open Rembrandt.Elements;
 
 type model = int;
@@ -38,14 +40,14 @@ Rembrandt.run(
   ~view=
     (model, dispatch) =>
       <div>
-        <div key="1" id="count"> {string_of_int(model) |> text} </div>
-        <button key="2" id="plus" onClick={_ => Add |> dispatch}>
+        <div id="count"> {string_of_int(model) |> text} </div>
+        <button id="plus" onClick={_ => Add |> dispatch}>
           {text("+")}
         </button>
-        <button key="3" id="minus" onClick={_ => Sub |> dispatch}>
+        <button id="minus" onClick={_ => Sub |> dispatch}>
           {text("-")}
         </button>
-        <button key="4" id="double" onClick={_ => Twice |> dispatch}>
+        <button id="double" onClick={_ => Twice |> dispatch}>
           {text("twice +")}
         </button>
       </div>,
@@ -55,29 +57,29 @@ Rembrandt.run(
 
 ## API
 
-#### model
+### model:
 
 Initial store value.
 
-#### update
+### update:
 
 Function for modify model. It takes current model and dispatched action. It returns 2 element tuple with new model and command.
 
-#### command
+### command:
 
 Way to run side effects in asynchronously. `Command.null` wouldn't run anything, `Command.action` will dispatch action asynchronously, `Command.run` will run passed function with `dispatch` as argument.
 
-#### view
+### view:
 
 On every state change result on function will be render on rootNode. Argument `dispatch` should be call with proper `action` on DOM event callback.
 
-#### rootId (optional)
+### rootId (optional):
 
 String for find rootNode via `document.getElementById`. Default is "app".
 
-#### initAction (optional)
+### initAction (optional):
 
 Action to dispatch after first render. Default is `Command.null`.
 
-#### middlewares (optional)
+### middlewares (optional):
 List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in examples/Form.re. Default is [].

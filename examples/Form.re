@@ -61,27 +61,25 @@ Rembrandt.run(
   ~view=
     ({first, second, loading, response}, dispatch) =>
       <form onSubmit={_ => Submit |> dispatch} action="#">
-        <div key="1" id="first"> {text("first: " ++ first)} </div>
-        <div key="2" id="second"> {text("second: " ++ second)} </div>
-        <div key="3" id="response"> {text("response: " ++ response)} </div>
-        <div key="4" id="loading">
+        <div id="first"> {text("first: " ++ first)} </div>
+        <div id="second"> {text("second: " ++ second)} </div>
+        <div id="response"> {text("response: " ++ response)} </div>
+        <div id="loading">
           {text(loading ? "loading" : "loaded")}
         </div>
-        <div key="5">
+        <div>
           <input
-            key="1"
             id="first-input"
             value=first
             onInput={e => FirstInputChange(getValue(e)) |> dispatch}
           />
           <input
-            key="2"
             id="second-input"
             value=second
             onInput={e => SecondInputChange(getValue(e)) |> dispatch}
           />
         </div>
-        <button key="7"> {text("send")} </button>
+        <button> {text("send")} </button>
       </form>,
   ~middlewares=[Rembrandt.MiddleWares.logger],
   (),

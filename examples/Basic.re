@@ -20,14 +20,14 @@ Rembrandt.run(
   ~view=
     (model, dispatch) =>
       <div>
-        <div key="1" id="count"> {string_of_int(model) |> text} </div>
-        <button key="2" id="plus" onClick={_ => Add |> dispatch}>
+        <div id="count"> {string_of_int(model) |> text} </div>
+        <button id="plus" onClick={_ => Add |> dispatch}>
           {text("+")}
         </button>
-        <button key="3" id="minus" onClick={_ => Sub |> dispatch}>
+        <button id="minus" onClick={_ => Sub |> dispatch}>
           {text("-")}
         </button>
-        <button key="4" id="double" onClick={_ => Twice |> dispatch}>
+        <button id="double" onClick={_ => Twice |> dispatch}>
           {text("twice +")}
         </button>
       </div>,
