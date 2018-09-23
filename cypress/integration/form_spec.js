@@ -1,7 +1,7 @@
 describe('Form example', () => {
 
   it('2way data binding', () => {
-    cy.visit('/form/index.html');
+    cy.visit('/Form/index.html');
 
     cy.get('#first').should('contain', 'first: ');
     cy.get('#second').should('contain', 'second: ');
@@ -15,7 +15,7 @@ describe('Form example', () => {
   });
 
   it('async loading', () => {
-    cy.visit('/form/index.html');
+    cy.visit('/Form/index.html');
     cy.get('button').click();
 
     cy.get('#loading').should('contain', 'loaded');
@@ -33,7 +33,7 @@ describe('Form example', () => {
   });
 
   it('send form data to backend', () => {
-    cy.visit('/form/index.html');
+    cy.visit('/Form/index.html');
     cy.get('button').click();
 
     cy.get('#loading').should('contain', 'loaded');
