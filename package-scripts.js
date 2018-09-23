@@ -6,7 +6,7 @@ const examples = [
 const buildExample = name => [
   `mkdir -p cypress/server/public/${name}`,
   `cp examples/index.html cypress/server/public/${name}/`,
-  `fpack --development examples/${name}.bs.js --output=cypress/server/public/${name}`,
+  `browserify --entry=examples/${name}.bs.js --outfile=cypress/server/public/${name}/index.js`,
 ].join(' && ');
 
 module.exports = {
