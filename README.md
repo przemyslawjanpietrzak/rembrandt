@@ -1,5 +1,5 @@
 # Rembrandt
-
+[![Build Status](https://travis-ci.org/przemyslawjanpietrzak/rembrandt.svg?branch=master)](https://travis-ci.org/przemyslawjanpietrzak/rembrandt)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![npm version](https://img.shields.io/npm/v/bs-rembrandt.svg?style=flat)
 
