@@ -3,8 +3,6 @@ node_js: 10
 install:
   - npm install
 script:
-  - npm start build
-  - npm start test
-  - npm start build.examples
-  - npm start server & npm start cy.run
+  - npm start ci
+
 

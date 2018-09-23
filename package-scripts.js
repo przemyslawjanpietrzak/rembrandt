@@ -6,7 +6,7 @@ const examples = [
 const buildExample = name => [
   `mkdir -p cypress/server/public/${name}`,
   `cp examples/index.html cypress/server/public/${name}/`,
-  `fpack examples/${name}.bs.js --output=cypress/server/public/${name}`,
+  `browserify --entry=examples/${name}.bs.js --outfile=cypress/server/public/${name}/index.js`,
 ].join(' && ');
 
 module.exports = {
@@ -31,6 +31,13 @@ module.exports = {
     cy: {
       default: './node_modules/.bin/cypress open',
       run: `./node_modules/.bin/cypress run --spec 'cypress/integration/**'`,
-    }
+    },
+    ci: [
+      'npm start clean',
+      'npm start build',
+      'npm start test',
+      'npm start build.examples',
+      'npm start server & (sleep 5 && npm start cy.run)'
+    ].join(' && ')
   },
 }

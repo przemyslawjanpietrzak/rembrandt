@@ -5,7 +5,7 @@ describe('Basic example', () => {
     cy.server({ delay: 1500 })
     cy.route('GET', 'localhost:3000/api/example/1', {})
 
-    cy.visit('/request/index.html');
+    cy.visit('/Request/index.html');
     cy.get('#data').should('contain', 'begin');
     cy.get('#request').click();
     cy.get('#data').should('contain', 'loading');

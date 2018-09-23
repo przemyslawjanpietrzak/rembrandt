@@ -16,7 +16,6 @@ app.get('/api/example/1', (req, res) => {
   }, 3000);
 });
 
-
 app.post('/api/form', (req, res) => {
   setTimeout(() => {
     const { firstName, lastName } = req.body;
