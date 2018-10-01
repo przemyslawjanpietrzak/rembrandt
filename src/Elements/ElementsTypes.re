@@ -6,7 +6,8 @@ type nodeName =
   | SPAN
   | Button
   | Input
-  | Form;
+  | Form
+  | A;
 
 type attributes = list((string, string));
 

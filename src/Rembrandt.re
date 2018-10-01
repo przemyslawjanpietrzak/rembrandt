@@ -6,6 +6,7 @@ module Elements = {
   let input = Input.input;
   let text = Text.text;
   let form = FormElement.form;
+  let a = A.a;
 }
 
 module Commands = {
