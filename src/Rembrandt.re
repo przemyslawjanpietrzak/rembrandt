@@ -1,11 +1,11 @@
 module Elements = {
-  type node = Common.node;
-  let div = Common.div;
-  let span = Common.span;
-  let button = Common.button;
-  let input = Common.input;
-  let text = Common.text;
-  let form = Common.form;
+  type node = ElementsTypes.node;
+  let div = Div.div;
+  let span = Span.span;
+  let button = Button.button;
+  let input = Input.input;
+  let text = Text.text;
+  let form = FormElement.form;
 }
 
 module Commands = {

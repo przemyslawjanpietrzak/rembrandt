@@ -1,5 +1,5 @@
+open ElementsTypes;
 open Dom;
-open Common;
 
 let createNodeElement = (node, render, name) =>
   createElement(name)
