@@ -7,7 +7,12 @@ type nodeName =
   | Button
   | Input
   | Form
-  | A;
+  | A
+  | H1
+  | H2
+  | H3
+  | H4
+  | H5;
 
 type attributes = list((string, string));
 
