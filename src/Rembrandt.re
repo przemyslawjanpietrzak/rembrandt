@@ -7,6 +7,11 @@ module Elements = {
   let text = Text.text;
   let form = FormElement.form;
   let a = A.a;
+  let h1 = H.h1;
+  let h2 = H.h2;
+  let h3 = H.h3;
+  let h4 = H.h4;
+  let h5 = H.h5;
 }
 
 module Commands = {
