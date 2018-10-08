@@ -1,8 +1,8 @@
 open Jest;
 
 open Utils;
-open Common;
 open ListDiff;
+open Div;
 
 describe("ListDiff", () => {
   open Expect;

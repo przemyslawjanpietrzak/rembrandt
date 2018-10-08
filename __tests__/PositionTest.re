@@ -1,7 +1,9 @@
 open Jest;
 
-open Common;
+open ElementsTypes;
 open VirtualDom;
+open Div;
+open Span;
 
 describe("Position", () => {
   open Expect;

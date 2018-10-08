@@ -1,4 +1,4 @@
-open Common;
+open ElementsTypes;
 open Utils;
 
 open Diff;

@@ -17,7 +17,7 @@ module.exports = {
       examples: examples.map(buildExample).join(' && '),
     },
     test: {
-      default: 'jest __tests__',
+      default: 'jest __tests__ __tests__/**/*.bs.js',
       e2e: {
         script: `node cypress/server/main.js & ./node_modules/.bin/cypress run --spec 'cypress/integration/**'`
       }

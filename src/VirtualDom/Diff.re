@@ -1,6 +1,6 @@
-open Common;
 open Dom;
 open Utils;
+open ElementsTypes;
 
 type attributes = list((string, string));
 

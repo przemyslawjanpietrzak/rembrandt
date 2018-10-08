@@ -1,6 +1,9 @@
 open Jest;
 
-open Common;
+open ElementsTypes;
+open Div;
+open Span;
+open Text;
 
 open Diff;
 open ListDiff;

@@ -1,8 +1,7 @@
 open Jest;
 
-open Common;
+open Div;
 
-open Diff;
 open DiffProps;
 
 describe("Test diff algorithm", () => {
