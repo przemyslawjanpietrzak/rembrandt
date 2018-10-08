@@ -11,6 +11,10 @@
       "type": "dev"
     },
     {
+      "dir": "__tests__/Elements",
+      "type": "dev"
+    },
+    {
       "dir": "examples",
       "type": "dev"
     }

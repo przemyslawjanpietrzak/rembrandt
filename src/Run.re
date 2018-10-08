@@ -1,4 +1,5 @@
-open Common;
+open ElementsTypes;
+open Div;
 open Command;
 
 type update('model, 'action) =
@@ -23,7 +24,6 @@ let runCommand = (command, dispatchAction) =>
   |> ignore;
 
 let dispatch = (action, model, update) => update(model, action);
-
 let run =
     (
       ~view: ('model, 'dispatch) => node,
