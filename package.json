@@ -15,6 +15,7 @@
     "browserify": "^16.2.3",
     "bs-jest": "^0.3.2",
     "bs-platform": "^4.0.7",
+    "chalk": "^2.4.1",
     "cypress": "^3.1.2",
     "express": "^4.16.4",
     "nps": "^5.9.3"
