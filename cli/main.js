@@ -1,54 +1,60 @@
-const util = require('util');
-const chalk = require('chalk');
+const util = require("util");
+const chalk = require("chalk");
 
-const jestCli = require('jest/build/jest');
+const jestCli = require("jest/build/jest");
 
-const exec = util.promisify(require('child_process').exec);
+const webpack = require("webpack");
 
+const childProcess = require("child_process");
+const exec = util.promisify(childProcess.exec);
+
+const generateWebpackConfig = require("./webpack.config");
 const [taskName] = process.argv.slice(2);
 
 const buildWebpack = async () => {};
 const watchWebpack = async () => {};
 
-
 const tryFail = async (cb, arg) => {
   try {
     const output = await cb(arg);
-    console.log(output);
+    if (output) {
+      process.stdout.write(output.stdout);
+    }
   } catch (e) {
-    console.error('rembrandt cli error: ', e);
+    console.error("rembrandt cli error: ", e); // TODO: colors
     process.exit(1);
   }
-}
+};
 
-const buildBSP = async () => {};
-const watchBSP = async () => {};
+const runWebpack = util.promisify(() =>
+  webpack(generateWebpackConfig({ port: 4200, isProduction: false })));
 
 (async () => {
-  switch(taskName) {
-    case 'build':
-      await exec('mkdir -p dist');
-      await buildWebpack();
+  switch (taskName) {
+    case "build":
+      await exec("mkdir -p dist");
+      tryFail(exec, "npx bsb -make-world");
       break;
-    case 'test':
-      await tryFail(buildBSP);
+    case "test":
+      tryFail(exec, "npx bsb -make-world");
       await tryFail(jestCli.run);
       break;
-    case 'start':
-      await tryFail(exec, 'cat xxx.json');
+    case "start:bs":
+      childProcess.exec("npx bsb -make-world -w").stdout.pipe(process.stdout);
+      // await runWebpack();
       break;
-    case 'help':
+    case 'start:js':
+      childProcess.exec("npx webpack-dev-server --config ./cli/webpack.config.js").stdout.pipe(process.stdout);
+      // await runWebpack();
       break;
-    case 'clean':
-      const { stdout, stderr } = await exec('rm -rf dist');
-      if (!stderr) console.log('catalog dir has been removed');
-      else console.error(`Error: ${stderr}`);
+    case "help":
       break;
-    case 'lint':
+    case "clean":
+      await tryFail(exec, "rm -rf dist");
+      await tryFail(exec, "npx bsb -clean-world");
       break;
     default:
-      console.error('command not found');
+      console.error("command not found");
       process.exit(1);
   }
-})()  
-
+})();
