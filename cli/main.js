@@ -26,14 +26,12 @@ const tryFail = async (cb, arg) => {
   }
 };
 
-const runWebpack = util.promisify(() =>
-  webpack(generateWebpackConfig({ port: 4200, isProduction: false })));
-
 (async () => {
   switch (taskName) {
     case "build":
       await exec("mkdir -p dist");
-      tryFail(exec, "npx bsb -make-world");
+      await tryFail(exec, 'npx bsb -make-world');
+      await tryFail(exec, 'npx webpack --config ./cli/webpack.config.js');
       break;
     case "test":
       tryFail(exec, "npx bsb -make-world");
@@ -41,13 +39,22 @@ const runWebpack = util.promisify(() =>
       break;
     case "start:bs":
       childProcess.exec("npx bsb -make-world -w").stdout.pipe(process.stdout);
-      // await runWebpack();
       break;
     case 'start:js':
       childProcess.exec("npx webpack-dev-server --config ./cli/webpack.config.js").stdout.pipe(process.stdout);
-      // await runWebpack();
       break;
     case "help":
+      console.table([
+        { command: 'build', description: 'compile source file into dist catalog', flags: '-' },
+        { command: 'clean', description: 'remove all build files', flags: '-' },
+        { command: 'init', description: 'create seed rembrandt application', flags: '-' },
+        { command: 'start:bs', description: 'run buckleScript compilation in watch mode', flags: '-' },
+        { command: 'start:js', description: 'run javascript bundler with dev server', flags: '-' },
+        { command: 'test', description: 'run unit tests', flags: '-' },
+    ]);
+      break;
+    case "init":
+      await tryFail(exec, 'cp -rf ./node_modules/rembrandt/seed/* .');
       break;
     case "clean":
       await tryFail(exec, "rm -rf dist");
