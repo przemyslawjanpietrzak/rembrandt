@@ -1,3 +1,4 @@
+const path = require('path');
 const util = require("util");
 const chalk = require("chalk");
 
@@ -8,11 +9,23 @@ const webpack = require("webpack");
 const childProcess = require("child_process");
 const exec = util.promisify(childProcess.exec);
 
-const generateWebpackConfig = require("./webpack.config");
+const webpackPath = path.join(__dirname, "webpack.config.js");
+const generateWebpackConfig = require(webpackPath);
+
 const [taskName] = process.argv.slice(2);
 
 const buildWebpack = async () => {};
 const watchWebpack = async () => {};
+
+const libs = [
+  'jest',
+  '@glennsl/bs-jest',
+  'html-webpack-plugin',
+  'webpack',
+  'webpack-cli',
+  'webpack-dev-server',
+  'optimize-css-assets-webpack-plugin',
+].reduce((acc, curr) => `${acc} ${curr}`, '');
 
 const tryFail = async (cb, arg) => {
   try {
@@ -21,7 +34,7 @@ const tryFail = async (cb, arg) => {
       process.stdout.write(output.stdout);
     }
   } catch (e) {
-    console.error("rembrandt cli error: ", e); // TODO: colors
+    console.error("rembrandt cli error: ", e); 
     process.exit(1);
   }
 };
@@ -31,7 +44,7 @@ const tryFail = async (cb, arg) => {
     case "build":
       await exec("mkdir -p dist");
       await tryFail(exec, 'npx bsb -make-world');
-      await tryFail(exec, 'npx webpack --config ./cli/webpack.config.js');
+      await tryFail(exec, 'npx webpack');
       break;
     case "test":
       tryFail(exec, "npx bsb -make-world");
@@ -41,7 +54,7 @@ const tryFail = async (cb, arg) => {
       childProcess.exec("npx bsb -make-world -w").stdout.pipe(process.stdout);
       break;
     case 'start:js':
-      childProcess.exec("npx webpack-dev-server --config ./cli/webpack.config.js").stdout.pipe(process.stdout);
+      childProcess.exec("npx webpack-dev-server --config ./webpack.config.js").stdout.pipe(process.stdout);
       break;
     case "help":
       console.table([
@@ -52,9 +65,12 @@ const tryFail = async (cb, arg) => {
         { command: 'start:js', description: 'run javascript bundler with dev server', flags: '-' },
         { command: 'test', description: 'run unit tests', flags: '-' },
     ]);
-      break;
+      break
     case "init":
-      await tryFail(exec, 'cp -rf ./node_modules/rembrandt/seed/* .');
+      await tryFail(exec, 'cp -rf ./node_modules/bs-rembrandt/seed/* .');
+      await tryFail(exec, "cp ./node_modules/bs-rembrandt/cli/webpack.config.js .");
+      await tryFail(exec, `npm i ${libs} --save-dev`);
+      console.log('Rembrandt: success');
       break;
     case "clean":
       await tryFail(exec, "rm -rf dist");

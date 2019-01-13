@@ -9,7 +9,7 @@ const port = process.env.PORT || 4200 ;
 
 module.exports = {
  entry: {
-   main: './examples/Basic.bs.js',
+   main: './src/Main.bs.js',
  },
  output: {
    path: path.resolve(__dirname, '../dist'),
@@ -20,7 +20,7 @@ module.exports = {
  module: {},
  plugins: [
    new HtmlWebPackPlugin({
-     template: './examples/index.html',
+     template: './src/index.html',
    }),
    new OptimizeCSSAssetsPlugin({}),
  ],

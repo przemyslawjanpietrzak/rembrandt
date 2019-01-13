@@ -1,4 +1,7 @@
-open Rembrandt.Elements;
+open BsRembrandt
+open BsRembrandt.Div;
+open BsRembrandt.Text;
+open BsRembrandt.Button;
 
 type model = int;
 type action =
