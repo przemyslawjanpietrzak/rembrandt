@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const path = require('path');
 const util = require("util");
 const chalk = require("chalk");
@@ -34,7 +36,7 @@ const tryFail = async (cb, arg) => {
       process.stdout.write(output.stdout);
     }
   } catch (e) {
-    console.error("rembrandt cli error: ", e); 
+    console.error("rembrandt cli error: ", e);
     process.exit(1);
   }
 };

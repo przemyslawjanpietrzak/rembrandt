@@ -1,6 +1,6 @@
 {
   "name": "bs-rembrandt",
-  "version": "1.2.0-rc.3",
+  "version": "1.2.0-rc.5",
   "scripts": {
     "start": "nps"
   },
@@ -9,6 +9,7 @@
   ],
   "author": "Przemyslaw Jan Pietrzak",
   "license": "MIT",
+  "bin": "./cli/main.js",
   "devDependencies": {
     "@glennsl/bs-jest": "^0.4.5",
     "body-parser": "^1.18.3",
