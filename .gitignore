@@ -6,3 +6,4 @@ lib
 cypress/server/public
 .bsb.lock
 .merlin
+dist

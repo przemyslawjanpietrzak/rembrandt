@@ -11,11 +11,32 @@ Simple functional UI framework written in Reasonml.
 
 `npm install bs-rembrandt --save`
 
-Add `bs-rembrandt` to `bs-dependencies` in `bsconfig.json`
+Create seed project
 
-To start empty reasonml project `bsb -init my-new-project -theme basic-reason` (required `bs-platform`)
+`npx bs-rembrandt init`
 
-## Example
+Build production files
+
+`npx bs-rembrandt build`
+
+Run dev server
+
+`npx bs-rembrandt start:bs`
+
+And in other terminal
+
+`npx bs-rembrandt start:js`
+
+Run unit tests
+
+`npx bs-rembrandt test`
+
+Display all available commands in CLI
+
+`npx bs-rembrandt help`
+
+
+## Example app
 
 ```reason
 open Rembrandt.Elements;

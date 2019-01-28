@@ -12,7 +12,7 @@ module.exports = {
    main: './src/Main.bs.js',
  },
  output: {
-   path: path.resolve(__dirname, '../dist'),
+   path: path.resolve(__dirname, './dist'),
    filename: '[name].[hash].js',
    publicPath: '/',
  },
