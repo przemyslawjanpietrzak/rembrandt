@@ -1,9 +1,7 @@
 node_modules
 **/*.bs.js
-bundle
 .bsb.lock
+dist
 lib
-cypress/server/public
 .bsb.lock
 .merlin
-dist
