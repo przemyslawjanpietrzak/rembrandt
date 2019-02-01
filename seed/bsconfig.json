@@ -21,7 +21,7 @@
     "bs-rembrandt"
   ],
   "bs-dev-dependencies": [
-    "bs-jest"
+    "@glennsl/bs-jest"
   ],
   "warnings": {
     "error": "+101"
