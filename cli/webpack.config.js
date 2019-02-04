@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const path = require('path');
 
@@ -22,7 +21,6 @@ module.exports = {
    new HtmlWebPackPlugin({
      template: './src/index.html',
    }),
-   new OptimizeCSSAssetsPlugin({}),
  ],
  devServer: {
    contentBase: path.join(__dirname, 'dist'),
