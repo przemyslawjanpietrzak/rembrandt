@@ -2,17 +2,9 @@
 
 const path = require("path");
 const util = require("util");
-const chalk = require("chalk");
-
-const jestCli = require("jest/build/jest");
-
-const webpack = require("webpack");
 
 const childProcess = require("child_process");
 const exec = util.promisify(childProcess.exec);
-
-const webpackPath = path.join(__dirname, "webpack.config.js");
-const generateWebpackConfig = require(webpackPath);
 
 const [taskName] = process.argv.slice(2);
 
@@ -49,6 +41,7 @@ const tryFail = async (cb, arg) => {
       await tryFail(exec, "npx webpack");
       break;
     case "test":
+      const jestCli = require("jest/build/jest");
       tryFail(exec, "npx bsb -make-world");
       await tryFail(jestCli.run);
       break;
@@ -56,6 +49,9 @@ const tryFail = async (cb, arg) => {
       childProcess.exec("npx bsb -make-world -w").stdout.pipe(process.stdout);
       break;
     case "start:js":
+      const webpack = require("webpack");
+      const webpackPath = path.join(__dirname, "webpack.config.js");
+      const generateWebpackConfig = require(webpackPath);
       childProcess
         .exec("npx webpack-dev-server --config ./webpack.config.js")
         .stdout.pipe(process.stdout);
