@@ -11,22 +11,22 @@
   "license": "MIT",
   "bin": "./cli/main.js",
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.5",
-    "body-parser": "^1.18.3",
+    "@glennsl/bs-jest": "^0.4.8",
+    "body-parser": "^1.19.0",
     "browserify": "^16.2.3",
     "bs-jest": "^0.3.2",
-    "bs-platform": "^4.0.7",
-    "cypress": "^3.1.2",
+    "bs-platform": "^5.0.4",
     "chalk": "^2.4.2",
-    "jest": "^23.6.0",
-    "express": "^4.16.4",
-    "nps": "^5.9.3"
+    "cypress": "^3.3.1",
+    "express": "^4.17.1",
+    "jest": "^24.8.0",
+    "nps": "^5.9.5"
   },
   "jest": {
     "verbose": true,
     "testURL": "http://localhost"
   },
   "dependencies": {
-    "bs-fetch": "^0.3.1"
+    "bs-fetch": "^0.4.0"
   }
 }
