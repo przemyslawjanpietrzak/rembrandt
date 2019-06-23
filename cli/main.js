@@ -37,23 +37,23 @@ const tryFail = async (cb, arg) => {
   switch (taskName) {
     case "build":
       await exec("mkdir -p dist");
-      await tryFail(exec, "npx bsb -make-world");
-      await tryFail(exec, "npx webpack");
+      await tryFail(exec, "yarn bsb -make-world");
+      await tryFail(exec, "yarn webpack");
       break;
     case "test":
       const jestCli = require("jest/build/jest");
-      tryFail(exec, "npx bsb -make-world");
+      tryFail(exec, "yarn bsb -make-world");
       await tryFail(jestCli.run);
       break;
     case "start:bs":
-      childProcess.exec("npx bsb -make-world -w").stdout.pipe(process.stdout);
+      childProcess.exec("yarn bsb -make-world -w").stdout.pipe(process.stdout);
       break;
     case "start:js":
       const webpack = require("webpack");
       const webpackPath = path.join(__dirname, "webpack.config.js");
       const generateWebpackConfig = require(webpackPath);
       childProcess
-        .exec("npx webpack-dev-server --config ./webpack.config.js")
+        .exec("yarn webpack-dev-server --config ./webpack.config.js")
         .stdout.pipe(process.stdout);
       break;
     case "help":
@@ -89,12 +89,12 @@ const tryFail = async (cb, arg) => {
         exec,
         "cp ./node_modules/bs-rembrandt/cli/webpack.config.js ."
       );
-      await tryFail(exec, `npm i ${libs} --save-dev`);
+      await tryFail(exec, `yarn add ${libs} -dev`);
       console.log("Rembrandt: success");
       break;
     case "clean":
       await tryFail(exec, "rm -rf dist");
-      await tryFail(exec, "npx bsb -clean-world");
+      await tryFail(exec, "yarn bsb -clean-world");
       break;
     default:
       console.error("command not found");
