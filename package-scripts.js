@@ -23,7 +23,7 @@ module.exports = {
       }
     },
     clean: {
-      default: 'npm start clean.bs && npm start clean.server',
+      default: 'yarn start clean.bs && yarn start clean.server',
       bs: 'bsb -clean-world',
       server: 'rm -rf cypress/server/public',
     },
@@ -33,11 +33,11 @@ module.exports = {
       run: `./node_modules/.bin/cypress run --spec 'cypress/integration/**'`,
     },
     ci: [
-      'npm start clean',
-      'npm start build',
-      'npm start test',
-      'npm start build.examples',
-      'npm start server & (sleep 5 && npm start cy.run)'
+      'yarn start clean',
+      'yarn start build',
+      'yarn start test',
+      'yarn start build.examples',
+      'yarn start server & (sleep 5 && yarn start cy.run)'
     ].join(' && ')
   },
 }

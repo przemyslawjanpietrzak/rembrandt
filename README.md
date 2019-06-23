@@ -9,31 +9,31 @@ Simple functional UI framework written in Reasonml.
 
 ## Getting started
 
-`npm install bs-rembrandt --save`
+`yarn install bs-rembrandt --save`
 
 Create seed project
 
-`npx bs-rembrandt init`
+`yarn bs-rembrandt init`
 
 Build production files
 
-`npx bs-rembrandt build`
+`yarn bs-rembrandt build`
 
 Run dev server
 
-`npx bs-rembrandt start:bs`
+`yarn bs-rembrandt start:bs`
 
 And in other terminal
 
-`npx bs-rembrandt start:js`
+`yarn bs-rembrandt start:js`
 
 Run unit tests
 
-`npx bs-rembrandt test`
+`yarn bs-rembrandt test`
 
 Display all available commands in CLI
 
-`npx bs-rembrandt help`
+`yarn bs-rembrandt help`
 
 
 ## Example app
