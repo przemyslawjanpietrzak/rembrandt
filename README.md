@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![npm version](https://img.shields.io/npm/v/bs-rembrandt.svg?style=flat)
 
-![alt text](./logo.svg "Logo Title Text 1")
+![alt text](https://raw.githubusercontent.com/przemyslawjanpietrzak/rembrandt/feature/new-logo/rembrandt.png)
 
 Simple functional UI framework written in Reasonml.
 
