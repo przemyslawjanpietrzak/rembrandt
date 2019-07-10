@@ -9,7 +9,7 @@ Simple functional UI framework written in Reasonml.
 
 ## Getting started
 
-`yarn install bs-rembrandt --save`
+`yarn add bs-rembrandt`
 
 Create seed project
 
