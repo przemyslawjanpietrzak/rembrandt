@@ -78,27 +78,27 @@ Rembrandt.run(
 
 ## API
 
-### model:
+### model
 
 Initial store value.
 
-### update:
+### update
 
 Function for modify model. It takes current model and dispatched action. It returns 2 element tuple with new model and command.
 
-### command:
+### command
 
 Way to run side effects in asynchronously. `Command.null` wouldn't run anything, `Command.action` will dispatch action asynchronously, `Command.run` will run passed function with `dispatch` as argument.
 
-### view:
+### view
 
 On every state change result on function will be render on rootNode. Argument `dispatch` should be call with proper `action` on DOM event callback.
 
-### rootId (optional):
+### rootId (optional)
 
 String for find rootNode via `document.getElementById`. Default is "app".
 
-### initAction (optional):
+### initAction (optional)
 
 Action to dispatch after first render. Default is `Command.null`.
 
