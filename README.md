@@ -78,29 +78,34 @@ Rembrandt.run(
 
 ## API
 
-### model:
+### model
 
 Initial store value.
 
-### update:
+### update
 
 Function for modify model. It takes current model and dispatched action. It returns 2 element tuple with new model and command.
 
-### command:
+### command
 
 Way to run side effects in asynchronously. `Command.null` wouldn't run anything, `Command.action` will dispatch action asynchronously, `Command.run` will run passed function with `dispatch` as argument.
 
-### view:
+### view
 
 On every state change result on function will be render on rootNode. Argument `dispatch` should be call with proper `action` on DOM event callback.
 
-### rootId (optional):
+### rootId (optional)
 
 String for find rootNode via `document.getElementById`. Default is "app".
 
-### initAction (optional):
+### initAction (optional)
 
 Action to dispatch after first render. Default is `Command.null`.
 
-### middlewares (optional):
-List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in examples/Form.re. Default is [].
+### subscription (optional)
+
+Function that takes 2 arguments: model and dispatch (like update). It allow us to interact with the outside world for example for websocket connection. See `examples/Subscription.re`. Default is `(model, dispatch) => ()`.
+
+### middlewares (optional)
+
+List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in `examples/Form.re`. Default is `[]`.

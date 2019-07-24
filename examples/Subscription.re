@@ -12,7 +12,6 @@ let update =
 Rembrandt.run(
   ~model=42,
   ~update,
-  ~middlewares=[Rembrandt.MiddleWares.logger],
   ~subscription=(model, dispatch) => {
     Js.Global.setInterval(() => {
     Js.log(model);
