@@ -54,7 +54,6 @@ let run =
     VirtualDom.patch(root^, diff);
     currentView := updatedView;
     runCommand(command, dispatchAction^);
-    subscription(currentModel^, dispatchAction^);
   };
 
   dispatchAction := (action => dispatch(~action, ~update));
@@ -62,5 +61,5 @@ let run =
 
   currentView := view(model, dispatchAction^);
   root := Render.render(currentView^) |> Dom.init(rootId);
-  /* subscription(model, dispatchAction^); */
+  subscription(currentModel^, dispatchAction^);
 };
