@@ -9,7 +9,7 @@ Simple functional UI framework written in Reasonml.
 
 ## Getting started
 
-`yarn install bs-rembrandt --save`
+`yarn add bs-rembrandt`
 
 Create seed project
 
@@ -102,10 +102,13 @@ String for find rootNode via `document.getElementById`. Default is "app".
 
 Action to dispatch after first render. Default is `Command.null`.
 
-### subscription (optional)
-
-Function that takes 2 arguments: model and dispatch (like update). It allow us to interact with the outside world for example for websocket connection. See `examples/Subscription.re`. Default is `(model, dispatch) => ()`.
-
 ### middlewares (optional)
 
 List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in `examples/Form.re`. Default is `[]`.
+=======
+### middlewares (optional):
+List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in examples/Form.re. Default is [].
+
+### subscription (optional)
+
+Function that takes 2 arguments: model and dispatch (like update). It allow us to interact with the outside world for example for websocket connection. See `examples/Subscription.re`. Default is `(model, dispatch) => ()`.
