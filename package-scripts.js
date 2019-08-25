@@ -32,13 +32,13 @@ module.exports = {
     cy: {
       default: './node_modules/.bin/cypress open',
       run: `./node_modules/.bin/cypress run --spec 'cypress/integration/**'`,
+      ci: 'yarn start server & (sleep 5 && yarn start cy.run)',
     },
     ci: [
       'yarn start clean',
       'yarn start build',
       'yarn start test',
       'yarn start build.examples',
-      'yarn start server & (sleep 5 && yarn start cy.run)'
     ].join(' && ')
   },
 }

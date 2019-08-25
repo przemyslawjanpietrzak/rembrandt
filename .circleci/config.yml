@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: cypress/base:10.16.0
+
+    working_directory: ~/src
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package.json" }}
+            - dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Remove all dist files
+          command: yarn start clean
+
+      - run:
+          name: Build
+          command: yarn start build
+
+      - run:
+          name: Unit tests
+          command: yarn start test
+
+      - run:
+          name:  Build examples
+          command: yarn start build.examples
+
+      - run:
+          name: Run cypress tests on examples apps
+          command: yarn start cy.ci
