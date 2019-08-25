@@ -6,6 +6,7 @@ type update('model, 'action) =
   ('model, 'action) => ('model, Command.command('action));
 
 type view('model, 'action) = ('model, 'action => bool) => node;
+type subscription('model, 'action) = ('model, 'action => bool) => unit;
 
 let runCommand = (command, dispatchAction) =>
   (
@@ -32,6 +33,7 @@ let run =
       ~initAction=Command.null,
       ~rootId="app",
       ~middlewares: list(('model, 'model, 'action) => unit)=[],
+      ~subscription: ('model, 'dispatch) => unit,
       (),
     ) => {
   let root = ref(Dom.createElement("div"));
@@ -59,4 +61,5 @@ let run =
 
   currentView := view(model, dispatchAction^);
   root := Render.render(currentView^) |> Dom.init(rootId);
+  subscription(currentModel^, dispatchAction^);
 };
