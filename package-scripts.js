@@ -36,7 +36,7 @@ module.exports = {
         'yarn start build',
         'yarn start build.examples',
         'yarn start server & (sleep 5 && yarn start cy.run)',
-      ].join(' && '),
+      ].join(' && ')
     },
     ci: [
       'yarn start clean',
