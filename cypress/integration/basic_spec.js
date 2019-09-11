@@ -21,7 +21,6 @@ describe('Basic example', () => {
     cy.visit('/Basic/index.html');
     cy.get('#count').should('contain', '42');
     cy.get('#double').click();
-    cy.wait(5000)
     cy.get('#count').should('contain', '44');
   });
 

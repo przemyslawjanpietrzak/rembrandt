@@ -17,14 +17,6 @@ let update =
 Rembrandt.run(
   ~model=42,
   ~update,
-  ~subscription=(model, dispatch) => {
-    Js.Global.setInterval(() => {
-    Js.log(model);
-      Add |> dispatch;
-      ();
-    }, 2500);
-    ()
-  },
   ~view=
     (model, dispatch) =>
       <div>
