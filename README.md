@@ -1,9 +1,9 @@
 # Rembrandt
-[![Build Status](https://travis-ci.org/przemyslawjanpietrzak/rembrandt.svg?branch=master)](https://travis-ci.org/przemyslawjanpietrzak/rembrandt)
+[![CircleCI](https://circleci.com/gh/przemyslawjanpietrzak/rembrandt/tree/develop.svg?style=svg)](https://circleci.com/gh/przemyslawjanpietrzak/rembrandt/tree/develop)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![npm version](https://img.shields.io/npm/v/bs-rembrandt.svg?style=flat)
 
-![alt text](./logo.svg "Logo Title Text 1")
+![alt text](./logo-small.png "Logo")
 
 Simple functional UI framework written in Reasonml.
 
@@ -11,30 +11,29 @@ Simple functional UI framework written in Reasonml.
 
 `yarn add bs-rembrandt`
 
-Create seed project
+Create seed project:
 
 `yarn bs-rembrandt init`
 
-Build production files
+Build production files:
 
 `yarn bs-rembrandt build`
 
-Run dev server
+Run dev server:
 
 `yarn bs-rembrandt start:bs`
 
-And in other terminal
+And in another terminal:
 
 `yarn bs-rembrandt start:js`
 
-Run unit tests
+Run unit tests:
 
 `yarn bs-rembrandt test`
 
-Display all available commands in CLI
+Display all available commands in CLI:
 
 `yarn bs-rembrandt help`
-
 
 ## Example app
 
@@ -96,11 +95,14 @@ On every state change result on function will be render on rootNode. Argument `d
 
 ### rootId (optional)
 
-String for find rootNode via `document.getElementById`. Default is "app".
+String for find rootNode via `document.getElementById`. Default is `app`.
 
 ### initAction (optional)
 
 Action to dispatch after first render. Default is `Command.null`.
 
 ### middlewares (optional):
-List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in examples/Form.re. Default is [].
+List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in `examples/Form.re`. Default is [].
+
+### subscription (optional):
+Function that takes current model and dispatch as argument. Allows to dispatch action based on asynchronous source (e.g. websocket) See in `examples/Subscription.re`. Default is `(model, dispatch)=> ()`.
