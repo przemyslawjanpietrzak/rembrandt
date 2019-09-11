@@ -40,5 +40,9 @@ jobs:
           command: yarn start build.examples
 
       - run:
+          name: Prepare cypress
+          command: yarn cypress install
+
+      - run:
           name: Run cypress tests on examples apps
           command: yarn start cy.ci

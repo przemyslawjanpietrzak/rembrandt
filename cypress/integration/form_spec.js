@@ -27,7 +27,6 @@ describe('Form example', () => {
     cy.get('button').click();
     cy.wait(500);
     cy.get('#loading').should('contain', 'loading');
-    cy.wait(5000);
     cy.get('#loading').should('contain', 'loaded');
     cy.get('#response').should('contain', 'response: correct');
   });
@@ -45,7 +44,6 @@ describe('Form example', () => {
     cy.get('button').click();
     cy.wait(500);
     cy.get('#loading').should('contain', 'loading');
-    cy.wait(5000);
     cy.get('#loading').should('contain', 'loaded');
     cy.get('#response').should('contain', 'response: wrong');
   });

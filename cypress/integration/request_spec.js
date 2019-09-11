@@ -9,7 +9,6 @@ describe('Basic example', () => {
     cy.get('#data').should('contain', 'begin');
     cy.get('#request').click();
     cy.get('#data').should('contain', 'loading');
-    cy.wait(5000)
     cy.get('#data').should('contain', 'example string #1');
   });
 });
