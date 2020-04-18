@@ -9,6 +9,14 @@ let createNodeElement = (node, render, name) =>
   |> setHandlers(node.handlers)
   |> appendChild(List.map(child => render(child), node.children));
 
+let createShadowRootElement = (node, render, name) =>
+  createShadowElement(name)
+  |> setAttributes(
+    node.attributes |> List.filter(((_, value)) => value != ""),
+  )
+  |> setHandlers(node.handlers)
+  |> appendChildToShadowRoot(List.map(child => render(child), node.children));
+
 let rec render = (node: node) =>
   switch (node.name) {
   | TEXT => createTextNode(node.text)
@@ -23,4 +31,5 @@ let rec render = (node: node) =>
   | H3 => createNodeElement(node, render, "h3")
   | H4 => createNodeElement(node, render, "h4")
   | H5 => createNodeElement(node, render, "h5")
+  | ShadowRoot => createShadowRootElement(node, render, "div")
   };

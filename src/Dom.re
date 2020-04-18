@@ -21,7 +21,18 @@ type eventHandler = event => unit;
 [@bs.val]
 external createElement: string => domElement = "document.createElement";
 
-let getChildrenArray: domElement => array(domElement) = [%bs.raw
+let createShadowElement: (string) => domElement = [%bs.raw
+  {|
+    function(nodeName) {
+      var element = document.createElement(nodeName);
+      element.attachShadow({ mode: 'open' });
+      
+      return element;
+    }
+  |}
+];
+
+let _getChildrenArray: domElement => array(domElement) = [%bs.raw
   {|
   function (element) {
       return element.childNodes;
@@ -29,7 +40,7 @@ let getChildrenArray: domElement => array(domElement) = [%bs.raw
   |}
 ];
 let getChildren = (element: domElement): list(domElement) =>
-  getChildrenArray(element)->Array.to_list;
+  _getChildrenArray(element)->Array.to_list;
 
 let getNthChild: (list(domElement), int) => domElement = [%bs.raw
   {|
@@ -74,19 +85,19 @@ let setAttributes =
 
 let setPosition: (int, domElement) => domElement = [%bs.raw
   {|
-function (position, element) {
-  element.position = position;
-  return element;
-}
+    function (position, element) {
+      element.position = position;
+      return element;
+    }
 |}
 ];
 
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
   {|
-        function(parent, newNode, oldNode) {
-            return parent.replaceChild(newNode, oldNode);
-        }
-    |}
+      function(parent, newNode, oldNode) {
+        return parent.replaceChild(newNode, oldNode);
+      }
+  |}
 ];
 
 let replaceTextNode: (domElement, string) => domElement = [%bs.raw
@@ -132,14 +143,29 @@ let getParentNode: domElement => domElement = [%bs.raw
     function(element) {
       return element.parentNode;
     }
-|}
+  |}
 ];
 
 let removeChild: (domElement, domElement) => domElement = [%bs.raw
   {|
-      function(parent, child) {
-        return parent.removeChild(child);
+    function(parent, child) {
+      return parent.removeChild(child);
+    }
+  |}
+];
+
+let appendChildToShadowRoot: (list(domElement), domElement) => domElement = [%bs.raw
+  {|
+  function (children, parent) {
+      for (let i=0; i < children.length; i++) {
+        if (Array.isArray(children[i])) {
+          appendChildToShadowRoot(children[i], parent);
+        } else if (typeof children[i] !== 'number') {
+          parent.shadowRoot.appendChild(children[i]);
+        }
       }
+      return parent;
+   }
   |}
 ];
 

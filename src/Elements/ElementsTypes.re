@@ -12,7 +12,8 @@ type nodeName =
   | H2
   | H3
   | H4
-  | H5;
+  | H5
+  | ShadowRoot;
 
 type attributes = list((string, string));
 
