@@ -34,7 +34,10 @@ let createShadowElement: (string) => domElement = [%bs.raw
 
 let _getChildrenArray: domElement => array(domElement) = [%bs.raw
   {|
-  function (element) {
+    function (element) {
+      if (element.shadowRoot) {
+        return element.shadowRoot.childNodes;
+      }
       return element.childNodes;
     }
   |}
@@ -95,6 +98,9 @@ let setPosition: (int, domElement) => domElement = [%bs.raw
 let replaceChild: (domElement, domElement, domElement) => domElement = [%bs.raw
   {|
       function(parent, newNode, oldNode) {
+        if (!parent.shadowRoot) {
+          return parent.shadowRoot.replaceChild(newNode, oldNode);
+        }
         return parent.replaceChild(newNode, oldNode);
       }
   |}
