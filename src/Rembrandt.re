@@ -12,6 +12,7 @@ module Elements = {
   let h3 = H.h3;
   let h4 = H.h4;
   let h5 = H.h5;
+  let shadowRoot = ShadowRoot.shadowRoot;
 }
 
 module Commands = {

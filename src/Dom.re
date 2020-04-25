@@ -23,9 +23,9 @@ external createElement: string => domElement = "document.createElement";
 
 let createShadowElement: (string) => domElement = [%bs.raw
   {|
-    function(nodeName) {
-      var element = document.createElement(nodeName);
-      element.attachShadow({ mode: 'open' });
+    function(mode) {
+      var element = document.createElement('div');
+      element.attachShadow({ mode: mode });
       
       return element;
     }

@@ -10,7 +10,7 @@ let createNodeElement = (node, render, name) =>
   |> appendChild(List.map(child => render(child), node.children));
 
 let createShadowRootElement = (node, render, name) =>
-  createShadowElement(name)
+  createShadowElement("open")
   |> setAttributes(
     node.attributes |> List.filter(((_, value)) => value != ""),
   )
@@ -31,5 +31,5 @@ let rec render = (node: node) =>
   | H3 => createNodeElement(node, render, "h3")
   | H4 => createNodeElement(node, render, "h4")
   | H5 => createNodeElement(node, render, "h5")
-  | ShadowRoot => createShadowRootElement(node, render, "div")
+  | SHADOW_ROOT => createShadowRootElement(node, render, "div")
   };

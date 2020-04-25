@@ -4,6 +4,27 @@ open ElementsTypes;
 
 let defaultHandler = _ => ();
 
+let generateShadowNode = (~key, ~children, ()): node => {
+  let r = {
+    name: DIV,
+    text: "",
+    position: 0,
+    attributes: [
+      ("key", key),
+    ],
+    handlers: [],
+    children,
+  };
+  children
+  |> List.iter(child => {
+       if (child.name != TEXT) {
+         r.position = r.position + child.position;
+       };
+       r.position = r.position + 1;
+     });
+  r;
+};
+
 let generateNode =
     (
       ~name: nodeName,
