@@ -42,6 +42,7 @@ let _getChildrenArray: domElement => array(domElement) = [%bs.raw
     }
   |}
 ];
+
 let getChildren = (element: domElement): list(domElement) =>
   _getChildrenArray(element)->Array.to_list;
 

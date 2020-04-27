@@ -4,14 +4,12 @@ open ElementsTypes;
 
 let defaultHandler = _ => ();
 
-let generateShadowNode = (~key, ~children, ()): node => {
+let generateShadowNode = (~children, ()): node => {
   let r = {
-    name: DIV,
+    name: SHADOW_ROOT,
     text: "",
     position: 0,
-    attributes: [
-      ("key", key),
-    ],
+    attributes: [],
     handlers: [],
     children,
   };
