@@ -10,9 +10,9 @@ let diffProps = (oldNode: node, newNode: node) => {
            newNode.attributes,
          )
        )
-  |> List.map(((oldKey, _)) =>
-    List.find(((newKey, _)) => oldKey == newKey, newNode.attributes)
-  );
+    |> List.map(((oldKey, _)) =>
+         List.find(((newKey, _)) => oldKey == newKey, newNode.attributes)
+       );
 
   let newProps =
     newNode.attributes

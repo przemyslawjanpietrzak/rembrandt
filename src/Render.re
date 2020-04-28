@@ -12,10 +12,12 @@ let createNodeElement = (node, render, name) =>
 let createShadowRootElement = (node, render) =>
   createShadowElement("open")
   |> setAttributes(
-    node.attributes |> List.filter(((_, value)) => value != ""),
-  )
+       node.attributes |> List.filter(((_, value)) => value != ""),
+     )
   |> setHandlers(node.handlers)
-  |> appendChildToShadowRoot(List.map(child => render(child), node.children));
+  |> appendChildToShadowRoot(
+       List.map(child => render(child), node.children),
+     );
 
 let rec render = (node: node) =>
   switch (node.name) {

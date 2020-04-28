@@ -83,7 +83,7 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
 
   /* first pass to check item in old list: if it's removed or not */
   oldNodes
-  |> List.iter(node => {
+  |> List.iter(node =>
        switch (getItemKey(node)) {
        | None =>
          let freeItem = List.nth(newFree, freeIndex^);
@@ -97,8 +97,8 @@ let getListDiff = (oldNodes: list(node), newNodes: list(node)): diff => {
          } else {
            children := List.append(children^, [None]);
          }
-       };
-     });
+       }
+     );
   let simulateList = ref(List.map(identity, children^));
   /* remove items no longer exist */
   let i = ref(0);

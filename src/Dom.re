@@ -21,12 +21,12 @@ type eventHandler = event => unit;
 [@bs.val]
 external createElement: string => domElement = "document.createElement";
 
-let createShadowElement: (string) => domElement = [%bs.raw
+let createShadowElement: string => domElement = [%bs.raw
   {|
     function(mode) {
       var element = document.createElement('div');
       element.attachShadow({ mode: mode });
-      
+
       return element;
     }
   |}

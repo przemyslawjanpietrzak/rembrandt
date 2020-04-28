@@ -17,7 +17,9 @@ type nodeName =
 
 type attributes = list((string, string));
 
-type shadowDomMode = ShadowDomOpenMode | ShadowDomCloseMode 
+type shadowDomMode =
+  | ShadowDomOpenMode
+  | ShadowDomCloseMode;
 
 type node = {
   name: nodeName,
@@ -26,5 +28,5 @@ type node = {
   attributes,
   handlers: list((string, option(eventHandler))),
   children: list(node),
-  shadowDomMode: option(shadowDomMode)
+  shadowDomMode: option(shadowDomMode),
 };

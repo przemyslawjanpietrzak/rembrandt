@@ -19,21 +19,19 @@ Rembrandt.run(
     (model, dispatch) =>
       <div>
         <div id="count"> {string_of_int(model) |> text} </div>
-      <shadowRoot mode=ShadowDomOpenMode>
-        <button id="plus" onClick={_ => Add |> dispatch}>
-          {"+" |> text}
-        </button>
-      </shadowRoot>
-      <shadowRoot mode=ShadowDomOpenMode>
-          <button id="minus" onClick={_ => Sub |> dispatch}>
-          {"-" |> text}
+        <shadowRoot mode=ShadowDomOpenMode>
+          <button id="plus" onClick={_ => Add |> dispatch}>
+            {"+" |> text}
           </button>
-      </shadowRoot>
-      <shadowRoot mode=ShadowDomOpenMode>
-      <div>
-       { "Some element in close shadow dom" |> text  }
-      </div>
-      </shadowRoot>
+        </shadowRoot>
+        <shadowRoot mode=ShadowDomOpenMode>
+          <button id="minus" onClick={_ => Sub |> dispatch}>
+            {"-" |> text}
+          </button>
+        </shadowRoot>
+        <shadowRoot mode=ShadowDomOpenMode>
+          <div> {"Some element in close shadow dom" |> text} </div>
+        </shadowRoot>
       </div>,
   (),
 );
