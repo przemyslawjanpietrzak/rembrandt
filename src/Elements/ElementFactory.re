@@ -4,7 +4,7 @@ open ElementsTypes;
 
 let defaultHandler = _ => ();
 
-let generateShadowNode = (~children, ()): node => {
+let generateShadowNode = (~children, ~mode, ()): node => {
   let r = {
     name: SHADOW_ROOT,
     text: "",
@@ -12,6 +12,7 @@ let generateShadowNode = (~children, ()): node => {
     attributes: [],
     handlers: [],
     children,
+    shadowDomMode: Some(mode),
   };
   children
   |> List.iter(child => {
@@ -66,6 +67,7 @@ let generateNode =
       ("submit", onSubmit !== defaultHandler ? Some(onSubmit) : None),
     ],
     children,
+    shadowDomMode: None,
   };
   children
   |> List.iter(child => {

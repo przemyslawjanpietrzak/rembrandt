@@ -3,4 +3,4 @@ open ElementsTypes;
 open Dom;
 
 let shadowRoot =
-  (~children, _rest): node => generateShadowNode(~children, ());
+  (~children, ~mode=ShadowDomOpenMode, ()): node => generateShadowNode(~children, ~mode, ());
