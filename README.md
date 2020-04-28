@@ -11,6 +11,8 @@ Simple functional UI framework written in Reasonml.
 
 `yarn add bs-rembrandt`
 
+## CLI
+
 Create seed project:
 
 `yarn bs-rembrandt init`
@@ -68,12 +70,24 @@ Rembrandt.run(
           {text("-")}
         </button>
         <button id="double" onClick={_ => Twice |> dispatch}>
-          {text("twice +")}
+            {text("twice +")}
         </button>
       </div>,
   (),
 );
 ```
+
+## Motivation
+
+Rembrandt was build in batteries included approach. Contains [https://elm-lang.org/](elm) architecture state manager also known as [https://redux-loop.js.org/](redux-loop), simple CLI allows to create seed project with configured `bs-platform`, `webpack` and `jest`. Framework is written in reasonml, so it guarantees type safe compilation via [https://ocaml.org/](OCaml).
+
+### Differences between reason-react
+
+Rembrandt contains a state manager with middleware. Framework is forcing developers to write stateless components, state known from react doesn't exist, components have to take data only from the model. Reason-react is reasonml bindings over javascript code, rembrandt is written in reasonml.
+
+### Differences between elm
+
+Rembrandt is pretty similar to elm (state manager, functional paradigm, static typing) however rembrandt's language doesn't force developers to write pure functional code, reasonml allows to use imperative features like object mutation, or references. Also UI layer is using JSX syntax instead of ML one, which repulses some developers.
 
 ## API
 
@@ -105,4 +119,4 @@ Action to dispatch after first render. Default is `Command.null`.
 List of functions to apply on each state update. Each takes oldModel, newModel and action as arguments. See `Rembrandt.MiddleWares.logger` in `examples/Form.re`. Default is [].
 
 ### subscription (optional):
-Function that takes current model and dispatch as argument. Allows to dispatch action based on asynchronous source (e.g. websocket) See in `examples/Subscription.re`. Default is `(model, dispatch)=> ()`.
+Function that takes current model and dispatch as argument. Allows to dispatch action based on asynchronous source (e.g. websocket) See in `examples/Subscription.re`. Default is `(model, dispatch) => ()`.
