@@ -8,4 +8,5 @@ let text = (s: string): node => {
   attributes: [],
   handlers: [],
   children: [],
+  shadowDomMode: None,
 };

@@ -52,7 +52,7 @@ let update =
   | Add => (model + 1, Command.null)
   | Sub => (model - 1, Command.null)
   | Twice => (model + 1, Command.action(Add))
-  };
+};
 
 Rembrandt.run(
   ~model=42,
@@ -62,13 +62,13 @@ Rembrandt.run(
       <div>
         <div id="count"> {string_of_int(model) |> text} </div>
         <button id="plus" onClick={_ => Add |> dispatch}>
-          {text("+")}
+          {"+" |> text}
         </button>
         <button id="minus" onClick={_ => Sub |> dispatch}>
-          {text("-")}
+          {"-" |> text}
         </button>
         <button id="double" onClick={_ => Twice |> dispatch}>
-          {text("twice +")}
+          {"twice +" |> text}
         </button>
       </div>,
   (),
@@ -106,3 +106,6 @@ List of functions to apply on each state update. Each takes oldModel, newModel a
 
 ### subscription (optional):
 Function that takes current model and dispatch as argument. Allows to dispatch action based on asynchronous source (e.g. websocket) See in `examples/Subscription.re`. Default is `(model, dispatch)=> ()`.
+
+## Shadow Dom
+To wrap elements in shadow dom you can use the `<shadowRoot>` element imported from `Rembrandt.Elements` as other components. It will render `<div>` element with shadowRoot. To attach a close shadow DOM use ` <shadowRoot mode=ShadowDomCloseMode>`, however it's not recommended to use it for display model-related data. See `examples/ShadowDom.re`.

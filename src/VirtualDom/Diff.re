@@ -58,9 +58,7 @@ let getPatches = (oldNode, newNode: option(node)): list(patch) =>
   | None => []
   | Some(node) =>
     /* TextNode content replacing */
-    if (node.name == TEXT
-        && oldNode.name == TEXT
-        && node.text != oldNode.text) {
+    if (node.name == TEXT && oldNode.name == TEXT && node.text != oldNode.text) {
       [{patchType: Text, content: Some(node), attributes: None, moves: []}];
     } else if (node.name === oldNode.name) {
       /* Diff props */

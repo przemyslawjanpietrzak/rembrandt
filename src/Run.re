@@ -33,7 +33,7 @@ let run =
       ~initAction=Command.null,
       ~rootId="app",
       ~middlewares: list(('model, 'model, 'action) => unit)=[],
-      ~subscription: ('model, 'dispatch) => unit = (mode, dispatch) => (),
+      ~subscription: ('model, 'dispatch) => unit=(mode, dispatch) => (),
       (),
     ) => {
   let root = ref(Dom.createElement("div"));

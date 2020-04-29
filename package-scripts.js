@@ -3,6 +3,7 @@ const examples = [
   'Request',
   'Form',
   'Subscription',
+  'ShadowDom',
 ];
 const buildExample = name => [
   `mkdir -p cypress/server/public/${name}`,

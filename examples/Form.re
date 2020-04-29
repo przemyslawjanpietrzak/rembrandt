@@ -64,9 +64,7 @@ Rembrandt.run(
         <div id="first"> {text("first: " ++ first)} </div>
         <div id="second"> {text("second: " ++ second)} </div>
         <div id="response"> {text("response: " ++ response)} </div>
-        <div id="loading">
-          {text(loading ? "loading" : "loaded")}
-        </div>
+        <div id="loading"> {text(loading ? "loading" : "loaded")} </div>
         <div>
           <input
             id="first-input"

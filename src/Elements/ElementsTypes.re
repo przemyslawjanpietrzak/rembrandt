@@ -12,9 +12,14 @@ type nodeName =
   | H2
   | H3
   | H4
-  | H5;
+  | H5
+  | SHADOW_ROOT;
 
 type attributes = list((string, string));
+
+type shadowDomMode =
+  | ShadowDomOpenMode
+  | ShadowDomCloseMode;
 
 type node = {
   name: nodeName,
@@ -23,4 +28,5 @@ type node = {
   attributes,
   handlers: list((string, option(eventHandler))),
   children: list(node),
+  shadowDomMode: option(shadowDomMode),
 };
