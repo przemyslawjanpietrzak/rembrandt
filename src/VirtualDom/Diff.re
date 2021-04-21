@@ -1,4 +1,3 @@
-// open Dom;
 open Utils;
 open ElementsTypes;
 
