@@ -29,8 +29,8 @@
     "@glennsl/bs-jest"
   ],
   "warnings": {
-    "number": "-6",
-    "error" : "+101"
+    "number": "-6-27",
+    "error" : "+101+33"
   },
   "namespace": true
 }

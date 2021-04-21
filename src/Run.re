@@ -12,11 +12,11 @@ let runCommand = (command, dispatchAction) =>
   (
     switch (command.commandType, command.commandAction, command.callback) {
     | (CAction, Some(commandAction), _) =>
-      Js.Promise.make((~resolve, ~reject) =>
+      Js.Promise.make((~resolve as _, ~reject as _) =>
         dispatchAction(commandAction) |> ignore
       )
     | (Run, _, Some(callback)) =>
-      Js.Promise.make((~resolve, ~reject) =>
+      Js.Promise.make((~resolve as _, ~reject as _) =>
         callback(dispatchAction) |> ignore
       )
     | (_, _, _) => Js.Promise.resolve()
@@ -33,7 +33,8 @@ let run =
       ~initAction=Command.null,
       ~rootId="app",
       ~middlewares: list(('model, 'model, 'action) => unit)=[],
-      ~subscription: ('model, 'dispatch) => unit=(mode, dispatch) => (),
+      ~subscription: ('model, 'dispatch) => unit=(_mode, _dispatch) => (),
+      // ~subscription: ('model, 'dispatch) => unit=dispatch => dispatch,
       (),
     ) => {
   let root = ref(Dom.createElement("div"));

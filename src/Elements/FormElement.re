@@ -21,9 +21,9 @@ let form =
     : node =>
   generateNode(
     ~name=Form,
-    ~id,
+    ~id=id,
     ~_class,
-    ~style,
+    ~style=style,
     ~key,
     ~action,
     ~method,

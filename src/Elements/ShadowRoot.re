@@ -1,6 +1,6 @@
 open ElementFactory;
 open ElementsTypes;
-open Dom;
+// open Dom;
 
 let shadowRoot = (~children, ~mode=ShadowDomOpenMode, ()): node =>
   generateShadowNode(~children, ~mode, ());

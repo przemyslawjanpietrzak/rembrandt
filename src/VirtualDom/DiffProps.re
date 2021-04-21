@@ -1,5 +1,5 @@
 open ElementsTypes;
-open ElementFactory;
+// open ElementFactory;
 
 let diffProps = (oldNode: node, newNode: node) => {
   let changedProps =

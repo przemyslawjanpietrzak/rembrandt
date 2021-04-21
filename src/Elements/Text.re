@@ -1,5 +1,5 @@
 open ElementsTypes;
-open ElementFactory;
+// open ElementFactory;
 
 let text = (s: string): node => {
   name: TEXT,

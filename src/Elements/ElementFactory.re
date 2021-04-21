@@ -1,6 +1,6 @@
-open Dom;
+// open Dom;
 
-open ElementsTypes;
+open !ElementsTypes;
 
 let defaultHandler = _ => ();
 
@@ -28,7 +28,7 @@ let generateNode =
     (
       ~name: nodeName,
       ~text="",
-      ~id,
+      ~id:string,
       ~_class,
       ~style,
       ~key,

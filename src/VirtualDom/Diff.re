@@ -1,4 +1,4 @@
-open Dom;
+// open Dom;
 open Utils;
 open ElementsTypes;
 
@@ -48,7 +48,7 @@ let getPrevChildPosition = (children: list(node), index: int): int =>
   | 0 => 0
   | _ =>
     switch (List.nth(children, index - 1)) {
-    | exception nth => 0
+    | exception _nth => 0
     | child => child.position
     }
   };

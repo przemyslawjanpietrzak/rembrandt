@@ -49,7 +49,7 @@ let makeKeyIndexAndFree = (list: list(node)): keyIndexes => {
   let _ =
     list
     |> List.iteri((i, item) => {
-         let itemKey = getItemKey(item);
+        //  let itemKey = getItemKey(item);
          let _ =
            switch (getItemKey(item)) {
            | None => free := List.append(free^, [item])
