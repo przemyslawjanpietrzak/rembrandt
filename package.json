@@ -15,7 +15,7 @@
     "body-parser": "^1.19.0",
     "browserify": "^16.5.0",
     "bs-jest": "^0.3.2",
-    "bs-platform": "^5.0.6",
+    "bs-platform": "^7.3.0",
     "chalk": "^2.4.2",
     "cypress": "^3.4.1",
     "express": "^4.17.1",

@@ -1,7 +1,7 @@
 open ElementsTypes;
 open Utils;
 
-open Diff;
+open !Diff;
 
 type maps = StringMap.t(Dom.domElement);
 
@@ -37,7 +37,7 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
        switch (move.moveType, move.item) {
        | (Remove, None) =>
          let childToRemove = Dom.getNthChild(element.children, move.index);
-         Dom.removeChild(element, childToRemove);
+         Dom.removeChild(element, childToRemove)|>ignore;
          staticNodeList := removeFromList(staticNodeList^, move.index);
        | (Insert, Some(item)) =>
          let insertNode =
@@ -58,7 +58,7 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
              insertNode,
              Dom.getNthChild(element.childNodes, move.index),
            );
-         ();
+         | _ =>();
        }
      );
 };
@@ -77,16 +77,20 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
              element,
            )
            |> ignore;
+           | None=>();
          }
        | Props =>
          switch (patch.attributes) {
          | Some(attributes) => setProps(element, attributes) |> ignore
+         | None=>();
          }
        | Children => reorderChildren(element, patch.moves) |> ignore
        | Text =>
          switch (patch.content) {
          | Some(node) => Dom.replaceTextNode(element, node.text) |> ignore
+     | None=>();
          }
+
        }
      );
 
