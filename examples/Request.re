@@ -1,5 +1,4 @@
 open Rembrandt.Elements;
-open Rembrandt.Commands;
 
 type model = string;
 type action =

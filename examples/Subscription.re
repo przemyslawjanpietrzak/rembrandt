@@ -22,11 +22,11 @@ Rembrandt.run(
           ();
         },
         2500,
-      );
+      )|>ignore;
       ();
     },
   ~view=
-    (model, dispatch) =>
+    (model, _dispatch) =>
       <div>
         <div id="count"> {string_of_int(model) |> text} </div>
         <div> {"Number should increase" |> text} </div>

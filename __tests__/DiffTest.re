@@ -1,6 +1,5 @@
 open Jest;
 
-open ElementsTypes;
 open Div;
 open Span;
 open Text;

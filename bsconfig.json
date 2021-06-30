@@ -24,13 +24,13 @@
     "in-source": true
   },
   "suffix": ".bs.js",
-  "bs-dependencies": ["bs-fetch"],
+  "bs-dependencies": ["bs-fetch","bs-webapi"],
   "bs-dev-dependencies": [
     "@glennsl/bs-jest"
   ],
   "warnings": {
-    "error" : "+101"
+    "number": "-6-27",
+    "error" : "+101+33"
   },
-  "namespace": true,
-  "refmt": 3
+  "namespace": true
 }

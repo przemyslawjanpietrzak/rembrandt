@@ -1,7 +1,6 @@
 open Jest;
 
 open ElementsTypes;
-open VirtualDom;
 open Div;
 open Span;
 

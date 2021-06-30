@@ -1,7 +1,14 @@
 type domElementValue =
   | String
   | Int;
-
+// type domElement = {
+//   children: list(Webapi.Dom.Element.t),
+//   childNodes: list(Webapi.Dom.Element.t),
+//   parentElement: Webapi.Dom.Element.t,
+//   nodeType: int,
+//   getAttribute: string => string,
+//   value: string,
+// };
 type domElement = {
   children: list(domElement),
   childNodes: list(domElement),
@@ -83,7 +90,7 @@ let _setAttributes: ((string, string), domElement) => domElement = [%bs.raw
 
 let setAttributes =
     (attributes: list((string, string)), domElement: domElement) => {
-  attributes |> List.map(attribute => _setAttributes(attribute, domElement));
+  let _ = attributes |> List.map(attribute => _setAttributes(attribute, domElement));
   domElement;
 };
 
@@ -213,7 +220,7 @@ let insertBefore: (domElement, domElement, domElement) => domElement = [%bs.raw
 let setHandlers =
     (handlers: list((string, option(eventHandler))), parent: domElement)
     : domElement => {
-  handlers
+  let _ =handlers
   |> List.map(((name, handler)) =>
        switch (handler) {
        | None => parent

@@ -1,4 +1,4 @@
-open Rembrandt.Elements;
+open !Rembrandt.Elements;
 open Rembrandt.Forms;
 
 type model = {

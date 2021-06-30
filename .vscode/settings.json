@@ -3,5 +3,9 @@
     "**/.git": true,
     "**/.DS_Store": true,
     "**/*.bs.js": true
-  },
+	},
+	"ocaml.sandbox": {
+		"kind": "opam",
+		"switch": "4.06.1"
+	},
 }
