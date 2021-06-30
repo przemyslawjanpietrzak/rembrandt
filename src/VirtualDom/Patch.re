@@ -1,7 +1,7 @@
 open ElementsTypes;
 open Utils;
 
-open !Diff;
+open! Diff;
 
 type maps = StringMap.t(Dom.domElement);
 
@@ -19,25 +19,12 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
   let staticNodeList = ref(element.childNodes);
   let maps = ref(StringMap.empty);
 
-  element.childNodes
-  |> List.iter((childElement: Dom.domElement) =>
-       if (childElement.nodeType === 1
-           && childElement.getAttribute("key") !== "") {
-         maps :=
-           StringMap.add(
-             childElement.getAttribute("key"),
-             childElement,
-             maps^,
-           );
-       }
-     );
-
   moves
   |> List.iter((move: ListDiff.move) =>
        switch (move.moveType, move.item) {
        | (Remove, None) =>
          let childToRemove = Dom.getNthChild(element.children, move.index);
-         Dom.removeChild(element, childToRemove)|>ignore;
+         Dom.removeChild(element, childToRemove) |> ignore;
          staticNodeList := removeFromList(staticNodeList^, move.index);
        | (Insert, Some(item)) =>
          let insertNode =
@@ -58,7 +45,8 @@ let reorderChildren = (element: Dom.domElement, moves: ListDiff.moves) => {
              insertNode,
              Dom.getNthChild(element.childNodes, move.index),
            );
-         | _ =>();
+         ();
+       | _ => ()
        }
      );
 };
@@ -77,20 +65,19 @@ let applyPatches = (element: Dom.domElement, currentPatches: list(patch)) =>
              element,
            )
            |> ignore;
-           | None=>();
+         | None => ()
          }
        | Props =>
          switch (patch.attributes) {
          | Some(attributes) => setProps(element, attributes) |> ignore
-         | None=>();
+         | None => ()
          }
        | Children => reorderChildren(element, patch.moves) |> ignore
        | Text =>
          switch (patch.content) {
          | Some(node) => Dom.replaceTextNode(element, node.text) |> ignore
-     | None=>();
+         | None => ()
          }
-
        }
      );
 

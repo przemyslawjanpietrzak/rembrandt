@@ -1,7 +1,14 @@
 type domElementValue =
   | String
   | Int;
-
+// type domElement = {
+//   children: list(Webapi.Dom.Element.t),
+//   childNodes: list(Webapi.Dom.Element.t),
+//   parentElement: Webapi.Dom.Element.t,
+//   nodeType: int,
+//   getAttribute: string => string,
+//   value: string,
+// };
 type domElement = {
   children: list(domElement),
   childNodes: list(domElement),

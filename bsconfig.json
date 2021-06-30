@@ -24,7 +24,7 @@
     "in-source": true
   },
   "suffix": ".bs.js",
-  "bs-dependencies": ["bs-fetch"],
+  "bs-dependencies": ["bs-fetch","bs-webapi"],
   "bs-dev-dependencies": [
     "@glennsl/bs-jest"
   ],
